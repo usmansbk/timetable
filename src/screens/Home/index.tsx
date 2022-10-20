@@ -4,7 +4,7 @@ import {Text} from 'react-native-paper';
 export default function Home() {
   return (
     <View>
-      <Text>Timetable</Text>
+      <Text variant="displayLarge">Timetable</Text>
     </View>
   );
 }
