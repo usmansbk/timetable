@@ -19,6 +19,8 @@ const CommonTheme: Partial<typeof MD3DarkTheme> = {
   roundness: 2,
 };
 
+const CommonColors: Partial<typeof MD3LightTheme['colors']> = {};
+
 const CombinedLightTheme = {
   ...MD3LightTheme,
   ...LightTheme,
@@ -26,6 +28,7 @@ const CombinedLightTheme = {
   colors: {
     ...MD3LightTheme.colors,
     ...LightTheme.colors,
+    ...CommonColors,
   },
 };
 
@@ -36,6 +39,7 @@ const CombinedDarkTheme = {
   colors: {
     ...MD3DarkTheme.colors,
     ...DarkTheme.colors,
+    ...CommonColors,
   },
 };
 
