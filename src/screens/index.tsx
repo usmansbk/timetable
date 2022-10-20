@@ -1,7 +1,7 @@
 import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
 import {Text, useTheme} from 'react-native-paper';
 
-export default function Navigator() {
+export default function Screens() {
   const {colors, dark} = useTheme();
 
   return (

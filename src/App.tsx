@@ -1,14 +1,17 @@
 import React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
 import {Provider as PaperProvider} from 'react-native-paper';
-import {usePaperTheme} from '~config/theme';
-import Navigator from '~screens';
+import {useAppTheme} from '~config/theme';
+import Screens from '~screens';
 
 function Main() {
-  const theme = usePaperTheme();
+  const theme = useAppTheme();
 
   return (
     <PaperProvider theme={theme}>
-      <Navigator />
+      <NavigationContainer theme={theme}>
+        <Screens />
+      </NavigationContainer>
     </PaperProvider>
   );
 }
