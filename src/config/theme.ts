@@ -8,7 +8,6 @@ import {
   DefaultTheme as NavigationLightTheme,
   DarkTheme as NavigationDarkTheme,
 } from '@react-navigation/native';
-import deepmerge from 'deepmerge';
 import {AppSchemeName} from '~types';
 
 const {LightTheme, DarkTheme} = adaptNavigationTheme({
@@ -16,8 +15,29 @@ const {LightTheme, DarkTheme} = adaptNavigationTheme({
   dark: NavigationDarkTheme,
 });
 
-const CombinedLightTheme = deepmerge(MD3LightTheme, LightTheme);
-const CombinedDarkTheme = deepmerge(MD3DarkTheme, DarkTheme);
+const CommonTheme: Partial<typeof MD3DarkTheme> = {
+  roundness: 2,
+};
+
+const CombinedLightTheme = {
+  ...MD3LightTheme,
+  ...LightTheme,
+  ...CommonTheme,
+  colors: {
+    ...MD3LightTheme.colors,
+    ...LightTheme.colors,
+  },
+};
+
+const CombinedDarkTheme = {
+  ...MD3DarkTheme,
+  ...DarkTheme,
+  ...CommonTheme,
+  colors: {
+    ...MD3DarkTheme.colors,
+    ...DarkTheme.colors,
+  },
+};
 
 export const useAppTheme = (appScheme?: AppSchemeName) => {
   const scheme = useColorScheme();
