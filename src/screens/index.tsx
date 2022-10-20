@@ -1,5 +1,9 @@
 import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
-import {Text, useTheme} from 'react-native-paper';
+import {useTheme} from 'react-native-paper';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Home from './Home';
+
+const Stack = createNativeStackNavigator();
 
 export default function Screens() {
   const {colors, dark} = useTheme();
@@ -11,7 +15,9 @@ export default function Screens() {
         backgroundColor={colors.primary}
         barStyle={dark ? 'dark-content' : 'light-content'}
       />
-      <Text>Timetable</Text>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen component={Home} name="Home" />
+      </Stack.Navigator>
     </SafeAreaView>
   );
 }
