@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function App() {
+export default function App() {
   return (
     <PaperProvider>
       <SafeAreaView style={styles.container}>
@@ -17,5 +17,3 @@ function App() {
     </PaperProvider>
   );
 }
-
-export default App;
