@@ -1,22 +1,18 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet} from 'react-native';
-import {Text, Provider as PaperProvider} from 'react-native-paper';
+import {Provider as PaperProvider} from 'react-native-paper';
 import {usePaperTheme} from '~config/theme';
+import Navigator from '~screens';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 2,
-  },
-});
-
-export default function App() {
+function Main() {
   const theme = usePaperTheme();
 
   return (
     <PaperProvider theme={theme}>
-      <SafeAreaView style={styles.container}>
-        <Text>Timetable</Text>
-      </SafeAreaView>
+      <Navigator />
     </PaperProvider>
   );
+}
+
+export default function App() {
+  return <Main />;
 }
