@@ -1,12 +1,16 @@
-import {SafeAreaView, StyleSheet} from 'react-native';
+import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
 import {Text, useTheme} from 'react-native-paper';
 
 export default function Navigator() {
-  const {colors} = useTheme();
+  const {colors, dark} = useTheme();
 
   return (
     <SafeAreaView
       style={[styles.container, {backgroundColor: colors.background}]}>
+      <StatusBar
+        backgroundColor={colors.primary}
+        barStyle={dark ? 'dark-content' : 'light-content'}
+      />
       <Text>Timetable</Text>
     </SafeAreaView>
   );
