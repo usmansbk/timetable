@@ -2,11 +2,10 @@ import {
   createDrawerNavigator,
   DrawerContentComponentProps,
   DrawerContentScrollView,
-  DrawerItemList,
   DrawerHeaderProps,
 } from '@react-navigation/drawer';
 import {memo} from 'react';
-import {Appbar} from 'react-native-paper';
+import {Appbar, Drawer as PaperDrawer} from 'react-native-paper';
 import {DrawerStackParamList, RootStackScreenProps} from '~types';
 import Timetable from './Timetable';
 
@@ -22,9 +21,21 @@ function DrawerNavigationBar({navigation, options}: DrawerHeaderProps) {
 }
 
 function AppDrawerContent(props: DrawerContentComponentProps) {
+  const {navigation, state} = props;
   return (
     <DrawerContentScrollView {...props}>
-      <DrawerItemList {...props} />
+      {state.routes.map(({name, key}, index) => (
+        <PaperDrawer.Item
+          active={index === state.index}
+          key={key}
+          label={name}
+          onPress={() => navigation.navigate(name)}
+        />
+      ))}
+      <PaperDrawer.Item
+        label="Settings"
+        onPress={() => navigation.navigate('Settings')}
+      />
     </DrawerContentScrollView>
   );
 }

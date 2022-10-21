@@ -1,19 +1,39 @@
-import {memo, useState} from 'react';
+import {memo, useCallback, useState} from 'react';
 import {useDrawerStatus} from '@react-navigation/drawer';
-import {StyleSheet, View} from 'react-native';
+import {BackHandler, StyleSheet, View} from 'react-native';
 import {FAB, Portal} from 'react-native-paper';
 import {AppDrawerScreenProps} from '~types';
-import {useIsFocused} from '@react-navigation/native';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 
 function Timetable({navigation}: AppDrawerScreenProps<'Timetable'>) {
   const drawerStatus = useDrawerStatus();
   const isFocused = useIsFocused();
   const [state, setState] = useState({open: false});
 
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        if (state.open) {
+          setState({open: false});
+          return true;
+        }
+        return false;
+      };
+
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        onBackPress,
+      );
+
+      return () => subscription.remove();
+    }, [state]),
+  );
+
   return (
     <View style={styles.container}>
       <Portal>
         <FAB.Group
+          style={styles.fab}
           visible={drawerStatus === 'closed' && isFocused}
           open={state.open}
           icon={state.open ? 'calendar-today' : 'plus'}
@@ -41,5 +61,8 @@ export default memo(Timetable);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  fab: {
+    bottom: 48,
   },
 });
