@@ -33,13 +33,15 @@ function Timetable({navigation}: AppDrawerScreenProps<'Timetable'>) {
     }, [state]),
   );
 
+  const fabVisible = drawerStatus === 'closed' && isFocused && !openAddEvent;
+
   return (
     <View style={styles.container}>
       <AgendaList />
       <Portal>
         <FAB.Group
           style={styles.fab}
-          visible={drawerStatus === 'closed' && isFocused}
+          visible={fabVisible}
           open={state.open}
           icon={state.open ? 'calendar-today' : 'plus'}
           actions={[

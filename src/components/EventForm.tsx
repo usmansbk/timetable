@@ -7,11 +7,12 @@ import {
   TextInput,
   useTheme,
 } from 'react-native-paper';
+import {useMemo} from 'react';
 import {useForm, Controller} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import {EventInput} from '~types';
-import {useMemo} from 'react';
+import DateTimeInput from './DateTimeInput';
 
 interface Props {
   autoFocus?: boolean;
@@ -94,6 +95,50 @@ export default function EventForm({
               {errors.title.message}
             </HelperText>
           )}
+          <Controller
+            control={control}
+            name="startDate"
+            render={({field: {onChange, value}}) => (
+              <DateTimeInput
+                label="Date"
+                onChange={onChange}
+                value={value}
+                mode="date"
+              />
+            )}
+          />
+          <View style={styles.row}>
+            <View style={styles.time}>
+              <Controller
+                control={control}
+                name="startTime"
+                render={({field: {onChange, value}}) => (
+                  <DateTimeInput
+                    optional
+                    label="From"
+                    onChange={onChange}
+                    value={value}
+                    mode="time"
+                  />
+                )}
+              />
+            </View>
+            <View style={styles.time}>
+              <Controller
+                control={control}
+                name="endTime"
+                render={({field: {onChange, value}}) => (
+                  <DateTimeInput
+                    optional
+                    label="To"
+                    onChange={onChange}
+                    value={value}
+                    mode="time"
+                  />
+                )}
+              />
+            </View>
+          </View>
         </View>
       </Modal>
     </Portal>
@@ -110,5 +155,11 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     justifyContent: 'flex-end',
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  time: {
+    flex: 1,
   },
 });
