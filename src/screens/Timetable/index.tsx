@@ -1,11 +1,43 @@
-import {View} from 'react-native';
-import {Button, Text} from 'react-native-paper';
+import {memo, useState} from 'react';
+import {useDrawerStatus} from '@react-navigation/drawer';
+import {StyleSheet, View} from 'react-native';
+import {FAB, Portal} from 'react-native-paper';
 
-export default function Timetable() {
+function Timetable() {
+  const drawerStatus = useDrawerStatus();
+  const [state, setState] = useState({open: false});
+
   return (
-    <View>
-      <Text variant="displayLarge">Timetable</Text>
-      <Button mode="contained">Hello</Button>
+    <View style={styles.container}>
+      <Portal>
+        <FAB.Group
+          visible={drawerStatus === 'closed'}
+          open={state.open}
+          icon={state.open ? 'calendar-today' : 'plus'}
+          actions={[
+            {
+              label: 'Import schedule',
+              icon: 'calendar-import',
+              onPress: () => null,
+            },
+            {
+              label: 'Create schedule',
+              icon: 'calendar-plus',
+              onPress: () => null,
+            },
+          ]}
+          onStateChange={setState}
+        />
+      </Portal>
     </View>
   );
 }
+
+export default memo(Timetable);
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+});
