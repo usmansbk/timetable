@@ -32,3 +32,8 @@ declare global {
     interface RootParamList extends RootStackParamList {}
   }
 }
+
+export interface ScheduleInput {
+  id: string;
+  title: string;
+}
