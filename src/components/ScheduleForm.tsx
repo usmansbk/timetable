@@ -41,6 +41,7 @@ export default function ScheduleForm({
             .min(3, () => 'Title too short')
             .max(80, 'Title too long')
             .required('Add a Title'),
+          events: yup.array().min(1, 'Add Events').required(),
         })
         .required(),
     [],
@@ -142,6 +143,7 @@ export default function ScheduleForm({
 ScheduleForm.defaultProps = {
   defaultValues: {
     title: '',
+    events: [],
   } as ScheduleInput,
 };
 

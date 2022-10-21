@@ -44,11 +44,6 @@ function Timetable({navigation}: AppDrawerScreenProps<'Timetable'>) {
           icon={state.open ? 'calendar-today' : 'plus'}
           actions={[
             {
-              label: 'Import schedule',
-              icon: 'calendar-import',
-              onPress: () => null,
-            },
-            {
               label: 'Create schedule',
               icon: 'calendar-plus',
               onPress: () => navigation.navigate('NewSchedule'),

@@ -33,14 +33,13 @@ declare global {
   }
 }
 
-export interface ScheduleInput {
-  id: string;
+export interface EventInput {
   title: string;
 }
 
-export interface EventInput {
-  id: string;
+export interface ScheduleInput {
   title: string;
+  events: EventInput[];
 }
 
 export interface FieldError<T> {
