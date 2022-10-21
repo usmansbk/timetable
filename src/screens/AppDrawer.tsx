@@ -4,9 +4,10 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
+import {DrawerStackParamList, RootStackScreenProps} from '~types';
 import Timetable from './Timetable';
 
-const Drawer = createDrawerNavigator();
+const Drawer = createDrawerNavigator<DrawerStackParamList>();
 
 function AppDrawerContent(props: DrawerContentComponentProps) {
   return (
@@ -16,7 +17,7 @@ function AppDrawerContent(props: DrawerContentComponentProps) {
   );
 }
 
-export default function AppDrawer() {
+export default function AppDrawer({}: RootStackScreenProps<'AppDrawer'>) {
   return (
     <Drawer.Navigator
       initialRouteName="Timetable"

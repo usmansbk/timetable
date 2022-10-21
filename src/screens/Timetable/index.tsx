@@ -2,8 +2,9 @@ import {memo, useState} from 'react';
 import {useDrawerStatus} from '@react-navigation/drawer';
 import {StyleSheet, View} from 'react-native';
 import {FAB, Portal} from 'react-native-paper';
+import {AppDrawerScreenProps} from '~types';
 
-function Timetable() {
+function Timetable({}: AppDrawerScreenProps<'Timetable'>) {
   const drawerStatus = useDrawerStatus();
   const [state, setState] = useState({open: false});
 
