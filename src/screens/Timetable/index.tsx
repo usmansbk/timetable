@@ -2,8 +2,9 @@ import {memo, useCallback, useState} from 'react';
 import {useDrawerStatus} from '@react-navigation/drawer';
 import {BackHandler, StyleSheet, View} from 'react-native';
 import {FAB, Portal} from 'react-native-paper';
-import {AppDrawerScreenProps} from '~types';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import {AppDrawerScreenProps} from '~types';
+import AgendaList from '~components/AgendaList';
 
 function Timetable({navigation}: AppDrawerScreenProps<'Timetable'>) {
   const drawerStatus = useDrawerStatus();
@@ -31,6 +32,7 @@ function Timetable({navigation}: AppDrawerScreenProps<'Timetable'>) {
 
   return (
     <View style={styles.container}>
+      <AgendaList />
       <Portal>
         <FAB.Group
           style={styles.fab}
