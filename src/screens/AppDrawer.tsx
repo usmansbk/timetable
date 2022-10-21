@@ -22,6 +22,7 @@ export default function AppDrawer() {
       initialRouteName="Timetable"
       screenOptions={{
         drawerType: 'back',
+        freezeOnBlur: true,
       }}
       drawerContent={AppDrawerContent}>
       <Drawer.Screen name="Timetable" component={Timetable} />
