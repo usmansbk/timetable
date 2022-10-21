@@ -3,6 +3,7 @@ import {
   MD3LightTheme,
   MD3DarkTheme,
   adaptNavigationTheme,
+  MD3Theme,
 } from 'react-native-paper';
 import {
   DefaultTheme as NavigationLightTheme,
@@ -10,15 +11,14 @@ import {
 } from '@react-navigation/native';
 import deepmarge from 'deepmerge';
 import {AppSchemeName} from '~types';
+import {NavigationTheme} from 'react-native-paper/lib/typescript/types';
 
 const {LightTheme, DarkTheme} = adaptNavigationTheme({
   light: NavigationLightTheme,
   dark: NavigationDarkTheme,
 });
 
-type Theme = typeof MD3DarkTheme;
-
-const CommonTheme: Partial<Theme> = {
+const CommonTheme: Partial<MD3Theme> = {
   roundness: 2,
   fonts: deepmarge(MD3LightTheme.fonts, {
     displayLarge: {
@@ -69,29 +69,19 @@ const CommonTheme: Partial<Theme> = {
   }),
 };
 
-const CommonColors: Partial<Theme['colors']> = {};
+type Theme = MD3Theme & NavigationTheme;
 
-const CombinedLightTheme = {
-  ...MD3LightTheme,
-  ...LightTheme,
-  ...CommonTheme,
-  colors: {
-    ...MD3LightTheme.colors,
-    ...LightTheme.colors,
-    ...CommonColors,
-  },
-} as Theme;
+const CombinedLightTheme = deepmarge.all([
+  MD3LightTheme,
+  LightTheme,
+  CommonTheme,
+]) as Theme;
 
-const CombinedDarkTheme = {
-  ...MD3DarkTheme,
-  ...DarkTheme,
-  ...CommonTheme,
-  colors: {
-    ...MD3DarkTheme.colors,
-    ...DarkTheme.colors,
-    ...CommonColors,
-  },
-} as Theme;
+const CombinedDarkTheme = deepmarge.all([
+  MD3DarkTheme,
+  DarkTheme,
+  CommonTheme,
+]) as Theme;
 
 export const useAppTheme = (appScheme?: AppSchemeName) => {
   const scheme = useColorScheme();
