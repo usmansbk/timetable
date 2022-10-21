@@ -1,18 +1,19 @@
-import {useCallback} from 'react';
+import {useCallback, useEffect, useMemo} from 'react';
 import {BackHandler, StyleSheet, View} from 'react-native';
 import {FAB, HelperText, TextInput} from 'react-native-paper';
 import {useForm, Controller} from 'react-hook-form';
 import {useFocusEffect} from '@react-navigation/native';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import {ScheduleFieldError, ScheduleInput} from '~types';
 import EmptyState from './EmptyState';
-import {ScheduleInput} from '~types';
 
 interface Props {
   autoFocus?: boolean;
   onDiscard: () => void;
   onSubmit: (input: ScheduleInput) => void;
   defaultValues?: ScheduleInput;
+  fieldErrors?: ScheduleFieldError[];
 }
 
 export default function ScheduleForm({
@@ -20,25 +21,32 @@ export default function ScheduleForm({
   onDiscard,
   onSubmit,
   defaultValues,
+  fieldErrors,
 }: Props) {
-  const schema = yup
-    .object({
-      id: yup.string().required(),
-      title: yup
-        .string()
-        .trim()
-        .min(3, ({min}) => `Title must be at least ${min} characters`)
-        .required('Add a Title'),
-    })
-    .required();
+  const schema = useMemo(
+    () =>
+      yup
+        .object({
+          title: yup
+            .string()
+            .trim()
+            .min(3, ({min}) => `Title must be at least ${min} characters`)
+            .max(80, 'Title too long')
+            .required('Add a Title'),
+        })
+        .required(),
+    [],
+  );
 
   const {
     control,
     handleSubmit,
+    setError,
     formState: {errors, touchedFields, isDirty},
   } = useForm<ScheduleInput>({
     defaultValues,
     resolver: yupResolver(schema),
+    reValidateMode: 'onChange',
   });
 
   const handleDiscard = useCallback(() => {
@@ -65,6 +73,12 @@ export default function ScheduleForm({
       return () => subscription.remove();
     }, [isDirty, handleDiscard]),
   );
+
+  useEffect(() => {
+    fieldErrors?.forEach(({name, message}) => {
+      setError(name, {message});
+    });
+  }, [fieldErrors]);
 
   return (
     <View style={styles.container}>

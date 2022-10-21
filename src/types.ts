@@ -37,3 +37,8 @@ export interface ScheduleInput {
   id: string;
   title: string;
 }
+
+export interface ScheduleFieldError {
+  name: keyof ScheduleInput;
+  message: string;
+}
