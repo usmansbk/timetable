@@ -7,6 +7,7 @@ import {
 import {RootStackParamList} from '~types';
 import AppDrawer from './AppDrawer';
 import Settings from './Settings';
+import NewSchedule from './NewSchedule';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -46,6 +47,13 @@ export default function Screens() {
           name="Settings"
           options={{
             title: 'Settings',
+          }}
+        />
+        <Stack.Screen
+          component={NewSchedule}
+          name="NewSchedule"
+          options={{
+            headerShown: false,
           }}
         />
       </Stack.Navigator>

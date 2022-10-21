@@ -46,10 +46,14 @@ function Timetable({navigation}: AppDrawerScreenProps<'Timetable'>) {
             {
               label: 'Create schedule',
               icon: 'calendar-plus',
-              onPress: () => navigation.navigate('Settings'),
+              onPress: () => navigation.navigate('NewSchedule'),
             },
           ]}
           onStateChange={setState}
+          onPress={() => {
+            if (state.open) {
+            }
+          }}
         />
       </Portal>
     </View>

@@ -15,6 +15,7 @@ export type DrawerStackParamList = {
 export type RootStackParamList = {
   AppDrawer: NavigatorScreenParams<DrawerStackParamList>;
   Settings: undefined;
+  NewSchedule: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
