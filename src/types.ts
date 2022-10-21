@@ -1,5 +1,8 @@
 import type {ColorSchemeName} from 'react-native';
-import type {NavigatorScreenParams} from '@react-navigation/native';
+import type {
+  CompositeScreenProps,
+  NavigatorScreenParams,
+} from '@react-navigation/native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {DrawerScreenProps} from '@react-navigation/drawer';
 
@@ -11,13 +14,17 @@ export type DrawerStackParamList = {
 
 export type RootStackParamList = {
   AppDrawer: NavigatorScreenParams<DrawerStackParamList>;
+  Settings: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
   NativeStackScreenProps<RootStackParamList, T>;
 
 export type AppDrawerScreenProps<T extends keyof DrawerStackParamList> =
-  DrawerScreenProps<DrawerStackParamList, T>;
+  CompositeScreenProps<
+    DrawerScreenProps<DrawerStackParamList, T>,
+    RootStackScreenProps<keyof RootStackParamList>
+  >;
 
 declare global {
   namespace ReactNavigation {

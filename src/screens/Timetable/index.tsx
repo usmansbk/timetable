@@ -3,16 +3,18 @@ import {useDrawerStatus} from '@react-navigation/drawer';
 import {StyleSheet, View} from 'react-native';
 import {FAB, Portal} from 'react-native-paper';
 import {AppDrawerScreenProps} from '~types';
+import {useIsFocused} from '@react-navigation/native';
 
-function Timetable({}: AppDrawerScreenProps<'Timetable'>) {
+function Timetable({navigation}: AppDrawerScreenProps<'Timetable'>) {
   const drawerStatus = useDrawerStatus();
+  const isFocused = useIsFocused();
   const [state, setState] = useState({open: false});
 
   return (
     <View style={styles.container}>
       <Portal>
         <FAB.Group
-          visible={drawerStatus === 'closed'}
+          visible={drawerStatus === 'closed' && isFocused}
           open={state.open}
           icon={state.open ? 'calendar-today' : 'plus'}
           actions={[
@@ -24,7 +26,7 @@ function Timetable({}: AppDrawerScreenProps<'Timetable'>) {
             {
               label: 'Create schedule',
               icon: 'calendar-plus',
-              onPress: () => null,
+              onPress: () => navigation.navigate('Settings'),
             },
           ]}
           onStateChange={setState}
