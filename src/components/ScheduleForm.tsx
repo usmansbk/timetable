@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {BackHandler, StyleSheet, View} from 'react-native';
 import {FAB, HelperText, TextInput} from 'react-native-paper';
 import {useForm, Controller} from 'react-hook-form';
@@ -7,6 +7,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import {ScheduleFieldError, ScheduleInput} from '~types';
 import EmptyState from './EmptyState';
+import Confirm from './Confirm';
 
 interface Props {
   autoFocus?: boolean;
@@ -23,6 +24,7 @@ export default function ScheduleForm({
   defaultValues,
   fieldErrors,
 }: Props) {
+  const [confirmVisible, setConfirmVisible] = useState(false);
   const schema = useMemo(
     () =>
       yup
@@ -49,9 +51,13 @@ export default function ScheduleForm({
     reValidateMode: 'onChange',
   });
 
-  const handleDiscard = useCallback(() => {
-    onDiscard();
-  }, [onDiscard]);
+  const onCancel = useCallback(() => {
+    if (isDirty) {
+      setConfirmVisible(true);
+    } else {
+      onDiscard();
+    }
+  }, [onDiscard, isDirty]);
 
   const _onSubmit = handleSubmit(onSubmit);
 
@@ -59,7 +65,7 @@ export default function ScheduleForm({
     useCallback(() => {
       const onBackPress = () => {
         if (isDirty) {
-          handleDiscard();
+          setConfirmVisible(true);
           return true;
         }
         return false;
@@ -71,7 +77,7 @@ export default function ScheduleForm({
       );
 
       return () => subscription.remove();
-    }, [isDirty, handleDiscard]),
+    }, [isDirty]),
   );
 
   useEffect(() => {
@@ -92,7 +98,7 @@ export default function ScheduleForm({
               roundness: 0,
             }}
             placeholder="Title"
-            left={<TextInput.Icon icon="close" onPress={handleDiscard} />}
+            left={<TextInput.Icon icon="close" onPress={onCancel} />}
             right={<TextInput.Icon icon="check" onPress={_onSubmit} />}
             onBlur={onBlur}
             onChangeText={onChange}
@@ -107,6 +113,12 @@ export default function ScheduleForm({
       )}
       <EmptyState title="Add Events" />
       <FAB icon="calendar-today" style={styles.fab} onPress={() => null} />
+      <Confirm
+        visible={confirmVisible}
+        onDismiss={() => setConfirmVisible(false)}
+        title="Discard edit?"
+        onConfirm={onDiscard}
+      />
     </View>
   );
 }
