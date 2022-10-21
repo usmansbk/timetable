@@ -8,7 +8,7 @@ interface Props {
 export default function EmptyState({title}: Props) {
   return (
     <View style={styles.container}>
-      <Text variant="displaySmall">{title}</Text>
+      <Text variant="titleLarge">{title}</Text>
     </View>
   );
 }

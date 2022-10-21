@@ -1,12 +1,14 @@
 import {memo} from 'react';
-import {View} from 'react-native';
-import {Title} from 'react-native-paper';
+import ScheduleForm from '~components/ScheduleForm';
+import {RootStackScreenProps} from '~types';
 
-function NewSchedule() {
+function NewSchedule({navigation}: RootStackScreenProps<'NewSchedule'>) {
   return (
-    <View>
-      <Title>New Schedule</Title>
-    </View>
+    <ScheduleForm
+      autoFocus
+      onDiscard={navigation.goBack}
+      onSubmit={console.log}
+    />
   );
 }
 
