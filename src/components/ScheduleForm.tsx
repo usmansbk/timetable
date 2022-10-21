@@ -34,7 +34,7 @@ export default function ScheduleForm({
   const schema = useMemo(
     () =>
       yup
-        .object({
+        .object<Record<keyof ScheduleInput, yup.AnySchema>>({
           title: yup
             .string()
             .trim()

@@ -35,13 +35,16 @@ export default function EventForm({
   const schema = useMemo(
     () =>
       yup
-        .object({
+        .object<Record<keyof EventInput, yup.AnySchema>>({
           title: yup
             .string()
             .trim()
             .min(3, 'Title too short')
             .max(80, 'Title too long')
             .required('Add a Title'),
+          startDate: yup.string().required(),
+          startTime: yup.string().optional(),
+          endTime: yup.string().optional(),
         })
         .required(),
     [],

@@ -35,6 +35,9 @@ declare global {
 
 export interface EventInput {
   title: string;
+  startDate: string;
+  startTime?: string | null;
+  endTime?: string | null;
 }
 
 export interface ScheduleInput {
