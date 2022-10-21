@@ -32,8 +32,8 @@ export default function ScheduleForm({
           title: yup
             .string()
             .trim()
-            .min(3, ({min}) => `Title must be at least ${min} characters`)
-            .max(80, 'Title too long')
+            .min(3, () => 'Title is too short')
+            .max(80, 'Title is too long')
             .required('Add a Title'),
         })
         .required(),
