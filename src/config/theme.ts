@@ -11,7 +11,10 @@ import {
 } from '@react-navigation/native';
 import deepmarge from 'deepmerge';
 import {AppSchemeName} from '~types';
-import {NavigationTheme} from 'react-native-paper/lib/typescript/types';
+import {
+  MD3Typescale,
+  NavigationTheme,
+} from 'react-native-paper/lib/typescript/types';
 
 const {LightTheme, DarkTheme} = adaptNavigationTheme({
   light: NavigationLightTheme,
@@ -66,7 +69,7 @@ const CommonTheme: Partial<MD3Theme> = {
     labelSmall: {
       fontFamily: 'Inter-ExtraLight',
     },
-  }),
+  } as MD3Typescale),
 };
 
 type Theme = MD3Theme & NavigationTheme;
