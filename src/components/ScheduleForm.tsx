@@ -5,16 +5,17 @@ import {useForm, Controller} from 'react-hook-form';
 import {useFocusEffect} from '@react-navigation/native';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import {ScheduleFieldError, ScheduleInput} from '~types';
+import {FieldError, ScheduleInput} from '~types';
 import EmptyState from './EmptyState';
 import Confirm from './Confirm';
+import EventForm from './EventForm';
 
 interface Props {
   autoFocus?: boolean;
   onDiscard: () => void;
   onSubmit: (input: ScheduleInput) => void;
   defaultValues?: ScheduleInput;
-  fieldErrors?: ScheduleFieldError[];
+  fieldErrors?: FieldError<ScheduleInput>[];
 }
 
 export default function ScheduleForm({
@@ -25,6 +26,11 @@ export default function ScheduleForm({
   fieldErrors,
 }: Props) {
   const [confirmVisible, setConfirmVisible] = useState(false);
+  const [addEventVisible, setAddEventVisible] = useState(false);
+
+  const closeConfirmDialog = useCallback(() => setConfirmVisible(false), []);
+  const closeAddEventForm = useCallback(() => setAddEventVisible(false), []);
+
   const schema = useMemo(
     () =>
       yup
@@ -32,8 +38,8 @@ export default function ScheduleForm({
           title: yup
             .string()
             .trim()
-            .min(3, () => 'Title is too short')
-            .max(80, 'Title is too long')
+            .min(3, () => 'Title too short')
+            .max(80, 'Title too long')
             .required('Add a Title'),
         })
         .required(),
@@ -59,7 +65,7 @@ export default function ScheduleForm({
     }
   }, [onDiscard, isDirty]);
 
-  const _onSubmit = handleSubmit(onSubmit);
+  const _onSubmit = handleSubmit(values => onSubmit(values));
 
   useFocusEffect(
     useCallback(() => {
@@ -112,10 +118,20 @@ export default function ScheduleForm({
         </HelperText>
       )}
       <EmptyState title="Add Events" />
-      <FAB icon="calendar-today" style={styles.fab} onPress={() => null} />
+      <FAB
+        icon="calendar-today"
+        style={styles.fab}
+        onPress={() => setAddEventVisible(true)}
+      />
+      <EventForm
+        autoFocus
+        visible={addEventVisible}
+        onDiscard={closeAddEventForm}
+        onSubmit={console.log}
+      />
       <Confirm
         visible={confirmVisible}
-        onDismiss={() => setConfirmVisible(false)}
+        onDismiss={closeConfirmDialog}
         title="Discard edit?"
         onConfirm={onDiscard}
       />
