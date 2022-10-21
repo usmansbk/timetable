@@ -5,11 +5,14 @@ import {FAB, Portal} from 'react-native-paper';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import {AppDrawerScreenProps} from '~types';
 import AgendaList from '~components/AgendaList';
+import AddNewEvent from './AddNewEvent';
 
 function Timetable({navigation}: AppDrawerScreenProps<'Timetable'>) {
   const drawerStatus = useDrawerStatus();
   const isFocused = useIsFocused();
   const [state, setState] = useState({open: false});
+  const [openAddEvent, setOpenAddEvent] = useState(false);
+  const closeAddEventForm = useCallback(() => setOpenAddEvent(false), []);
 
   useFocusEffect(
     useCallback(() => {
@@ -54,10 +57,12 @@ function Timetable({navigation}: AppDrawerScreenProps<'Timetable'>) {
           onStateChange={setState}
           onPress={() => {
             if (state.open) {
+              setOpenAddEvent(true);
             }
           }}
         />
       </Portal>
+      <AddNewEvent visible={openAddEvent} onDismiss={closeAddEventForm} />
     </View>
   );
 }
