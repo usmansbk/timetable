@@ -1,7 +1,7 @@
 import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import Home from './Home';
+import AppDrawer from './AppDrawer';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,8 +15,14 @@ export default function Screens() {
         backgroundColor={colors.primary}
         barStyle={dark ? 'dark-content' : 'light-content'}
       />
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen component={Home} name="Home" />
+      <Stack.Navigator initialRouteName="AppDrawer">
+        <Stack.Screen
+          component={AppDrawer}
+          name="AppDrawer"
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack.Navigator>
     </SafeAreaView>
   );
