@@ -28,17 +28,20 @@ export default function ScheduleForm({
 }: Props) {
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [addEventVisible, setAddEventVisible] = useState(false);
-  const [editEventVisible, setEditEventVisible] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
   const onPressItem = useCallback((_item: EventInput, index: number) => {
     setEditIndex(index);
-    setEditEventVisible(true);
   }, []);
 
   const closeConfirmDialog = useCallback(() => setConfirmVisible(false), []);
   const closeAddEventForm = useCallback(() => setAddEventVisible(false), []);
-  const closeEditEventForm = useCallback(() => setEditEventVisible(false), []);
+  const closeEditEventForm = useCallback(() => setEditIndex(null), []);
+
+  const onPressDuplicate = useCallback(
+    () => setAddEventVisible(true),
+    [editIndex],
+  );
 
   const schema = useMemo(
     () =>
@@ -75,10 +78,19 @@ export default function ScheduleForm({
     keyName: '_id',
   });
 
+  const onAddItem = useCallback(
+    (input: EventInput) => {
+      append(input);
+      closeAddEventForm();
+      closeEditEventForm();
+    },
+    [append],
+  );
+
   const onRemoveItem = useCallback(() => {
     if (editIndex !== null) {
       remove(editIndex);
-      setEditIndex(null);
+      closeEditEventForm();
     }
   }, [remove, editIndex]);
 
@@ -86,7 +98,7 @@ export default function ScheduleForm({
     (input: EventInput) => {
       if (editIndex !== null) {
         update(editIndex, input);
-        setEditIndex(null);
+        closeEditEventForm();
       }
     },
     [update, editIndex],
@@ -169,18 +181,21 @@ export default function ScheduleForm({
         onPress={() => setAddEventVisible(true)}
       />
       <EventForm
-        autoFocus
-        blurOnSubmit={false}
-        visible={addEventVisible}
-        onDismiss={closeAddEventForm}
-        onSubmit={append}
-      />
-      <EventForm
         title="Edit"
-        visible={editEventVisible}
+        visible={editIndex !== null}
         onDismiss={closeEditEventForm}
         onSubmit={onUpdateItem}
         onDiscard={onRemoveItem}
+        defaultValues={editItem}
+        onPressDuplicate={onPressDuplicate}
+      />
+      <EventForm
+        autoFocus
+        title={editItem ? 'Copy' : undefined}
+        resetOnSubmit={!editItem}
+        visible={addEventVisible}
+        onDismiss={closeAddEventForm}
+        onSubmit={onAddItem}
         defaultValues={editItem}
       />
       <Confirm

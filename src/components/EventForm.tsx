@@ -22,9 +22,10 @@ interface Props {
   onDismiss: () => void;
   onSubmit: (input: EventInput) => void;
   onDiscard?: () => void;
+  onPressDuplicate?: () => void;
   title?: string;
   defaultValues?: EventInput;
-  blurOnSubmit?: boolean;
+  resetOnSubmit?: boolean;
 }
 
 function EventForm({
@@ -33,9 +34,10 @@ function EventForm({
   onDismiss,
   onSubmit,
   onDiscard,
+  onPressDuplicate,
   title,
   defaultValues,
-  blurOnSubmit = true,
+  resetOnSubmit,
 }: Props) {
   const {colors} = useTheme();
   const [confirmVisible, setConfirmVisible] = useState(false);
@@ -81,9 +83,7 @@ function EventForm({
 
   const _onSubmit = handleSubmit(values => {
     onSubmit(values);
-    if (blurOnSubmit) {
-      onDismiss();
-    } else {
+    if (resetOnSubmit) {
       handleReset();
     }
   });
@@ -112,6 +112,9 @@ function EventForm({
           <Appbar.Header>
             <Appbar.Action icon="close" onPress={onDismiss} />
             <Appbar.Content title={title} />
+            {!!onPressDuplicate && (
+              <Appbar.Action icon="content-copy" onPress={onPressDuplicate} />
+            )}
             {!!onDiscard && (
               <Appbar.Action
                 icon="trash-can-outline"
