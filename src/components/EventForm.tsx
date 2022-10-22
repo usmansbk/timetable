@@ -101,10 +101,7 @@ function EventForm({
 
   return (
     <Portal>
-      <Modal
-        visible={visible}
-        onDismiss={onDismiss}
-        contentContainerStyle={styles.contentContainer}>
+      <Modal visible={visible} onDismiss={onDismiss} style={styles.container}>
         <View
           style={{
             backgroundColor: colors.background,
@@ -201,8 +198,7 @@ function EventForm({
 export default memo(EventForm);
 
 const styles = StyleSheet.create({
-  contentContainer: {
-    flex: 1,
+  container: {
     justifyContent: 'flex-end',
   },
   row: {
