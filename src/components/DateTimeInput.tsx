@@ -55,12 +55,12 @@ function DateTimeInput({label, mode, optional, onChange, value}: Props) {
           mode={mode}
           value={parsedValue}
           onChange={(e, date) => {
+            setOpen(false);
             if (e.type === 'set' && date) {
               onChange(
                 mode === 'date' ? formatToUTCdate(date) : formatToUTCtime(date),
               );
             }
-            setOpen(false);
           }}
         />
       )}
