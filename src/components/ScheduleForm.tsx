@@ -75,7 +75,7 @@ export default function ScheduleForm({
   const {fields, append, update, remove} = useFieldArray({
     control,
     name: 'events',
-    keyName: '_id',
+    keyName: 'key',
   });
 
   const onAddItem = useCallback(
