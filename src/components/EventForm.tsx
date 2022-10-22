@@ -7,7 +7,7 @@ import {
   TextInput,
   useTheme,
 } from 'react-native-paper';
-import {useMemo} from 'react';
+import {useEffect, useMemo} from 'react';
 import {useForm, Controller} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -55,12 +55,19 @@ export default function EventForm({
     control,
     handleSubmit,
     formState: {errors, touchedFields},
+    reset,
   } = useForm<EventInput>({
     defaultValues,
     resolver: yupResolver(schema),
   });
 
   const _onSubmit = handleSubmit(values => onSubmit(values));
+
+  useEffect(() => {
+    if (!visible) {
+      reset(defaultValues);
+    }
+  }, [visible, defaultValues]);
 
   return (
     <Portal>
@@ -83,7 +90,8 @@ export default function EventForm({
             render={({field: {onBlur, onChange, value}}) => (
               <TextInput
                 autoFocus={autoFocus}
-                placeholder="Title"
+                label="Title"
+                placeholder={defaultValues?.title}
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
