@@ -52,6 +52,7 @@ function DateTimeInput({label, mode, optional, onChange, value}: Props) {
       </TouchableRipple>
       {open && (
         <DateTimePicker
+          minimumDate={new Date()}
           mode={mode}
           value={parsedValue}
           onChange={(e, date) => {
