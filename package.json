@@ -1,5 +1,5 @@
 {
-  "name": "Timetable",
+  "name": "timetable",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -7,11 +7,27 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "prepare": "husky install"
   },
   "dependencies": {
+    "@hookform/resolvers": "^2.9.10",
+    "@react-native-community/datetimepicker": "^6.5.2",
+    "@react-navigation/drawer": "^6.5.0",
+    "@react-navigation/native": "^6.0.13",
+    "@react-navigation/native-stack": "^6.9.1",
+    "dayjs": "^1.11.6",
+    "deepmerge": "^4.2.2",
     "react": "18.1.0",
-    "react-native": "0.70.3"
+    "react-hook-form": "^7.38.0",
+    "react-native": "0.70.3",
+    "react-native-gesture-handler": "^2.7.1",
+    "react-native-paper": "5.0.0-rc.8",
+    "react-native-reanimated": "^2.11.0",
+    "react-native-safe-area-context": "^4.4.1",
+    "react-native-screens": "^3.18.2",
+    "react-native-vector-icons": "^9.2.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
@@ -21,13 +37,25 @@
     "@types/jest": "^26.0.23",
     "@types/react": "^18.0.21",
     "@types/react-native": "^0.70.4",
+    "@types/react-native-vector-icons": "^6.4.12",
     "@types/react-test-renderer": "^18.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.37.0",
-    "@typescript-eslint/parser": "^5.37.0",
+    "@typescript-eslint/eslint-plugin": "^5.40.1",
+    "@typescript-eslint/parser": "^5.40.1",
     "babel-jest": "^26.6.3",
-    "eslint": "^7.32.0",
+    "babel-plugin-module-resolver": "^4.1.0",
+    "eslint": "^7.32.0 || ^8.2.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "husky": "^8.0.1",
     "jest": "^26.6.3",
+    "lint-staged": "^13.0.3",
     "metro-react-native-babel-preset": "0.72.3",
+    "prettier": "2.7.1",
     "react-test-renderer": "18.1.0",
     "typescript": "^4.8.3"
   },
@@ -41,5 +69,8 @@
       "json",
       "node"
     ]
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
   }
 }
