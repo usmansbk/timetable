@@ -12,6 +12,7 @@ import {useForm, Controller} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import {EventInput} from '~types';
+import {formatToUTCdate} from '~utils/date';
 import DateTimeInput from './DateTimeInput';
 
 interface Props {
@@ -57,15 +58,22 @@ export default function EventForm({
     formState: {errors, touchedFields},
     reset,
   } = useForm<EventInput>({
-    defaultValues,
     resolver: yupResolver(schema),
   });
 
   const _onSubmit = handleSubmit(values => onSubmit(values));
 
   useEffect(() => {
-    if (!visible) {
-      reset(defaultValues);
+    if (visible) {
+      reset(
+        Object.assign(
+          {
+            title: '',
+            startDate: formatToUTCdate(new Date()),
+          },
+          defaultValues,
+        ),
+      );
     }
   }, [visible, defaultValues]);
 
@@ -152,12 +160,6 @@ export default function EventForm({
     </Portal>
   );
 }
-
-EventForm.defaultProps = {
-  defualtValues: {
-    title: '',
-  } as EventInput,
-};
 
 const styles = StyleSheet.create({
   contentContainer: {
