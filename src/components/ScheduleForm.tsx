@@ -156,7 +156,7 @@ export default function ScheduleForm({
             theme={{
               roundness: 0,
             }}
-            placeholder="Title"
+            placeholder="Add title"
             left={<TextInput.Icon icon="close" onPress={onCancel} />}
             right={<TextInput.Icon icon="check" onPress={onSubmitForm} />}
             onBlur={onBlur}
