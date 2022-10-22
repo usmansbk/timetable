@@ -1,18 +1,22 @@
 import {memo} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Title} from 'react-native-paper';
+import {Title, TouchableRipple} from 'react-native-paper';
 import {EventInput} from '~types';
 
 interface Props {
   item: EventInput;
+  onPress: () => void;
 }
 
-function AgendaItem({item}: Props) {
+function AgendaItem({item, onPress}: Props) {
   const {title} = item;
+
   return (
-    <View style={styles.container}>
-      <Title>{title}</Title>
-    </View>
+    <TouchableRipple onPress={onPress}>
+      <View style={styles.container}>
+        <Title>{title}</Title>
+      </View>
+    </TouchableRipple>
   );
 }
 

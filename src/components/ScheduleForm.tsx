@@ -5,7 +5,7 @@ import {useForm, Controller, useFieldArray} from 'react-hook-form';
 import {useFocusEffect} from '@react-navigation/native';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import {FieldError, ScheduleInput} from '~types';
+import {EventInput, FieldError, ScheduleInput} from '~types';
 import EmptyState from './EmptyState';
 import Confirm from './Confirm';
 import EventForm from './EventForm';
@@ -28,9 +28,17 @@ export default function ScheduleForm({
 }: Props) {
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [addEventVisible, setAddEventVisible] = useState(false);
+  const [editEventVisible, setEditEventVisible] = useState(false);
+  const [editIndex, setEditIndex] = useState<number | null>(null);
+
+  const onPressItem = useCallback((_item: EventInput, index: number) => {
+    setEditIndex(index);
+    setEditEventVisible(true);
+  }, []);
 
   const closeConfirmDialog = useCallback(() => setConfirmVisible(false), []);
   const closeAddEventForm = useCallback(() => setAddEventVisible(false), []);
+  const closeEditEventForm = useCallback(() => setEditEventVisible(false), []);
 
   const schema = useMemo(
     () =>
@@ -59,11 +67,23 @@ export default function ScheduleForm({
     reValidateMode: 'onChange',
   });
 
-  const {fields, append} = useFieldArray({
+  const onSubmitForm = handleSubmit(values => onSubmit(values));
+
+  const {fields, append, update} = useFieldArray({
     control,
     name: 'events',
     keyName: '_id',
   });
+
+  const onUpdateItem = useCallback(
+    (input: EventInput) => {
+      if (editIndex !== null) {
+        update(editIndex, input);
+        setEditIndex(null);
+      }
+    },
+    [update, editIndex],
+  );
 
   const onCancel = useCallback(() => {
     if (isDirty) {
@@ -72,14 +92,6 @@ export default function ScheduleForm({
       onDiscard();
     }
   }, [onDiscard, isDirty]);
-
-  const _onSubmit = handleSubmit(values => onSubmit(values));
-
-  useEffect(() => {
-    if (!!errors.events) {
-      setAddEventVisible(true);
-    }
-  }, [errors]);
 
   useFocusEffect(
     useCallback(() => {
@@ -101,10 +113,18 @@ export default function ScheduleForm({
   );
 
   useEffect(() => {
+    if (!!errors.events && Object.keys(errors).length === 1) {
+      setAddEventVisible(true);
+    }
+  }, [errors]);
+
+  useEffect(() => {
     fieldErrors?.forEach(({name, message}) => {
       setError(name, {message});
     });
   }, [fieldErrors]);
+
+  const editItem = editIndex !== null ? fields[editIndex] : undefined;
 
   return (
     <View style={styles.container}>
@@ -119,7 +139,7 @@ export default function ScheduleForm({
             }}
             placeholder="Title"
             left={<TextInput.Icon icon="close" onPress={onCancel} />}
-            right={<TextInput.Icon icon="check" onPress={_onSubmit} />}
+            right={<TextInput.Icon icon="check" onPress={onSubmitForm} />}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
@@ -134,6 +154,7 @@ export default function ScheduleForm({
       <AgendaList
         items={fields}
         ListEmptyComponent={<EmptyState title="Add Events" />}
+        onPressItem={onPressItem}
       />
       <FAB
         icon="calendar-today"
@@ -145,6 +166,13 @@ export default function ScheduleForm({
         visible={addEventVisible}
         onDismiss={closeAddEventForm}
         onSubmit={append}
+      />
+      <EventForm
+        title="Edit"
+        visible={editEventVisible}
+        onDismiss={closeEditEventForm}
+        onSubmit={onUpdateItem}
+        defaultValues={editItem}
       />
       <Confirm
         visible={confirmVisible}
