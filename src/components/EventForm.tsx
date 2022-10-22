@@ -7,7 +7,7 @@ import {
   TextInput,
   useTheme,
 } from 'react-native-paper';
-import {useEffect, useMemo} from 'react';
+import {memo, useEffect, useMemo} from 'react';
 import {useForm, Controller} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -18,16 +18,16 @@ import DateTimeInput from './DateTimeInput';
 interface Props {
   autoFocus?: boolean;
   visible: boolean;
-  onDiscard: () => void;
+  onDismiss: () => void;
   onSubmit: (input: EventInput) => void;
   title?: string;
   defaultValues?: EventInput;
 }
 
-export default function EventForm({
+function EventForm({
   visible,
   autoFocus,
-  onDiscard,
+  onDismiss,
   onSubmit,
   title,
   defaultValues,
@@ -61,7 +61,10 @@ export default function EventForm({
     resolver: yupResolver(schema),
   });
 
-  const _onSubmit = handleSubmit(values => onSubmit(values));
+  const _onSubmit = handleSubmit(values => {
+    onSubmit(values);
+    onDismiss();
+  });
 
   useEffect(() => {
     if (visible) {
@@ -81,14 +84,14 @@ export default function EventForm({
     <Portal>
       <Modal
         visible={visible}
-        onDismiss={onDiscard}
+        onDismiss={onDismiss}
         contentContainerStyle={styles.contentContainer}>
         <View
           style={{
             backgroundColor: colors.background,
           }}>
           <Appbar.Header>
-            <Appbar.Action icon="close" onPress={onDiscard} />
+            <Appbar.Action icon="close" onPress={onDismiss} />
             <Appbar.Content title={title} />
             <Appbar.Action icon="check" onPress={_onSubmit} />
           </Appbar.Header>
@@ -160,6 +163,8 @@ export default function EventForm({
     </Portal>
   );
 }
+
+export default memo(EventForm);
 
 const styles = StyleSheet.create({
   contentContainer: {

@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {BackHandler, StyleSheet, View} from 'react-native';
 import {FAB, HelperText, TextInput} from 'react-native-paper';
-import {useForm, Controller} from 'react-hook-form';
+import {useForm, Controller, useFieldArray} from 'react-hook-form';
 import {useFocusEffect} from '@react-navigation/native';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -9,6 +9,7 @@ import {FieldError, ScheduleInput} from '~types';
 import EmptyState from './EmptyState';
 import Confirm from './Confirm';
 import EventForm from './EventForm';
+import AgendaList from './AgendaList';
 
 interface Props {
   autoFocus?: boolean;
@@ -58,6 +59,12 @@ export default function ScheduleForm({
     reValidateMode: 'onChange',
   });
 
+  const {fields, append} = useFieldArray({
+    control,
+    name: 'events',
+    keyName: '_id',
+  });
+
   const onCancel = useCallback(() => {
     if (isDirty) {
       setConfirmVisible(true);
@@ -67,6 +74,12 @@ export default function ScheduleForm({
   }, [onDiscard, isDirty]);
 
   const _onSubmit = handleSubmit(values => onSubmit(values));
+
+  useEffect(() => {
+    if (!!errors.events) {
+      setAddEventVisible(true);
+    }
+  }, [errors]);
 
   useFocusEffect(
     useCallback(() => {
@@ -118,7 +131,10 @@ export default function ScheduleForm({
           {errors.title.message}
         </HelperText>
       )}
-      <EmptyState title="Add Events" />
+      <AgendaList
+        items={fields}
+        ListEmptyComponent={<EmptyState title="Add Events" />}
+      />
       <FAB
         icon="calendar-today"
         style={styles.fab}
@@ -127,8 +143,8 @@ export default function ScheduleForm({
       <EventForm
         autoFocus
         visible={addEventVisible}
-        onDiscard={closeAddEventForm}
-        onSubmit={console.log}
+        onDismiss={closeAddEventForm}
+        onSubmit={append}
       />
       <Confirm
         visible={confirmVisible}

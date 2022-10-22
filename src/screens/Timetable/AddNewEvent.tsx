@@ -11,7 +11,7 @@ function AddNewEvent({visible, onDismiss}: Props) {
     <EventForm
       autoFocus
       visible={visible}
-      onDiscard={onDismiss}
+      onDismiss={onDismiss}
       onSubmit={console.log}
     />
   );
