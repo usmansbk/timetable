@@ -16,6 +16,7 @@
     "@react-navigation/drawer": "^6.5.0",
     "@react-navigation/native": "^6.0.13",
     "@react-navigation/native-stack": "^6.9.1",
+    "dayjs": "^1.11.6",
     "deepmerge": "^4.2.2",
     "react": "18.1.0",
     "react-hook-form": "^7.38.0",

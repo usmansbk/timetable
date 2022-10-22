@@ -1,6 +1,14 @@
 import {TextInput, TouchableRipple} from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {useState} from 'react';
+import {memo, useState} from 'react';
+import {
+  formatToLocalDate,
+  formatToLocalTime,
+  formatToUTCdate,
+  formatToUTCtime,
+  parseDate,
+  parseTime,
+} from '~utils/date';
 
 interface Props {
   optional?: boolean;
@@ -10,14 +18,20 @@ interface Props {
   onChange: (value: string | null) => void;
 }
 
-export default function DateTimeInput({
-  label,
-  mode,
-  optional,
-  onChange,
-  value,
-}: Props) {
+function DateTimeInput({label, mode, optional, onChange, value}: Props) {
   const [open, setOpen] = useState(false);
+
+  let formattedValue;
+  let parsedValue;
+
+  if (value) {
+    formattedValue =
+      mode === 'date' ? formatToLocalDate(value) : formatToLocalTime(value);
+    parsedValue = mode === 'date' ? parseDate(value) : parseTime(value);
+  } else {
+    formattedValue = '';
+    parsedValue = new Date();
+  }
 
   return (
     <>
@@ -26,7 +40,7 @@ export default function DateTimeInput({
           theme={{
             roundness: 0,
           }}
-          value={value || ''}
+          value={formattedValue}
           editable={false}
           label={label}
           right={
@@ -39,10 +53,12 @@ export default function DateTimeInput({
       {open && (
         <DateTimePicker
           mode={mode}
-          value={new Date()}
+          value={parsedValue}
           onChange={(e, date) => {
             if (e.type === 'set' && date) {
-              onChange(date.toISOString());
+              onChange(
+                mode === 'date' ? formatToUTCdate(date) : formatToUTCtime(date),
+              );
             }
             setOpen(false);
           }}
@@ -51,3 +67,5 @@ export default function DateTimeInput({
     </>
   );
 }
+
+export default memo(DateTimeInput);
