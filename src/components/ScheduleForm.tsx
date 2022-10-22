@@ -69,11 +69,18 @@ export default function ScheduleForm({
 
   const onSubmitForm = handleSubmit(values => onSubmit(values));
 
-  const {fields, append, update} = useFieldArray({
+  const {fields, append, update, remove} = useFieldArray({
     control,
     name: 'events',
     keyName: '_id',
   });
+
+  const onRemoveItem = useCallback(() => {
+    if (editIndex !== null) {
+      remove(editIndex);
+      setEditIndex(null);
+    }
+  }, [remove, editIndex]);
 
   const onUpdateItem = useCallback(
     (input: EventInput) => {
@@ -173,6 +180,7 @@ export default function ScheduleForm({
         visible={editEventVisible}
         onDismiss={closeEditEventForm}
         onSubmit={onUpdateItem}
+        onDiscard={onRemoveItem}
         defaultValues={editItem}
       />
       <Confirm

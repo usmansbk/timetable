@@ -7,19 +7,21 @@ import {
   TextInput,
   useTheme,
 } from 'react-native-paper';
-import {memo, useCallback, useEffect, useMemo} from 'react';
+import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useForm, Controller} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import {EventInput} from '~types';
 import {formatToUTCdate} from '~utils/date';
 import DateTimeInput from './DateTimeInput';
+import Confirm from './Confirm';
 
 interface Props {
   autoFocus?: boolean;
   visible: boolean;
   onDismiss: () => void;
   onSubmit: (input: EventInput) => void;
+  onDiscard?: () => void;
   title?: string;
   defaultValues?: EventInput;
   blurOnSubmit?: boolean;
@@ -30,11 +32,13 @@ function EventForm({
   autoFocus,
   onDismiss,
   onSubmit,
+  onDiscard,
   title,
   defaultValues,
   blurOnSubmit = true,
 }: Props) {
   const {colors} = useTheme();
+  const [confirmVisible, setConfirmVisible] = useState(false);
 
   const schema = useMemo(
     () =>
@@ -84,6 +88,11 @@ function EventForm({
     }
   });
 
+  const handleDiscard = useCallback(() => {
+    onDiscard?.();
+    onDismiss();
+  }, [onDiscard, onDismiss]);
+
   useEffect(() => {
     if (visible) {
       handleReset();
@@ -103,6 +112,12 @@ function EventForm({
           <Appbar.Header>
             <Appbar.Action icon="close" onPress={onDismiss} />
             <Appbar.Content title={title} />
+            {!!onDiscard && (
+              <Appbar.Action
+                icon="trash-can-outline"
+                onPress={() => setConfirmVisible(true)}
+              />
+            )}
             <Appbar.Action icon="check" onPress={_onSubmit} />
           </Appbar.Header>
           <Controller
@@ -170,6 +185,12 @@ function EventForm({
           </View>
         </View>
       </Modal>
+      <Confirm
+        title="Discard?"
+        visible={confirmVisible}
+        onConfirm={handleDiscard}
+        onDismiss={() => setConfirmVisible(false)}
+      />
     </Portal>
   );
 }
