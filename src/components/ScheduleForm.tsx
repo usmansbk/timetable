@@ -163,6 +163,7 @@ export default function ScheduleForm({
       />
       <EventForm
         autoFocus
+        blurOnSubmit={false}
         visible={addEventVisible}
         onDismiss={closeAddEventForm}
         onSubmit={append}

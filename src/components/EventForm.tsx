@@ -7,7 +7,7 @@ import {
   TextInput,
   useTheme,
 } from 'react-native-paper';
-import {memo, useEffect, useMemo} from 'react';
+import {memo, useCallback, useEffect, useMemo} from 'react';
 import {useForm, Controller} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -22,6 +22,7 @@ interface Props {
   onSubmit: (input: EventInput) => void;
   title?: string;
   defaultValues?: EventInput;
+  blurOnSubmit?: boolean;
 }
 
 function EventForm({
@@ -31,6 +32,7 @@ function EventForm({
   onSubmit,
   title,
   defaultValues,
+  blurOnSubmit = true,
 }: Props) {
   const {colors} = useTheme();
 
@@ -61,24 +63,32 @@ function EventForm({
     resolver: yupResolver(schema),
   });
 
+  const handleReset = useCallback(() => {
+    reset(
+      Object.assign(
+        {
+          title: '',
+          startDate: formatToUTCdate(new Date()),
+        },
+        defaultValues,
+      ),
+    );
+  }, [reset, defaultValues]);
+
   const _onSubmit = handleSubmit(values => {
     onSubmit(values);
-    onDismiss();
+    if (blurOnSubmit) {
+      onDismiss();
+    } else {
+      handleReset();
+    }
   });
 
   useEffect(() => {
     if (visible) {
-      reset(
-        Object.assign(
-          {
-            title: '',
-            startDate: formatToUTCdate(new Date()),
-          },
-          defaultValues,
-        ),
-      );
+      handleReset();
     }
-  }, [visible, defaultValues]);
+  }, [visible, handleReset]);
 
   return (
     <Portal>
