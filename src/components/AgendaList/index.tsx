@@ -4,15 +4,19 @@ import EmptyState from '~components/EmptyState';
 import {EventInput} from '~types';
 import AgendaItem from './AgendaItem';
 
-interface Props {
-  items: EventInput[];
-  onPressItem: (item: EventInput, index: number) => void;
-  ListEmptyComponent?: FlatListProps<EventInput>['ListEmptyComponent'];
+interface Props<T extends EventInput> {
+  items: T[];
+  onPressItem: (item: T, index: number) => void;
+  ListEmptyComponent?: FlatListProps<T>['ListEmptyComponent'];
 }
 
-function AgendaList({items, ListEmptyComponent, onPressItem}: Props) {
+function AgendaList<T extends EventInput>({
+  items,
+  ListEmptyComponent,
+  onPressItem,
+}: Props<T>) {
   const handlePress = useCallback(
-    (item: EventInput, index: number) => () => onPressItem(item, index),
+    (item: T, index: number) => () => onPressItem(item, index),
     [],
   );
 
