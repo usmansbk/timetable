@@ -186,7 +186,7 @@ function EventForm({
         </View>
       </Modal>
       <Confirm
-        title="Discard?"
+        title="Delete?"
         visible={confirmVisible}
         onConfirm={handleDiscard}
         onDismiss={() => setConfirmVisible(false)}
