@@ -5,6 +5,7 @@ import {useForm, Controller, useFieldArray} from 'react-hook-form';
 import {useFocusEffect} from '@react-navigation/native';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import {nanoid} from '@reduxjs/toolkit';
 import {EventInput, FieldError, ScheduleInput} from '~types';
 import EmptyState from './EmptyState';
 import Confirm from './Confirm';
@@ -47,6 +48,7 @@ export default function ScheduleForm({
     () =>
       yup
         .object<Record<keyof ScheduleInput, yup.AnySchema>>({
+          id: yup.string().default(() => nanoid()),
           title: yup
             .string()
             .trim()
@@ -212,7 +214,7 @@ ScheduleForm.defaultProps = {
   defaultValues: {
     title: '',
     events: [],
-  } as ScheduleInput,
+  } as Partial<ScheduleInput>,
 };
 
 const styles = StyleSheet.create({

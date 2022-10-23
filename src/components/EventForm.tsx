@@ -11,6 +11,7 @@ import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useForm, Controller} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import {nanoid} from '@reduxjs/toolkit';
 import {EventInput} from '~types';
 import {formatToUTCdate} from '~utils/date';
 import DateTimeInput from './DateTimeInput';
@@ -46,6 +47,7 @@ function EventForm({
     () =>
       yup
         .object<Record<keyof EventInput, yup.AnySchema>>({
+          id: yup.string().default(() => nanoid()),
           title: yup
             .string()
             .trim()
