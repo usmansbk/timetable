@@ -2,12 +2,12 @@ import {TextInput, TouchableRipple} from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {memo, useState} from 'react';
 import {
-  formatToLocalDate,
-  formatToLocalTime,
+  formatUTCToLocalDate,
+  formatUTCToLocalTime,
   formatToUTCdate,
   formatToUTCtime,
-  parseDate,
-  parseTime,
+  parseUTCDate,
+  parseUTCTime,
 } from '~utils/date';
 
 interface Props {
@@ -26,8 +26,10 @@ function DateTimeInput({label, mode, optional, onChange, value}: Props) {
 
   if (value) {
     formattedValue =
-      mode === 'date' ? formatToLocalDate(value) : formatToLocalTime(value);
-    parsedValue = mode === 'date' ? parseDate(value) : parseTime(value);
+      mode === 'date'
+        ? formatUTCToLocalDate(value)
+        : formatUTCToLocalTime(value);
+    parsedValue = mode === 'date' ? parseUTCDate(value) : parseUTCTime(value);
   } else {
     formattedValue = '';
     parsedValue = new Date();
