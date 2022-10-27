@@ -16,22 +16,22 @@ export function formatToUTCtime(date: Date) {
   return dayjs(date).utc().format(UTC_TIME_FORMAT);
 }
 
-export function formatUTCToLocalDate(
+export function formatUTCtoLocalDate(
   date: string,
   format = 'ddd, DD MMM YYYY',
 ) {
   return dayjs.utc(date, UTC_DATE_FORMAT).local().format(format);
 }
 
-export function formatUTCToLocalTime(date: string, format = 'HH:mm') {
+export function formatUTCtoLocalTime(date: string, format = 'HH:mm') {
   return dayjs.utc(date, UTC_TIME_FORMAT).local().format(format);
 }
 
-export function parseUTCDate(date: string) {
+export function parseUTCdate(date: string) {
   return dayjs.utc(date, UTC_DATE_FORMAT).toDate();
 }
 
-export function parseUTCTime(time: string) {
+export function parseUTCtime(time: string) {
   return dayjs.utc(time, UTC_TIME_FORMAT).toDate();
 }
 
