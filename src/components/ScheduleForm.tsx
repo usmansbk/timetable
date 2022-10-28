@@ -66,8 +66,8 @@ export default function ScheduleForm({
     handleSubmit,
     setError,
     formState: {errors, touchedFields, isDirty},
+    reset,
   } = useForm<ScheduleInput>({
-    defaultValues,
     resolver: yupResolver(schema),
     reValidateMode: 'onChange',
   });
@@ -132,6 +132,10 @@ export default function ScheduleForm({
       return () => subscription.remove();
     }, [isDirty]),
   );
+
+  useEffect(() => {
+    reset(defaultValues);
+  }, [defaultValues]);
 
   useEffect(() => {
     if (!!errors.events && Object.keys(errors).length === 1) {
