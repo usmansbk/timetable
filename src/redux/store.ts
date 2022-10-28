@@ -1,9 +1,9 @@
 import {configureStore} from '@reduxjs/toolkit';
-import schedulesReducer from './schedules/schedulesSlice';
+import timetableReducer from './timetable/timetableSlice';
 
 const store = configureStore({
   reducer: {
-    schedules: schedulesReducer,
+    timetable: timetableReducer,
   },
 });
 
