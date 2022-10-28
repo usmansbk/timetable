@@ -3,6 +3,7 @@ import {
   createEntityAdapter,
   EntityId,
   EntityState,
+  PayloadAction,
 } from '@reduxjs/toolkit';
 import {EventInput, ScheduleInput} from '~types';
 import type {RootState} from '../store';
@@ -17,7 +18,7 @@ interface EventEntity extends Omit<EventInput, 'id'> {
   scheduleId: EntityId;
 }
 
-interface State {
+interface TimetableState {
   schedules: EntityState<ScheduleEntity>;
   events: EntityState<EventEntity>;
 }
@@ -25,7 +26,7 @@ interface State {
 const schedulesAdapter = createEntityAdapter<ScheduleEntity>();
 const eventsAdapter = createEntityAdapter<EventEntity>();
 
-const initialState: State = {
+const initialState: TimetableState = {
   schedules: schedulesAdapter.getInitialState(),
   events: eventsAdapter.getInitialState(),
 };
@@ -34,12 +35,22 @@ const schedulesSlice = createSlice({
   name: 'schedules',
   initialState,
   reducers: {
-    addSchedule(state, action) {},
-    removeSchedule(state, action) {},
-    updateSchedule(state, action) {},
-    addEvent(state, action) {},
-    removeEvent(state, action) {},
-    updateEvent(state, action) {},
+    addSchedule: {
+      reducer(state, action: PayloadAction<ScheduleInput>) {},
+      prepare(payload) {
+        return payload;
+      },
+    },
+    removeSchedule(state, action: PayloadAction<EntityId>) {},
+    updateSchedule: {
+      reducer(state, action: PayloadAction<ScheduleInput>) {},
+      prepare(payload) {
+        return payload;
+      },
+    },
+    addEvent(state, action: PayloadAction<EventInput>) {},
+    removeEvent(state, action: PayloadAction<EntityId>) {},
+    updateEvent(state, action: PayloadAction<EventInput>) {},
   },
 });
 
