@@ -14,15 +14,11 @@ const scheduleSchemaEntity = new schema.Entity('schedules', {
   events: [eventSchemaEntity],
 });
 
-interface ScheduleEntity extends Omit<ScheduleInput, 'events' | 'id'> {
-  id: EntityId;
+interface ScheduleEntity extends Omit<ScheduleInput, 'events'> {
   eventIds: EntityId[];
 }
 
-interface EventEntity extends Omit<EventInput, 'id' | 'scheduleId'> {
-  id: EntityId;
-  scheduleId: EntityId;
-}
+interface EventEntity extends EventInput {}
 
 interface TimetableState {
   schedules: EntityState<ScheduleEntity>;
