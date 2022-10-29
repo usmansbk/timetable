@@ -1,5 +1,8 @@
-import {memo} from 'react';
+import {memo, useCallback} from 'react';
 import EventForm from '~components/EventForm';
+import {useAppDispatch} from '~redux/hooks';
+import {addEvent} from '~redux/timetable/timetableSlice';
+import {EventInput} from '~types';
 
 interface Props {
   visible: boolean;
@@ -7,12 +10,19 @@ interface Props {
 }
 
 function AddNewEvent({visible, onDismiss}: Props) {
+  const dispatch = useAppDispatch();
+
+  const onSubmit = useCallback((input: EventInput) => {
+    dispatch(addEvent(input));
+    onDismiss();
+  }, []);
+
   return (
     <EventForm
       autoFocus
       visible={visible}
       onDismiss={onDismiss}
-      onSubmit={console.log}
+      onSubmit={onSubmit}
     />
   );
 }
