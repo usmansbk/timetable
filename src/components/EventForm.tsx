@@ -57,6 +57,7 @@ function EventForm({
           startDate: yup.string().required(),
           startTime: yup.string().optional(),
           endTime: yup.string().optional(),
+          scheduleId: yup.string().optional(),
         })
         .required(),
     [],
