@@ -45,6 +45,11 @@ function DateTimeInput({label, mode, optional, onChange, value}: Props) {
           value={formattedValue}
           editable={false}
           label={label}
+          left={
+            <TextInput.Icon
+              icon={mode === 'date' ? 'calendar-outline' : 'clock-outline'}
+            />
+          }
           right={
             optional && value ? (
               <TextInput.Icon icon="close" onPress={() => onChange(null)} />
