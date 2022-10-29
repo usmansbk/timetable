@@ -44,8 +44,8 @@ const initialState: TimetableState = {
   events: eventsAdapter.getInitialState(),
 };
 
-const schedulesSlice = createSlice({
-  name: 'schedules',
+const timetableSlice = createSlice({
+  name: 'timetable',
   initialState,
   reducers: {
     addSchedule: {
@@ -136,7 +136,7 @@ const schedulesSlice = createSlice({
   },
 });
 
-const {actions, reducer} = schedulesSlice;
+const {actions, reducer} = timetableSlice;
 
 export const {
   addEvent,
