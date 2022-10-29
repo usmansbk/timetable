@@ -8,6 +8,7 @@ import {RootStackParamList} from '~types';
 import AppDrawer from './AppDrawer';
 import Settings from './Settings';
 import NewSchedule from './NewSchedule';
+import Schedule from './Schedule';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -56,6 +57,7 @@ export default function Screens() {
             headerShown: false,
           }}
         />
+        <Stack.Screen component={Schedule} name="Schedule" />
       </Stack.Navigator>
     </SafeAreaView>
   );

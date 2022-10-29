@@ -34,7 +34,9 @@ interface NormalizedEvent {
   events: {[key: EntityId]: EventEntity};
 }
 
-const schedulesAdapter = createEntityAdapter<ScheduleEntity>();
+const schedulesAdapter = createEntityAdapter<ScheduleEntity>({
+  sortComparer: (a, b) => a.title.localeCompare(b.title),
+});
 const eventsAdapter = createEntityAdapter<EventEntity>();
 
 const initialState: TimetableState = {

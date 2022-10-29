@@ -5,7 +5,9 @@ import {
   DrawerHeaderProps,
 } from '@react-navigation/drawer';
 import {memo} from 'react';
-import {Appbar, Drawer as PaperDrawer} from 'react-native-paper';
+import {Appbar, Drawer as PaperDrawer, List} from 'react-native-paper';
+import {useAppSelector} from '~redux/hooks';
+import {selectAllSchedules} from '~redux/timetable/timetableSlice';
 import {DrawerStackParamList, RootStackScreenProps} from '~types';
 import Timetable from './Timetable';
 
@@ -22,6 +24,8 @@ function DrawerNavigationBar({navigation, options}: DrawerHeaderProps) {
 
 function AppDrawerContent(props: DrawerContentComponentProps) {
   const {navigation, state} = props;
+  const schedules = useAppSelector(selectAllSchedules);
+
   return (
     <DrawerContentScrollView {...props}>
       {state.routes.map(({name, key}, index) => (
@@ -30,9 +34,19 @@ function AppDrawerContent(props: DrawerContentComponentProps) {
           key={key}
           label={name}
           onPress={() => navigation.navigate(name)}
+          icon="view-day"
+        />
+      ))}
+      {schedules.map(({title, id}) => (
+        <PaperDrawer.Item
+          key={id}
+          label={title}
+          onPress={() => navigation.navigate('Schedule', {id})}
+          icon="view-day-outline"
         />
       ))}
       <PaperDrawer.Item
+        icon="cog-outline"
         label="Settings"
         onPress={() => navigation.navigate('Settings')}
       />
