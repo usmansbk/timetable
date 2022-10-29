@@ -2,8 +2,9 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {Provider as PaperProvider} from 'react-native-paper';
 import {Provider as StoreProvider} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
 import {useAppTheme} from '~config/theme';
-import store from '~redux/store';
+import store, {persistor} from '~redux/store';
 import Screens from '~screens';
 
 function Main() {
@@ -21,7 +22,9 @@ function Main() {
 export default function App() {
   return (
     <StoreProvider store={store}>
-      <Main />
+      <PersistGate persistor={persistor} loading={null}>
+        <Main />
+      </PersistGate>
     </StoreProvider>
   );
 }
