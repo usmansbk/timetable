@@ -39,6 +39,7 @@ export interface EventInput {
   startDate: string;
   startTime?: string | null;
   endTime?: string | null;
+  scheduleId?: string | null;
 }
 
 export interface ScheduleInput {

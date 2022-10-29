@@ -5,15 +5,21 @@ import {
   EntityState,
   PayloadAction,
 } from '@reduxjs/toolkit';
+import {normalize, schema} from 'normalizr';
 import {EventInput, ScheduleInput} from '~types';
 import type {RootState} from '../store';
+
+const eventSchemaEntity = new schema.Entity('events');
+const scheduleSchemaEntity = new schema.Entity('schedules', {
+  events: [eventSchemaEntity],
+});
 
 interface ScheduleEntity extends Omit<ScheduleInput, 'events' | 'id'> {
   id: EntityId;
   eventIds: EntityId[];
 }
 
-interface EventEntity extends Omit<EventInput, 'id'> {
+interface EventEntity extends Omit<EventInput, 'id' | 'scheduleId'> {
   id: EntityId;
   scheduleId: EntityId;
 }
@@ -21,6 +27,15 @@ interface EventEntity extends Omit<EventInput, 'id'> {
 interface TimetableState {
   schedules: EntityState<ScheduleEntity>;
   events: EntityState<EventEntity>;
+}
+
+interface NormalizedSchedule {
+  events: {[key: EntityId]: EventEntity};
+  schedules: {[key: EntityId]: ScheduleEntity};
+}
+
+interface NormalizedEvent {
+  events: {[key: EntityId]: EventEntity};
 }
 
 const schedulesAdapter = createEntityAdapter<ScheduleEntity>();
@@ -36,21 +51,90 @@ const schedulesSlice = createSlice({
   initialState,
   reducers: {
     addSchedule: {
-      reducer(state, action: PayloadAction<ScheduleInput>) {},
-      prepare(payload) {
-        return payload;
+      reducer(state, action: PayloadAction<NormalizedSchedule>) {
+        schedulesAdapter.addMany(state.schedules, action.payload.schedules);
+        eventsAdapter.addMany(state.events, action.payload.events);
+      },
+      prepare(payload: ScheduleInput) {
+        const normalized = normalize<any, NormalizedSchedule>(
+          payload,
+          scheduleSchemaEntity,
+        );
+
+        return {
+          payload: normalized.entities,
+        };
       },
     },
-    removeSchedule(state, action: PayloadAction<EntityId>) {},
+    removeSchedule(state, action: PayloadAction<EntityId>) {
+      const schedule = state.schedules.entities[action.payload];
+
+      if (schedule?.eventIds.length) {
+        eventsAdapter.removeMany(state.events, schedule.eventIds);
+      }
+
+      schedulesAdapter.removeOne(state.schedules, action.payload);
+    },
     updateSchedule: {
-      reducer(state, action: PayloadAction<ScheduleInput>) {},
-      prepare(payload) {
-        return payload;
+      reducer(state, action: PayloadAction<NormalizedSchedule>) {
+        schedulesAdapter.upsertMany(state.schedules, action.payload.schedules);
+        eventsAdapter.upsertMany(state.events, action.payload.events);
+      },
+      prepare(payload: ScheduleInput) {
+        const normalized = normalize<any, NormalizedSchedule>(
+          payload,
+          scheduleSchemaEntity,
+        );
+
+        return {
+          payload: normalized.entities,
+        };
       },
     },
-    addEvent(state, action: PayloadAction<EventInput>) {},
-    removeEvent(state, action: PayloadAction<EntityId>) {},
-    updateEvent(state, action: PayloadAction<EventInput>) {},
+    addEvent: {
+      reducer(state, action: PayloadAction<NormalizedEvent>) {
+        eventsAdapter.addMany(state.events, action.payload.events);
+      },
+      prepare(payload: EventInput) {
+        const normalized = normalize<any, NormalizedEvent>(
+          payload,
+          eventSchemaEntity,
+        );
+
+        return {
+          payload: normalized.entities,
+        };
+      },
+    },
+    removeEvent(state, action: PayloadAction<EntityId>) {
+      const event = state.events.entities[action.payload];
+
+      if (event?.scheduleId) {
+        const schedule = state.schedules.entities[event.scheduleId];
+        if (schedule) {
+          schedule.eventIds = schedule.eventIds.filter(
+            id => id !== event.scheduleId,
+          );
+        }
+      }
+
+      eventsAdapter.removeOne(state.events, action.payload);
+    },
+    updateEvent: {
+      reducer(state, action: PayloadAction<NormalizedEvent>) {
+        eventsAdapter.upsertMany(state.events, action.payload.events);
+      },
+      prepare(payload: EventInput) {
+        const normalized = normalize<any, NormalizedEvent>(
+          payload,
+          eventSchemaEntity,
+        );
+
+        return {
+          payload: normalized.entities,
+        };
+      },
+    },
   },
 });
 
