@@ -16,6 +16,7 @@ import {EventInput} from '~types';
 import {formatToUTCdate} from '~utils/date';
 import DateTimeInput from './DateTimeInput';
 import Confirm from './Confirm';
+import Select, {SelectOption} from './Select';
 
 interface Props {
   autoFocus?: boolean;
@@ -27,6 +28,7 @@ interface Props {
   title?: string;
   defaultValues?: EventInput;
   resetOnSubmit?: boolean;
+  schedules?: SelectOption[];
 }
 
 function EventForm({
@@ -39,6 +41,7 @@ function EventForm({
   title,
   defaultValues,
   resetOnSubmit,
+  schedules,
 }: Props) {
   const {colors} = useTheme();
   const [confirmVisible, setConfirmVisible] = useState(false);
@@ -186,6 +189,20 @@ function EventForm({
               />
             </View>
           </View>
+          <Controller
+            control={control}
+            name="scheduleId"
+            render={({field: {onChange, value}}) => (
+              <Select
+                optional
+                icon="view-day-outline"
+                label="Schedule"
+                value={value}
+                onChange={onChange}
+                options={schedules}
+              />
+            )}
+          />
         </View>
       </Modal>
       <Confirm

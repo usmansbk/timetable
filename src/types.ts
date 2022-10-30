@@ -1,3 +1,4 @@
+import {ComponentProps} from 'react';
 import type {ColorSchemeName} from 'react-native';
 import type {
   CompositeScreenProps,
@@ -5,6 +6,9 @@ import type {
 } from '@react-navigation/native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {DrawerScreenProps} from '@react-navigation/drawer';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+export type IconName = ComponentProps<typeof Icon>['name'];
 
 export type AppSchemeName = ColorSchemeName | 'system';
 
