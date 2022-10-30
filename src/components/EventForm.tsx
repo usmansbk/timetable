@@ -189,20 +189,22 @@ function EventForm({
               />
             </View>
           </View>
-          <Controller
-            control={control}
-            name="scheduleId"
-            render={({field: {onChange, value}}) => (
-              <Select
-                optional
-                icon="view-day-outline"
-                label="Schedule"
-                value={value}
-                onChange={onChange}
-                options={schedules}
-              />
-            )}
-          />
+          {!!schedules?.length && (
+            <Controller
+              control={control}
+              name="scheduleId"
+              render={({field: {onChange, value}}) => (
+                <Select
+                  optional
+                  icon="view-day-outline"
+                  label="Schedule"
+                  value={value}
+                  onChange={onChange}
+                  options={schedules}
+                />
+              )}
+            />
+          )}
         </View>
       </Modal>
       <Confirm
