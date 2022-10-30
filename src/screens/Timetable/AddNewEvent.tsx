@@ -1,7 +1,7 @@
-import {memo, useCallback} from 'react';
+import {memo, useCallback, useMemo} from 'react';
 import EventForm from '~components/EventForm';
-import {useAppDispatch} from '~redux/hooks';
-import {addEvent} from '~redux/timetable/timetableSlice';
+import {useAppDispatch, useAppSelector} from '~redux/hooks';
+import {addEvent, selectAllSchedules} from '~redux/timetable/timetableSlice';
 import {EventInput} from '~types';
 
 interface Props {
@@ -11,11 +11,21 @@ interface Props {
 
 function AddNewEvent({visible, onDismiss}: Props) {
   const dispatch = useAppDispatch();
+  const schedules = useAppSelector(selectAllSchedules);
 
   const onSubmit = useCallback((input: EventInput) => {
     dispatch(addEvent(input));
     onDismiss();
   }, []);
+
+  const scheduleOptions = useMemo(
+    () =>
+      schedules?.map(({title, id}) => ({
+        label: title,
+        value: id,
+      })),
+    [schedules],
+  );
 
   return (
     <EventForm
@@ -23,6 +33,7 @@ function AddNewEvent({visible, onDismiss}: Props) {
       visible={visible}
       onDismiss={onDismiss}
       onSubmit={onSubmit}
+      schedules={scheduleOptions}
     />
   );
 }
