@@ -12,12 +12,17 @@ import Schedule from './Schedule';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-function AppNavigationBar({back, navigation, options}: NativeStackHeaderProps) {
+function AppNavigationBar(props: NativeStackHeaderProps) {
+  const {back, navigation, options} = props;
   return (
-    <Appbar elevated>
+    <Appbar.Header elevated>
       {back ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
       <Appbar.Content title={options.title} />
-    </Appbar>
+      {options.headerRight?.({
+        canGoBack: !!back,
+        tintColor: options.headerTintColor,
+      })}
+    </Appbar.Header>
   );
 }
 
