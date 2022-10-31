@@ -169,7 +169,9 @@ export const {
 export const selectScheduleEventsById = createSelector(
   [selectEventEntities, selectScheduleById],
   (entities, schedule) => {
-    return schedule?.events?.map(id => entities[id]) ?? [];
+    return (
+      schedule?.events?.map(id => entities[id]).filter(item => !!item) ?? []
+    );
   },
 );
 
