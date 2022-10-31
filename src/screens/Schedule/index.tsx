@@ -96,21 +96,9 @@ export default function Schedule({
           visible={menuVisible}
           onDismiss={closeMenu}
           anchor={<Appbar.Action icon="dots-vertical" onPress={openMenu} />}>
-          <Menu.Item
-            onPress={handleMenuPress('edit')}
-            title="Edit"
-            leadingIcon="pencil-outline"
-          />
-          <Menu.Item
-            onPress={handleMenuPress('duplicate')}
-            title="Duplicate"
-            leadingIcon="content-copy"
-          />
-          <Menu.Item
-            onPress={handleMenuPress('delete')}
-            title="Delete"
-            leadingIcon="delete-outline"
-          />
+          <Menu.Item onPress={handleMenuPress('edit')} title="Edit" />
+          <Menu.Item onPress={handleMenuPress('duplicate')} title="Duplicate" />
+          <Menu.Item onPress={handleMenuPress('delete')} title="Delete" />
         </Menu>
       </Appbar.Header>
       <Items scheduleId={schedule.id} />
