@@ -5,7 +5,6 @@ import {useForm, Controller, useFieldArray} from 'react-hook-form';
 import {useFocusEffect} from '@react-navigation/native';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import {nanoid} from '@reduxjs/toolkit';
 import {EventInput, FieldError, ScheduleInput} from '~types';
 import EmptyState from './EmptyState';
 import Confirm from './Confirm';
@@ -48,7 +47,7 @@ export default function ScheduleForm({
     () =>
       yup
         .object<Record<keyof ScheduleInput, yup.AnySchema>>({
-          id: yup.string().default(() => nanoid()),
+          id: yup.string().optional(),
           title: yup
             .string()
             .trim()
@@ -72,7 +71,9 @@ export default function ScheduleForm({
     reValidateMode: 'onChange',
   });
 
-  const onSubmitForm = handleSubmit(values => onSubmit(values));
+  const onSubmitForm = handleSubmit(values =>
+    onSubmit(schema.cast(values, {stripUnknown: true})),
+  );
 
   const {fields, append, update, remove} = useFieldArray({
     control,

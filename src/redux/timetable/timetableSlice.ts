@@ -5,6 +5,7 @@ import {
   EntityState,
   PayloadAction,
   createSelector,
+  nanoid,
 } from '@reduxjs/toolkit';
 import {normalize, schema} from 'normalizr';
 import {EventInput, ScheduleInput} from '~types';
@@ -16,10 +17,13 @@ const scheduleSchemaEntity = new schema.Entity('schedules', {
 });
 
 interface ScheduleEntity extends Omit<ScheduleInput, 'events'> {
+  id: string;
   events: string[];
 }
 
-interface EventEntity extends EventInput {}
+interface EventEntity extends EventInput {
+  id: string;
+}
 
 interface TimetableState {
   schedules: EntityState<ScheduleEntity>;
@@ -51,12 +55,21 @@ const timetableSlice = createSlice({
   reducers: {
     addSchedule: {
       reducer(state, action: PayloadAction<NormalizedSchedule>) {
-        schedulesAdapter.addMany(state.schedules, action.payload.schedules);
         eventsAdapter.addMany(state.events, action.payload.events);
+        schedulesAdapter.addMany(state.schedules, action.payload.schedules);
       },
       prepare(payload: ScheduleInput) {
+        const payloadWithIds = Object.assign({}, payload, {
+          id: nanoid(),
+          events: payload.events.map(e =>
+            Object.assign({}, e, {
+              id: nanoid(),
+            }),
+          ),
+        });
+
         const normalized = normalize<any, NormalizedSchedule>(
-          payload,
+          payloadWithIds,
           scheduleSchemaEntity,
         );
 
@@ -80,8 +93,16 @@ const timetableSlice = createSlice({
         eventsAdapter.upsertMany(state.events, action.payload.events);
       },
       prepare(payload: ScheduleInput) {
+        const payloadWithIds = Object.assign({}, payload, {
+          events: payload.events.map(e =>
+            Object.assign({}, e, {
+              id: e.id || nanoid(),
+            }),
+          ),
+        });
+
         const normalized = normalize<any, NormalizedSchedule>(
-          payload,
+          payloadWithIds,
           scheduleSchemaEntity,
         );
 
@@ -95,8 +116,10 @@ const timetableSlice = createSlice({
         eventsAdapter.addMany(state.events, action.payload.events);
       },
       prepare(payload: EventInput) {
+        const payloadWithId = Object.assign({}, payload, {id: nanoid()});
+
         const normalized = normalize<any, NormalizedEvent>(
-          payload,
+          payloadWithId,
           eventSchemaEntity,
         );
 
