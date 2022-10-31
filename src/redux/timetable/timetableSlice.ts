@@ -59,17 +59,19 @@ const timetableSlice = createSlice({
         schedulesAdapter.addMany(state.schedules, action.payload.schedules);
       },
       prepare(payload: ScheduleInput) {
-        const payloadWithIds = Object.assign({}, payload, {
-          id: nanoid(),
+        const id = nanoid();
+        const schedule = Object.assign({}, payload, {
+          id,
           events: payload.events.map(e =>
             Object.assign({}, e, {
               id: nanoid(),
+              scheduleId: id,
             }),
           ),
         });
 
         const normalized = normalize<any, NormalizedSchedule>(
-          payloadWithIds,
+          schedule,
           scheduleSchemaEntity,
         );
 
@@ -93,16 +95,17 @@ const timetableSlice = createSlice({
         eventsAdapter.upsertMany(state.events, action.payload.events);
       },
       prepare(payload: ScheduleInput) {
-        const payloadWithIds = Object.assign({}, payload, {
+        const schedule = Object.assign({}, payload, {
           events: payload.events.map(e =>
             Object.assign({}, e, {
               id: e.id || nanoid(),
+              scheduleId: payload.id,
             }),
           ),
         });
 
         const normalized = normalize<any, NormalizedSchedule>(
-          payloadWithIds,
+          schedule,
           scheduleSchemaEntity,
         );
 
@@ -116,10 +119,10 @@ const timetableSlice = createSlice({
         eventsAdapter.addMany(state.events, action.payload.events);
       },
       prepare(payload: EventInput) {
-        const payloadWithId = Object.assign({}, payload, {id: nanoid()});
+        const event = Object.assign({}, payload, {id: nanoid()});
 
         const normalized = normalize<any, NormalizedEvent>(
-          payloadWithId,
+          event,
           eventSchemaEntity,
         );
 
