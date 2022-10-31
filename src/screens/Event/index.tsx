@@ -1,6 +1,5 @@
 import {memo, useCallback, useEffect, useState} from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
-import {Appbar, Menu, Text} from 'react-native-paper';
+import {Appbar, Menu} from 'react-native-paper';
 import Confirm from '~components/Confirm';
 import EmptyState from '~components/EmptyState';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
@@ -8,6 +7,7 @@ import {removeEvent, selectEventById} from '~redux/timetable/timetableSlice';
 import {RootStackScreenProps} from '~types';
 import DuplicateEvent from './DuplicateEvent';
 import EditEvent from './EditEvent';
+import EventDetails from './EventDetails';
 
 function Event({route, navigation}: RootStackScreenProps<'Event'>) {
   const {id} = route.params;
@@ -64,8 +64,6 @@ function Event({route, navigation}: RootStackScreenProps<'Event'>) {
     return <EmptyState title="Event does not exists" />;
   }
 
-  const {title} = event;
-
   return (
     <>
       <Appbar.Header elevated mode="center-aligned">
@@ -80,9 +78,7 @@ function Event({route, navigation}: RootStackScreenProps<'Event'>) {
           <Menu.Item title="Delete" onPress={handleMenuPress('delete')} />
         </Menu>
       </Appbar.Header>
-      <ScrollView style={styles.container}>
-        <Text variant="headlineLarge">{title}</Text>
-      </ScrollView>
+      <EventDetails event={event} />
       <EditEvent event={event} visible={editVisible} onDismiss={closeEdit} />
       <DuplicateEvent
         event={event}
@@ -91,7 +87,7 @@ function Event({route, navigation}: RootStackScreenProps<'Event'>) {
         onSuccess={navigation.popToTop}
       />
       <Confirm
-        title={`Delete "${title}"?`}
+        title={`Delete "${event.title}"?`}
         visible={confirmVisible}
         onDismiss={closeConfirm}
         onConfirm={handleDelete}
@@ -99,12 +95,5 @@ function Event({route, navigation}: RootStackScreenProps<'Event'>) {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    padding: 16,
-  },
-});
 
 export default memo(Event);
