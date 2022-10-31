@@ -29,6 +29,9 @@ export type RootStackParamList = {
   Schedule: {
     id: string;
   };
+  Event: {
+    id: string;
+  };
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

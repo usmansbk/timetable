@@ -12,6 +12,7 @@ import NewSchedule from './NewSchedule';
 import Schedule from './Schedule';
 import EditSchedule from './EditSchedule';
 import DuplicateSchedule from './DuplicateSchedule';
+import Event from './Event';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -92,13 +93,8 @@ export default function Screens() {
             headerShown: false,
           }}
         />
-        <Stack.Screen
-          component={Schedule}
-          name="Schedule"
-          options={{
-            headerShown: false,
-          }}
-        />
+        <Stack.Screen component={Schedule} name="Schedule" />
+        <Stack.Screen component={Event} name="Event" />
       </Stack.Navigator>
     </SafeAreaView>
   );

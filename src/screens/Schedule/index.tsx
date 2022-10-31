@@ -1,4 +1,5 @@
-import {memo, useCallback, useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {memo, useCallback, useEffect, useState} from 'react';
 import {Appbar, Menu} from 'react-native-paper';
 import AgendaList from '~components/AgendaList';
 import Confirm from '~components/Confirm';
@@ -16,8 +17,21 @@ const Items = memo(({scheduleId}: {scheduleId: string}) => {
     selectScheduleEventsById(state, scheduleId),
   );
 
+  const navigation = useNavigation();
+
+  const onPressItem = useCallback(
+    (item: EventInput) => {
+      if (item.id) {
+        navigation.navigate('Event', {
+          id: item.id,
+        });
+      }
+    },
+    [navigation],
+  );
+
   return (
-    <AgendaList items={events as EventInput[]} onPressItem={console.log} />
+    <AgendaList items={events as EventInput[]} onPressItem={onPressItem} />
   );
 });
 
@@ -61,6 +75,18 @@ export default function Schedule({
     dispatch(removeSchedule(id));
   }, [id, navigation]);
 
+  useEffect(() => {
+    if (schedule) {
+      navigation.setOptions({
+        headerShown: false,
+      });
+    }
+  }, [schedule, navigation]);
+
+  if (!schedule) {
+    return <EmptyState title="Schedule does not exist" />;
+  }
+
   return (
     <>
       <Appbar.Header elevated mode="center-aligned">
@@ -87,19 +113,13 @@ export default function Schedule({
           />
         </Menu>
       </Appbar.Header>
-      {schedule ? (
-        <>
-          <Items scheduleId={schedule.id} />
-          <Confirm
-            visible={confirmVisible}
-            onDismiss={closeConfirm}
-            onConfirm={handleDelete}
-            title={`Delete "${schedule.title}"`}
-          />
-        </>
-      ) : (
-        <EmptyState title="Schedule does not exist" />
-      )}
+      <Items scheduleId={schedule.id} />
+      <Confirm
+        visible={confirmVisible}
+        onDismiss={closeConfirm}
+        onConfirm={handleDelete}
+        title={`Delete "${schedule.title}"`}
+      />
     </>
   );
 }
