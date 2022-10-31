@@ -5,7 +5,7 @@ import {
   DrawerHeaderProps,
 } from '@react-navigation/drawer';
 import {memo} from 'react';
-import {Appbar, Drawer as PaperDrawer, List} from 'react-native-paper';
+import {Appbar, Drawer as PaperDrawer} from 'react-native-paper';
 import {useAppSelector} from '~redux/hooks';
 import {selectAllSchedules} from '~redux/timetable/timetableSlice';
 import {DrawerStackParamList, RootStackScreenProps} from '~types';
