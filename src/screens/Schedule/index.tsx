@@ -1,9 +1,11 @@
 import {memo, useCallback, useState} from 'react';
 import {Appbar, Menu} from 'react-native-paper';
 import AgendaList from '~components/AgendaList';
+import Confirm from '~components/Confirm';
 import EmptyState from '~components/EmptyState';
-import {useAppSelector} from '~redux/hooks';
+import {useAppDispatch, useAppSelector} from '~redux/hooks';
 import {
+  removeSchedule,
   selectScheduleById,
   selectScheduleEventsById,
 } from '~redux/timetable/timetableSlice';
@@ -24,11 +26,16 @@ export default function Schedule({
   route,
 }: RootStackScreenProps<'Schedule'>) {
   const {id} = route.params;
+  const dispatch = useAppDispatch();
   const schedule = useAppSelector(state => selectScheduleById(state, id));
 
   const [menuVisible, setOpenMenu] = useState(false);
   const closeMenu = useCallback(() => setOpenMenu(false), []);
   const openMenu = useCallback(() => setOpenMenu(true), []);
+
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const closeConfirm = useCallback(() => setConfirmVisible(false), []);
+  const openConfirm = useCallback(() => setConfirmVisible(true), []);
 
   const handleMenuPress = useCallback(
     (key: 'edit' | 'delete' | 'duplicate') => () => {
@@ -43,10 +50,16 @@ export default function Schedule({
           id,
         });
       } else if (key === 'delete') {
+        openConfirm();
       }
     },
     [navigation, id],
   );
+
+  const handleDelete = useCallback(() => {
+    navigation.pop();
+    dispatch(removeSchedule(id));
+  }, [id, navigation]);
 
   return (
     <>
@@ -75,7 +88,15 @@ export default function Schedule({
         </Menu>
       </Appbar.Header>
       {schedule ? (
-        <Items scheduleId={schedule.id} />
+        <>
+          <Items scheduleId={schedule.id} />
+          <Confirm
+            visible={confirmVisible}
+            onDismiss={closeConfirm}
+            onConfirm={handleDelete}
+            title={`Delete "${schedule.title}"`}
+          />
+        </>
       ) : (
         <EmptyState title="Schedule does not exist" />
       )}
