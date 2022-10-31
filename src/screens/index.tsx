@@ -1,5 +1,6 @@
 import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
 import {Appbar, useTheme} from 'react-native-paper';
+import {useCallback} from 'react';
 import {
   createNativeStackNavigator,
   NativeStackHeaderProps,
@@ -14,14 +15,24 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function AppNavigationBar(props: NativeStackHeaderProps) {
   const {back, navigation, options} = props;
+  const {title, headerRight} = options;
+
+  const renderRight = useCallback(
+    () =>
+      headerRight
+        ? headerRight({
+            canGoBack: !!back,
+            tintColor: options.headerTintColor,
+          })
+        : null,
+    [headerRight, options, back],
+  );
+
   return (
-    <Appbar.Header elevated>
+    <Appbar.Header elevated mode="center-aligned">
       {back ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
-      <Appbar.Content title={options.title} />
-      {options.headerRight?.({
-        canGoBack: !!back,
-        tintColor: options.headerTintColor,
-      })}
+      <Appbar.Content title={title} />
+      {renderRight()}
     </Appbar.Header>
   );
 }
@@ -40,6 +51,9 @@ export default function Screens() {
         initialRouteName="AppDrawer"
         screenOptions={{
           header: props => <AppNavigationBar {...props} />,
+          contentStyle: {
+            backgroundColor: colors.background,
+          },
         }}>
         <Stack.Screen
           component={AppDrawer}
@@ -62,7 +76,13 @@ export default function Screens() {
             headerShown: false,
           }}
         />
-        <Stack.Screen component={Schedule} name="Schedule" />
+        <Stack.Screen
+          component={Schedule}
+          name="Schedule"
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack.Navigator>
     </SafeAreaView>
   );

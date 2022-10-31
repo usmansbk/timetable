@@ -15,10 +15,10 @@ const Drawer = createDrawerNavigator<DrawerStackParamList>();
 
 function DrawerNavigationBar({navigation, options}: DrawerHeaderProps) {
   return (
-    <Appbar elevated mode="center-aligned">
+    <Appbar.Header elevated mode="center-aligned">
       <Appbar.Action icon="menu" onPress={navigation.openDrawer} />
       <Appbar.Content title={options.title} />
-    </Appbar>
+    </Appbar.Header>
   );
 }
 
