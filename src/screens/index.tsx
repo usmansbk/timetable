@@ -10,6 +10,8 @@ import AppDrawer from './AppDrawer';
 import Settings from './Settings';
 import NewSchedule from './NewSchedule';
 import Schedule from './Schedule';
+import EditSchedule from './EditSchedule';
+import DuplicateSchedule from './DuplicateSchedule';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -72,6 +74,20 @@ export default function Screens() {
         <Stack.Screen
           component={NewSchedule}
           name="NewSchedule"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          component={EditSchedule}
+          name="EditSchedule"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          component={DuplicateSchedule}
+          name="DuplicateSchedule"
           options={{
             headerShown: false,
           }}

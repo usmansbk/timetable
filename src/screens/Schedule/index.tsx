@@ -30,6 +30,24 @@ export default function Schedule({
   const closeMenu = useCallback(() => setOpenMenu(false), []);
   const openMenu = useCallback(() => setOpenMenu(true), []);
 
+  const handleMenuPress = useCallback(
+    (key: 'edit' | 'delete' | 'duplicate') => () => {
+      closeMenu();
+
+      if (key === 'edit') {
+        navigation.navigate('EditSchedule', {
+          id,
+        });
+      } else if (key === 'duplicate') {
+        navigation.navigate('DuplicateSchedule', {
+          id,
+        });
+      } else if (key === 'delete') {
+      }
+    },
+    [navigation, id],
+  );
+
   return (
     <>
       <Appbar.Header elevated mode="center-aligned">
@@ -40,17 +58,17 @@ export default function Schedule({
           onDismiss={closeMenu}
           anchor={<Appbar.Action icon="dots-vertical" onPress={openMenu} />}>
           <Menu.Item
-            onPress={() => null}
+            onPress={handleMenuPress('edit')}
             title="Edit"
             leadingIcon="pencil-outline"
           />
           <Menu.Item
-            onPress={() => null}
+            onPress={handleMenuPress('duplicate')}
             title="Duplicate"
             leadingIcon="content-copy"
           />
           <Menu.Item
-            onPress={() => null}
+            onPress={handleMenuPress('delete')}
             title="Delete"
             leadingIcon="delete-outline"
           />
