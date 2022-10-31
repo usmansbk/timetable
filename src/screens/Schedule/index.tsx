@@ -4,13 +4,15 @@ import AgendaList from '~components/AgendaList';
 import EmptyState from '~components/EmptyState';
 import {useAppSelector} from '~redux/hooks';
 import {
-  selectManyEventsById,
   selectScheduleById,
+  selectScheduleEventsById,
 } from '~redux/timetable/timetableSlice';
 import {EventInput, RootStackScreenProps} from '~types';
 
-const List = memo(({ids}: {ids: any[]}) => {
-  const events = useAppSelector(state => selectManyEventsById(state, ids));
+const Items = memo(({scheduleId}: {scheduleId: string}) => {
+  const events = useAppSelector(state =>
+    selectScheduleEventsById(state, scheduleId),
+  );
 
   return (
     <AgendaList items={events as EventInput[]} onPressItem={console.log} />
@@ -28,39 +30,44 @@ export default function Schedule({
   const closeMenu = useCallback(() => setOpenMenu(false), []);
   const openMenu = useCallback(() => setOpenMenu(true), []);
 
+  const headerRight = useCallback(
+    () => (
+      <Menu
+        visible={menuVisible}
+        onDismiss={closeMenu}
+        anchor={<Appbar.Action icon="dots-vertical" onPress={openMenu} />}>
+        <Menu.Item
+          onPress={() => null}
+          title="Edit"
+          leadingIcon="pencil-outline"
+        />
+        <Menu.Item
+          onPress={() => null}
+          title="Duplicate"
+          leadingIcon="content-copy"
+        />
+        <Menu.Item
+          onPress={() => null}
+          title="Delete"
+          leadingIcon="delete-outline"
+        />
+      </Menu>
+    ),
+    [menuVisible],
+  );
+
   useEffect(() => {
     if (schedule) {
       navigation.setOptions({
         title: schedule.title,
-        headerRight: () => (
-          <Menu
-            visible={menuVisible}
-            onDismiss={closeMenu}
-            anchor={<Appbar.Action icon="dots-vertical" onPress={openMenu} />}>
-            <Menu.Item
-              onPress={() => null}
-              title="Edit"
-              leadingIcon="pencil-outline"
-            />
-            <Menu.Item
-              onPress={() => null}
-              title="Duplicate"
-              leadingIcon="content-copy"
-            />
-            <Menu.Item
-              onPress={() => null}
-              title="Delete"
-              leadingIcon="delete-outline"
-            />
-          </Menu>
-        ),
+        headerRight,
       });
     }
-  }, [schedule, menuVisible, navigation]);
+  }, [schedule, navigation, headerRight]);
 
   if (!schedule) {
     return <EmptyState title="Schedule does not exist" />;
   }
 
-  return <List ids={schedule.eventIds} />;
+  return <Items scheduleId={schedule.id} />;
 }

@@ -4,6 +4,7 @@ import {
   EntityId,
   EntityState,
   PayloadAction,
+  createSelector,
 } from '@reduxjs/toolkit';
 import {normalize, schema} from 'normalizr';
 import {EventInput, ScheduleInput} from '~types';
@@ -11,11 +12,11 @@ import type {RootState} from '../store';
 
 const eventSchemaEntity = new schema.Entity('events');
 const scheduleSchemaEntity = new schema.Entity('schedules', {
-  events: [eventSchemaEntity],
+  events: new schema.Array(eventSchemaEntity),
 });
 
 interface ScheduleEntity extends Omit<ScheduleInput, 'events'> {
-  eventIds: EntityId[];
+  events: string[];
 }
 
 interface EventEntity extends EventInput {}
@@ -67,8 +68,8 @@ const timetableSlice = createSlice({
     removeSchedule(state, action: PayloadAction<EntityId>) {
       const schedule = state.schedules.entities[action.payload];
 
-      if (schedule?.eventIds.length) {
-        eventsAdapter.removeMany(state.events, schedule.eventIds);
+      if (schedule?.events.length) {
+        eventsAdapter.removeMany(state.events, schedule.events);
       }
 
       schedulesAdapter.removeOne(state.schedules, action.payload);
@@ -110,7 +111,7 @@ const timetableSlice = createSlice({
       if (event?.scheduleId) {
         const schedule = state.schedules.entities[event.scheduleId];
         if (schedule) {
-          schedule.eventIds = schedule.eventIds.filter(
+          schedule.events = schedule.events.filter(
             id => id !== event.scheduleId,
           );
         }
@@ -164,5 +165,12 @@ export const {
   selectIds: selectEventIds,
   selectTotal: selectTotalEvents,
 } = eventsAdapter.getSelectors((state: RootState) => state.timetable.events);
+
+export const selectScheduleEventsById = createSelector(
+  [selectEventEntities, selectScheduleById],
+  (entities, schedule) => {
+    return schedule?.events?.map(id => entities[id]) ?? [];
+  },
+);
 
 export default reducer;
