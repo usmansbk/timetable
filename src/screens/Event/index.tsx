@@ -6,6 +6,7 @@ import EmptyState from '~components/EmptyState';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
 import {removeEvent, selectEventById} from '~redux/timetable/timetableSlice';
 import {RootStackScreenProps} from '~types';
+import DuplicateEvent from './DuplicateEvent';
 import EditEvent from './EditEvent';
 
 function Event({route, navigation}: RootStackScreenProps<'Event'>) {
@@ -83,6 +84,12 @@ function Event({route, navigation}: RootStackScreenProps<'Event'>) {
         <Text variant="headlineLarge">{title}</Text>
       </ScrollView>
       <EditEvent event={event} visible={editVisible} onDismiss={closeEdit} />
+      <DuplicateEvent
+        event={event}
+        visible={duplicateVisible}
+        onDismiss={closeDuplicate}
+        onSuccess={navigation.popToTop}
+      />
       <Confirm
         title={`Delete "${title}"?`}
         visible={confirmVisible}

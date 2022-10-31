@@ -1,26 +1,31 @@
 import {memo, useCallback} from 'react';
 import EventForm from '~components/EventForm';
 import {useAppDispatch} from '~redux/hooks';
-import {updateEvent} from '~redux/timetable/timetableSlice';
+import {addEvent} from '~redux/timetable/timetableSlice';
 import {EventInput} from '~types';
 
 interface Props {
   event: EventInput;
   visible: boolean;
   onDismiss: () => void;
+  onSuccess: () => void;
 }
 
-function EditEvent({event, visible, onDismiss}: Props) {
+function DuplicateEvent({event, visible, onDismiss, onSuccess}: Props) {
   const dispatch = useAppDispatch();
 
-  const onSubmit = useCallback((values: EventInput) => {
-    dispatch(updateEvent(values));
-    onDismiss();
-  }, []);
+  const onSubmit = useCallback(
+    (values: EventInput) => {
+      dispatch(addEvent(values));
+      onDismiss();
+      onSuccess();
+    },
+    [onSuccess, onDismiss],
+  );
 
   return (
     <EventForm
-      title="Edit"
+      title="Copy"
       defaultValues={event}
       visible={visible}
       onDismiss={onDismiss}
@@ -29,4 +34,4 @@ function EditEvent({event, visible, onDismiss}: Props) {
   );
 }
 
-export default memo(EditEvent);
+export default memo(DuplicateEvent);
