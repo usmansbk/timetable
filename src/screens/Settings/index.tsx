@@ -1,18 +1,27 @@
-import {StyleSheet, View} from 'react-native';
-import {Title} from 'react-native-paper';
+import {useCallback, useState} from 'react';
+import {StyleSheet, ScrollView} from 'react-native';
+import {List} from 'react-native-paper';
 import {RootStackScreenProps} from '~types';
+import ThemePicker from './ThemePicker';
 
 export default function Settings({}: RootStackScreenProps<'Settings'>) {
+  const [themePickerVisible, setThemePickerVisible] = useState(false);
+
+  const openThemePicker = useCallback(() => setThemePickerVisible(true), []);
+  const closeThemePicker = useCallback(() => setThemePickerVisible(false), []);
+
   return (
-    <View style={styles.container}>
-      <Title>Settings</Title>
-    </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <List.Section title="Preferences">
+        <List.Item title="Theme" onPress={openThemePicker} />
+      </List.Section>
+      <ThemePicker visible={themePickerVisible} onDismiss={closeThemePicker} />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 16,
+    flexGrow: 1,
   },
 });
