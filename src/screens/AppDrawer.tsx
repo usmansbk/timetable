@@ -7,7 +7,7 @@ import {
 import {memo} from 'react';
 import {Appbar, Drawer as PaperDrawer} from 'react-native-paper';
 import {useAppSelector} from '~redux/hooks';
-import {selectAllSchedules} from '~redux/timetable/timetableSlice';
+import {selectAllSchedules} from '~redux/timetable/slice';
 import {DrawerStackParamList, RootStackScreenProps} from '~types';
 import Timetable from './Timetable';
 

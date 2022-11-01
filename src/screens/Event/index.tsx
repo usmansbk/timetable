@@ -3,7 +3,7 @@ import {Appbar, Menu} from 'react-native-paper';
 import Confirm from '~components/Confirm';
 import EmptyState from '~components/EmptyState';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
-import {removeEvent, selectEventById} from '~redux/timetable/timetableSlice';
+import {removeEvent, selectEventById} from '~redux/timetable/slice';
 import {RootStackScreenProps} from '~types';
 import DuplicateEvent from './DuplicateEvent';
 import EditEvent from './EditEvent';

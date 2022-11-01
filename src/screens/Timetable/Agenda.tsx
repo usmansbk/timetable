@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import {memo, useCallback} from 'react';
 import AgendaList from '~components/AgendaList';
 import {useAppSelector} from '~redux/hooks';
-import {selectAllEvents} from '~redux/timetable/timetableSlice';
+import {selectAllEvents} from '~redux/timetable/slice';
 import {EventInput} from '~types';
 
 function Agenda() {

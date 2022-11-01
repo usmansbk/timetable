@@ -5,7 +5,7 @@ import {
   selectScheduleById,
   selectScheduleEventsById,
   updateSchedule,
-} from '~redux/timetable/timetableSlice';
+} from '~redux/timetable/slice';
 import {RootStackScreenProps, ScheduleInput} from '~types';
 
 function EditSchedule({

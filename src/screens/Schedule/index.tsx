@@ -9,7 +9,7 @@ import {
   removeSchedule,
   selectScheduleById,
   selectScheduleEventsById,
-} from '~redux/timetable/timetableSlice';
+} from '~redux/timetable/slice';
 import {EventInput, RootStackScreenProps} from '~types';
 
 const Items = memo(({scheduleId}: {scheduleId: string}) => {

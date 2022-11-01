@@ -1,7 +1,7 @@
 import {memo, useCallback} from 'react';
 import ScheduleForm from '~components/ScheduleForm';
 import {useAppDispatch} from '~redux/hooks';
-import {addSchedule} from '~redux/timetable/timetableSlice';
+import {addSchedule} from '~redux/timetable/slice';
 import {RootStackScreenProps, ScheduleInput} from '~types';
 
 function NewSchedule({navigation}: RootStackScreenProps<'NewSchedule'>) {

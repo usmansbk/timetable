@@ -1,7 +1,7 @@
 import {memo, useCallback, useMemo} from 'react';
 import EventForm from '~components/EventForm';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
-import {addEvent, selectAllSchedules} from '~redux/timetable/timetableSlice';
+import {addEvent, selectAllSchedules} from '~redux/timetable/slice';
 import {EventInput} from '~types';
 
 interface Props {
