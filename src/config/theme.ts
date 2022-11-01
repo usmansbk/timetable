@@ -10,11 +10,12 @@ import {
   DarkTheme as NavigationDarkTheme,
 } from '@react-navigation/native';
 import deepmarge from 'deepmerge';
-import {AppSchemeName} from '~types';
 import {
   MD3Typescale,
   NavigationTheme,
 } from 'react-native-paper/lib/typescript/types';
+import {useAppSelector} from '~redux/hooks';
+import {selectAppTheme} from '~redux/settings/slice';
 
 const {LightTheme, DarkTheme} = adaptNavigationTheme({
   light: NavigationLightTheme,
@@ -86,7 +87,8 @@ const CombinedDarkTheme = deepmarge.all([
   CommonTheme,
 ]) as Theme;
 
-export const useAppTheme = (appScheme?: AppSchemeName) => {
+export const useAppTheme = () => {
+  const appScheme = useAppSelector(selectAppTheme);
   const scheme = useColorScheme();
 
   if (appScheme === 'system') {
