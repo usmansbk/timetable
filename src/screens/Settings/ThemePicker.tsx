@@ -29,7 +29,7 @@ function ThemePicker({visible, onDismiss}: Props) {
         <Dialog.Title>Theme</Dialog.Title>
         <Dialog.Content>
           <RadioButton.Group
-            value={theme || ''}
+            value={theme as string}
             onValueChange={value => setAppTheme(value as AppSchemeName)}>
             {themes.map(({key, label}) => (
               <RadioButton.Item value={key as string} label={label} />
