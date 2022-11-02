@@ -1,6 +1,7 @@
 import {useCallback, useState} from 'react';
 import {StyleSheet, ScrollView, Platform, Linking} from 'react-native';
 import {Divider, List} from 'react-native-paper';
+import RNOpenNotificaition from 'react-native-open-notification';
 import {formatDay} from '~utils/date';
 import {useAppSelector} from '~redux/hooks';
 import {selectAppTheme, selectStartOfWeek} from '~redux/settings/slice';
@@ -51,7 +52,10 @@ export default function Settings({}: RootStackScreenProps<'Settings'>) {
       <List.Section title="Notifications">
         <List.Item title="Default Reminders" onPress={openReminderPicker} />
         {Platform.OS === 'android' && (
-          <List.Item title="Sound and Vibration" onPress={() => null} />
+          <List.Item
+            title="Primary settings"
+            onPress={RNOpenNotificaition.open}
+          />
         )}
       </List.Section>
       <Divider />
