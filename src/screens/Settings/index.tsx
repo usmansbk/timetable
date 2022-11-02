@@ -64,7 +64,7 @@ export default function Settings({}: RootStackScreenProps<'Settings'>) {
           description={t(`theme_${theme}`)}
         />
         <List.Item
-          title={t('Start the week on')}
+          title={t('Start of the week')}
           description={formatDay(startOfWeek)}
           onPress={openDayPicker}
         />
