@@ -3,17 +3,28 @@ import {StyleSheet, ScrollView, Platform, Linking} from 'react-native';
 import {Divider, List} from 'react-native-paper';
 import RNOpenNotificaition from 'react-native-open-notification';
 import {formatDay} from '~utils/date';
-import {useAppSelector} from '~redux/hooks';
-import {selectAppTheme, selectStartOfWeek} from '~redux/settings/slice';
+import {useAppDispatch, useAppSelector} from '~redux/hooks';
+import {
+  selectAppTheme,
+  selectNotificationSound,
+  selectNotificationVibration,
+  selectStartOfWeek,
+  toggleNotificationSound,
+  toggleNotificationVibration,
+} from '~redux/settings/slice';
 import {RootStackScreenProps} from '~types';
 import {APP_VERSION, SUPPORT_EMAIL} from '~constants';
 import ThemePicker from './ThemePicker';
 import DayPicker from './DayPicker';
 import DefaultReminders from './DefaultReminders';
+import {Switch} from 'react-native-gesture-handler';
 
 export default function Settings({}: RootStackScreenProps<'Settings'>) {
+  const dispatch = useAppDispatch();
   const theme = useAppSelector(selectAppTheme);
   const startOfWeek = useAppSelector(selectStartOfWeek);
+  const playSound = useAppSelector(selectNotificationSound);
+  const vibrate = useAppSelector(selectNotificationVibration);
 
   const [themePickerVisible, setThemePickerVisible] = useState(false);
   const [dayPickerVisible, setDayPickerVisible] = useState(false);
@@ -34,6 +45,14 @@ export default function Settings({}: RootStackScreenProps<'Settings'>) {
     );
   }, []);
 
+  const onToggleVibrate = useCallback(() => {
+    dispatch(toggleNotificationVibration());
+  }, []);
+
+  const onToggleSound = useCallback(() => {
+    dispatch(toggleNotificationSound());
+  }, []);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <List.Section title="Preferences">
@@ -51,6 +70,16 @@ export default function Settings({}: RootStackScreenProps<'Settings'>) {
       <Divider />
       <List.Section title="Notifications">
         <List.Item title="Default Reminders" onPress={openReminderPicker} />
+        <List.Item
+          title="Sound"
+          onPress={onToggleSound}
+          right={() => <Switch value={playSound} onChange={onToggleSound} />}
+        />
+        <List.Item
+          title="Vibration"
+          onPress={onToggleVibrate}
+          right={() => <Switch value={vibrate} onChange={onToggleVibrate} />}
+        />
         {Platform.OS === 'android' && (
           <List.Item
             title="Primary settings"
