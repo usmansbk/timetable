@@ -47,6 +47,9 @@ function EventForm({
   const {colors} = useTheme();
   const [confirmVisible, setConfirmVisible] = useState(false);
 
+  const openConfirm = useCallback(() => setConfirmVisible(true), []);
+  const closeConfirm = useCallback(() => setConfirmVisible(false), []);
+
   const schema = useMemo(
     () =>
       yup
@@ -120,10 +123,7 @@ function EventForm({
               <Appbar.Action icon="content-copy" onPress={onPressDuplicate} />
             )}
             {!!onDiscard && (
-              <Appbar.Action
-                icon="trash-can-outline"
-                onPress={() => setConfirmVisible(true)}
-              />
+              <Appbar.Action icon="trash-can-outline" onPress={openConfirm} />
             )}
             <Appbar.Action icon="check" onPress={_onSubmit} />
           </Appbar.Header>
@@ -212,7 +212,7 @@ function EventForm({
         title={t('Delete?')}
         visible={confirmVisible}
         onConfirm={handleDiscard}
-        onDismiss={() => setConfirmVisible(false)}
+        onDismiss={closeConfirm}
       />
     </Portal>
   );
