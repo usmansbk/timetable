@@ -1,6 +1,7 @@
 import {memo, useCallback} from 'react';
 import {View} from 'react-native';
 import {Button, Dialog, Portal, RadioButton} from 'react-native-paper';
+import {useTranslation} from 'react-i18next';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
 import {selectStartOfWeek, setStartOfWeek} from '~redux/settings/slice';
 import {DAYS_OF_WEEK, formatDay} from '~utils/date';
@@ -11,6 +12,7 @@ interface Props {
 }
 
 function DayPicker({visible, onDismiss}: Props) {
+  const {t} = useTranslation();
   const dispatch = useAppDispatch();
   const startOfWeek = useAppSelector(selectStartOfWeek);
   const onChange = useCallback((value: string) => {
@@ -20,7 +22,7 @@ function DayPicker({visible, onDismiss}: Props) {
   return (
     <Portal>
       <Dialog visible={visible} onDismiss={onDismiss}>
-        <Dialog.Title>Start the week on</Dialog.Title>
+        <Dialog.Title>{t('Start the week on')}</Dialog.Title>
         <Dialog.Content>
           <RadioButton.Group
             value={String(startOfWeek)}
@@ -37,7 +39,7 @@ function DayPicker({visible, onDismiss}: Props) {
         <Dialog.Actions>
           <View>
             <Button uppercase onPress={onDismiss}>
-              Cancel
+              {t('Cancel')}
             </Button>
           </View>
         </Dialog.Actions>

@@ -5,6 +5,7 @@ import {useForm, Controller, useFieldArray} from 'react-hook-form';
 import {useFocusEffect} from '@react-navigation/native';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import {useTranslation} from 'react-i18next';
 import {EventInput, FieldError, ScheduleInput} from '~types';
 import EmptyState from './EmptyState';
 import Confirm from './Confirm';
@@ -26,6 +27,7 @@ export default function ScheduleForm({
   defaultValues,
   fieldErrors,
 }: Props) {
+  const {t} = useTranslation();
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [addEventVisible, setAddEventVisible] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
@@ -51,13 +53,16 @@ export default function ScheduleForm({
           title: yup
             .string()
             .trim()
-            .min(3, () => 'Title too short')
-            .max(80, 'Title too long')
-            .required('Add a Title'),
-          events: yup.array().min(1, 'Add Events').required(),
+            .min(3, () => t('Title too short'))
+            .max(80, () => t('Title too long'))
+            .required(() => t('Add a Title')),
+          events: yup
+            .array()
+            .min(1, () => t('Add Events'))
+            .required(),
         })
         .required(),
-    [],
+    [t],
   );
 
   const {
@@ -163,7 +168,7 @@ export default function ScheduleForm({
             theme={{
               roundness: 0,
             }}
-            placeholder="Add title"
+            placeholder={t('Add title')}
             left={<TextInput.Icon icon="close" onPress={onCancel} />}
             right={<TextInput.Icon icon="check" onPress={onSubmitForm} />}
             onBlur={onBlur}
@@ -179,7 +184,7 @@ export default function ScheduleForm({
       )}
       <AgendaList
         items={fields}
-        ListEmptyComponent={<EmptyState title="Add Events" />}
+        ListEmptyComponent={<EmptyState title={t('Add Events')} />}
         onPressItem={onPressItem}
       />
       <FAB
@@ -188,7 +193,7 @@ export default function ScheduleForm({
         onPress={() => setAddEventVisible(true)}
       />
       <EventForm
-        title="Edit"
+        title={t('Edit')}
         visible={editIndex !== null}
         onDismiss={closeEditEventForm}
         onSubmit={onUpdateItem}
@@ -198,7 +203,7 @@ export default function ScheduleForm({
       />
       <EventForm
         autoFocus
-        title={editItem ? 'Copy' : undefined}
+        title={editItem ? t('Copy') : undefined}
         resetOnSubmit={!editItem}
         visible={addEventVisible}
         onDismiss={closeAddEventForm}
@@ -208,7 +213,7 @@ export default function ScheduleForm({
       <Confirm
         visible={confirmVisible}
         onDismiss={closeConfirmDialog}
-        title="Discard edit?"
+        title={t('Discard edit?')}
         onConfirm={onDiscard}
       />
     </View>

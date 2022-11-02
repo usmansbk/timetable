@@ -1,4 +1,5 @@
 import {memo, useCallback} from 'react';
+import {useTranslation} from 'react-i18next';
 import EventForm from '~components/EventForm';
 import {useAppDispatch} from '~redux/hooks';
 import {updateEvent} from '~redux/timetable/slice';
@@ -11,6 +12,7 @@ interface Props {
 }
 
 function EditEvent({event, visible, onDismiss}: Props) {
+  const {t} = useTranslation();
   const dispatch = useAppDispatch();
 
   const onSubmit = useCallback((values: EventInput) => {
@@ -20,7 +22,7 @@ function EditEvent({event, visible, onDismiss}: Props) {
 
   return (
     <EventForm
-      title="Edit"
+      title={t('Edit')}
       defaultValues={event}
       visible={visible}
       onDismiss={onDismiss}

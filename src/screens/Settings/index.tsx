@@ -2,6 +2,7 @@ import {useCallback, useState} from 'react';
 import {StyleSheet, ScrollView, Platform, Linking, View} from 'react-native';
 import {Divider, List, Text} from 'react-native-paper';
 import RNOpenNotificaition from 'react-native-open-notification';
+import {useTranslation} from 'react-i18next';
 import {formatDay} from '~utils/date';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
 import {
@@ -20,6 +21,7 @@ import DefaultReminders from './DefaultReminders';
 import {Switch} from 'react-native-gesture-handler';
 
 export default function Settings({}: RootStackScreenProps<'Settings'>) {
+  const {t} = useTranslation();
   const dispatch = useAppDispatch();
   const theme = useAppSelector(selectAppTheme);
   const startOfWeek = useAppSelector(selectStartOfWeek);
@@ -55,23 +57,26 @@ export default function Settings({}: RootStackScreenProps<'Settings'>) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <List.Section title="Preferences">
+      <List.Section title={t('Preferences')}>
         <List.Item
-          title="Theme"
+          title={t('Theme')}
           onPress={openThemePicker}
-          description={theme}
+          description={t(`theme_${theme}`)}
         />
         <List.Item
-          title="Start the week on"
+          title={t('Start the week on')}
           description={formatDay(startOfWeek)}
           onPress={openDayPicker}
         />
       </List.Section>
       <Divider />
-      <List.Section title="Notifications">
-        <List.Item title="Default Reminders" onPress={openReminderPicker} />
+      <List.Section title={t('Notifications')}>
         <List.Item
-          title="Sound"
+          title={t('Default Reminders')}
+          onPress={openReminderPicker}
+        />
+        <List.Item
+          title={t('Sound')}
           onPress={onToggleSound}
           right={() => <Switch value={playSound} onChange={onToggleSound} />}
         />
@@ -82,16 +87,16 @@ export default function Settings({}: RootStackScreenProps<'Settings'>) {
         />
         {Platform.OS === 'android' && (
           <List.Item
-            title="Primary settings"
+            title={t('Primary settings')}
             onPress={RNOpenNotificaition.open}
           />
         )}
       </List.Section>
       <Divider />
-      <List.Section title="More">
+      <List.Section title={t('More')}>
         <List.Item
-          title="Contact support"
-          description="Report a bug or Suggest a feature"
+          title={t('Contact support')}
+          description={t('Report a bug or Suggest a feature')}
           onPress={sendEmailToSupport}
         />
       </List.Section>

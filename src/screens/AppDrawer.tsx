@@ -5,6 +5,7 @@ import {
   DrawerHeaderProps,
 } from '@react-navigation/drawer';
 import {memo} from 'react';
+import {useTranslation} from 'react-i18next';
 import {Appbar, Drawer as PaperDrawer} from 'react-native-paper';
 import {useAppSelector} from '~redux/hooks';
 import {selectAllSchedules} from '~redux/timetable/slice';
@@ -23,6 +24,7 @@ function DrawerNavigationBar({navigation, options}: DrawerHeaderProps) {
 }
 
 function AppDrawerContent(props: DrawerContentComponentProps) {
+  const {t} = useTranslation();
   const {navigation, state} = props;
   const schedules = useAppSelector(selectAllSchedules);
 
@@ -47,7 +49,7 @@ function AppDrawerContent(props: DrawerContentComponentProps) {
       ))}
       <PaperDrawer.Item
         icon="cog-outline"
-        label="Settings"
+        label={t('Settings')}
         onPress={() => navigation.navigate('Settings')}
       />
     </DrawerContentScrollView>
@@ -55,6 +57,7 @@ function AppDrawerContent(props: DrawerContentComponentProps) {
 }
 
 function AppDrawer({}: RootStackScreenProps<'AppDrawer'>) {
+  const {t} = useTranslation();
   return (
     <Drawer.Navigator
       initialRouteName="Timetable"
@@ -68,7 +71,7 @@ function AppDrawer({}: RootStackScreenProps<'AppDrawer'>) {
         name="Timetable"
         component={Timetable}
         options={{
-          title: 'Timetable',
+          title: t('Timetable'),
         }}
       />
     </Drawer.Navigator>

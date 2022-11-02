@@ -1,6 +1,7 @@
 import {memo, useCallback} from 'react';
 import {View} from 'react-native';
 import {Button, Dialog, Portal, RadioButton} from 'react-native-paper';
+import {useTranslation} from 'react-i18next';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
 import {selectAppTheme, setTheme} from '~redux/settings/slice';
 import {AppSchemeName} from '~types';
@@ -13,6 +14,7 @@ interface Props {
 const themes: AppSchemeName[] = ['system', 'light', 'dark'];
 
 function ThemePicker({visible, onDismiss}: Props) {
+  const {t} = useTranslation();
   const dispatch = useAppDispatch();
   const theme = useAppSelector(selectAppTheme);
   const setAppTheme = useCallback(
@@ -23,7 +25,7 @@ function ThemePicker({visible, onDismiss}: Props) {
   return (
     <Portal>
       <Dialog visible={visible} onDismiss={onDismiss}>
-        <Dialog.Title>Theme</Dialog.Title>
+        <Dialog.Title>{t('Theme')}</Dialog.Title>
         <Dialog.Content>
           <RadioButton.Group
             value={theme as string}
@@ -32,7 +34,7 @@ function ThemePicker({visible, onDismiss}: Props) {
               <RadioButton.Item
                 key={value}
                 value={value as string}
-                label={value as string}
+                label={t(`theme_${value}`)}
               />
             ))}
           </RadioButton.Group>
@@ -40,7 +42,7 @@ function ThemePicker({visible, onDismiss}: Props) {
         <Dialog.Actions>
           <View>
             <Button uppercase onPress={onDismiss}>
-              Cancel
+              {t('Cancel')}
             </Button>
           </View>
         </Dialog.Actions>

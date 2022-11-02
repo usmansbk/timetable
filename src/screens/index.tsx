@@ -5,6 +5,7 @@ import {
   createNativeStackNavigator,
   NativeStackHeaderProps,
 } from '@react-navigation/native-stack';
+import {useTranslation} from 'react-i18next';
 import {RootStackParamList} from '~types';
 import AppDrawer from './AppDrawer';
 import Settings from './Settings';
@@ -42,6 +43,7 @@ function AppNavigationBar(props: NativeStackHeaderProps) {
 
 export default function Screens() {
   const {colors, dark} = useTheme();
+  const {t} = useTranslation();
 
   return (
     <SafeAreaView
@@ -69,7 +71,7 @@ export default function Screens() {
           component={Settings}
           name="Settings"
           options={{
-            title: 'Settings',
+            title: t('Settings'),
           }}
         />
         <Stack.Screen

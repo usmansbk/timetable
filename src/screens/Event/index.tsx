@@ -1,5 +1,6 @@
 import {memo, useCallback, useEffect, useState} from 'react';
 import {Appbar, Menu} from 'react-native-paper';
+import {useTranslation} from 'react-i18next';
 import Confirm from '~components/Confirm';
 import EmptyState from '~components/EmptyState';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
@@ -10,6 +11,7 @@ import EditEvent from './EditEvent';
 import EventDetails from './EventDetails';
 
 function Event({route, navigation}: RootStackScreenProps<'Event'>) {
+  const {t} = useTranslation();
   const {id} = route.params;
   const dispatch = useAppDispatch();
   const event = useAppSelector(state => selectEventById(state, id));
@@ -61,7 +63,7 @@ function Event({route, navigation}: RootStackScreenProps<'Event'>) {
   }, [event, navigation]);
 
   if (!event) {
-    return <EmptyState title="Event does not exists" />;
+    return <EmptyState title={t('Event does not exists')} />;
   }
 
   return (
@@ -73,9 +75,12 @@ function Event({route, navigation}: RootStackScreenProps<'Event'>) {
           visible={menuVisible}
           onDismiss={closeMenu}
           anchor={<Appbar.Action icon="dots-vertical" onPress={openMenu} />}>
-          <Menu.Item title="Edit" onPress={handleMenuPress('edit')} />
-          <Menu.Item title="Duplicate" onPress={handleMenuPress('duplicate')} />
-          <Menu.Item title="Delete" onPress={handleMenuPress('delete')} />
+          <Menu.Item title={t('Edit')} onPress={handleMenuPress('edit')} />
+          <Menu.Item
+            title={t('Duplicate')}
+            onPress={handleMenuPress('duplicate')}
+          />
+          <Menu.Item title={t('Delete')} onPress={handleMenuPress('delete')} />
         </Menu>
       </Appbar.Header>
       <EventDetails event={event} />
@@ -87,7 +92,7 @@ function Event({route, navigation}: RootStackScreenProps<'Event'>) {
         onSuccess={navigation.popToTop}
       />
       <Confirm
-        title={`Delete "${event.title}"?`}
+        title={t('confirm_delete_event', {title: event.title})}
         visible={confirmVisible}
         onDismiss={closeConfirm}
         onConfirm={handleDelete}

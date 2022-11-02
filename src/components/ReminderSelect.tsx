@@ -1,6 +1,7 @@
 import {memo, useCallback} from 'react';
 import {View} from 'react-native';
 import {Button, Checkbox, Dialog, Portal} from 'react-native-paper';
+import {useTranslation} from 'react-i18next';
 import {ReminderKey} from '~types';
 
 interface Props {
@@ -42,6 +43,7 @@ const reminders: {label: string; key: ReminderKey}[] = [
 ];
 
 function ReminderSelect({visible, onDismiss, values, onChange}: Props) {
+  const {t} = useTranslation();
   const handleChange = useCallback(
     (key: ReminderKey) => () => {
       onChange(key);
@@ -56,7 +58,7 @@ function ReminderSelect({visible, onDismiss, values, onChange}: Props) {
           {reminders.map(({key, label}) => (
             <Checkbox.Item
               key={key}
-              label={label}
+              label={t(label)}
               status={values[key] ? 'checked' : 'unchecked'}
               onPress={handleChange(key)}
             />
@@ -65,7 +67,7 @@ function ReminderSelect({visible, onDismiss, values, onChange}: Props) {
         <Dialog.Actions>
           <View>
             <Button uppercase onPress={onDismiss}>
-              Cancel
+              {t('Cancel')}
             </Button>
           </View>
         </Dialog.Actions>

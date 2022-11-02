@@ -1,4 +1,5 @@
 import {memo, useCallback} from 'react';
+import {useTranslation} from 'react-i18next';
 import EventForm from '~components/EventForm';
 import {useAppDispatch} from '~redux/hooks';
 import {addEvent} from '~redux/timetable/slice';
@@ -12,6 +13,7 @@ interface Props {
 }
 
 function DuplicateEvent({event, visible, onDismiss, onSuccess}: Props) {
+  const {t} = useTranslation();
   const dispatch = useAppDispatch();
 
   const onSubmit = useCallback(
@@ -25,7 +27,7 @@ function DuplicateEvent({event, visible, onDismiss, onSuccess}: Props) {
 
   return (
     <EventForm
-      title="Copy"
+      title={t('Copy')}
       defaultValues={event}
       visible={visible}
       onDismiss={onDismiss}

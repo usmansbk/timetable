@@ -10,6 +10,7 @@ import {
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useForm, Controller} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
+import {useTranslation} from 'react-i18next';
 import * as yup from 'yup';
 import {EventInput} from '~types';
 import {formatToUTCdate} from '~utils/date';
@@ -42,6 +43,7 @@ function EventForm({
   resetOnSubmit,
   schedules,
 }: Props) {
+  const {t} = useTranslation();
   const {colors} = useTheme();
   const [confirmVisible, setConfirmVisible] = useState(false);
 
@@ -53,16 +55,16 @@ function EventForm({
           title: yup
             .string()
             .trim()
-            .min(3, 'Title too short')
-            .max(80, 'Title too long')
-            .required('Add a Title'),
+            .min(3, () => t('Title too short'))
+            .max(80, () => t('Title too long'))
+            .required(() => t('Add a Title')),
           startDate: yup.string().required(),
           startTime: yup.string().optional(),
           endTime: yup.string().optional(),
           scheduleId: yup.string().optional(),
         })
         .required(),
-    [],
+    [t],
   );
 
   const {
@@ -131,7 +133,7 @@ function EventForm({
             render={({field: {onBlur, onChange, value}}) => (
               <TextInput
                 autoFocus={autoFocus}
-                label="Title"
+                label={t('Title') as string}
                 placeholder={defaultValues?.title}
                 value={value}
                 onChangeText={onChange}
@@ -149,7 +151,7 @@ function EventForm({
             name="startDate"
             render={({field: {onChange, value}}) => (
               <DateTimeInput
-                label="Date"
+                label={t('Date')}
                 onChange={onChange}
                 value={value}
                 mode="date"
@@ -164,7 +166,7 @@ function EventForm({
                 render={({field: {onChange, value}}) => (
                   <DateTimeInput
                     optional
-                    label="From"
+                    label={t('From')}
                     onChange={onChange}
                     value={value}
                     mode="time"
@@ -179,7 +181,7 @@ function EventForm({
                 render={({field: {onChange, value}}) => (
                   <DateTimeInput
                     optional
-                    label="To"
+                    label={t('To')}
                     onChange={onChange}
                     value={value}
                     mode="time"
@@ -196,7 +198,7 @@ function EventForm({
                 <Select
                   optional
                   icon="view-day-outline"
-                  label="Schedule"
+                  label={t('Schedule')}
                   value={value}
                   onChange={onChange}
                   options={schedules}
@@ -207,7 +209,7 @@ function EventForm({
         </View>
       </Modal>
       <Confirm
-        title="Delete?"
+        title={t('Delete?')}
         visible={confirmVisible}
         onConfirm={handleDiscard}
         onDismiss={() => setConfirmVisible(false)}
