@@ -32,6 +32,7 @@
     "react-native-vector-icons": "^9.2.0",
     "react-redux": "^8.0.4",
     "redux-persist": "^6.0.0",
+    "rrule": "^2.7.1",
     "yup": "^0.32.11"
   },
   "devDependencies": {
