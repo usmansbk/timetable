@@ -1,6 +1,6 @@
 import {useCallback, useState} from 'react';
-import {StyleSheet, ScrollView, Platform, Linking} from 'react-native';
-import {Divider, List} from 'react-native-paper';
+import {StyleSheet, ScrollView, Platform, Linking, View} from 'react-native';
+import {Divider, List, Text} from 'react-native-paper';
 import RNOpenNotificaition from 'react-native-open-notification';
 import {formatDay} from '~utils/date';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
@@ -95,6 +95,9 @@ export default function Settings({}: RootStackScreenProps<'Settings'>) {
           onPress={sendEmailToSupport}
         />
       </List.Section>
+      <View style={styles.footer}>
+        <Text variant="labelSmall">version {APP_VERSION}</Text>
+      </View>
       <ThemePicker visible={themePickerVisible} onDismiss={closeThemePicker} />
       <DayPicker visible={dayPickerVisible} onDismiss={closeDayPicker} />
       <DefaultReminders
@@ -108,5 +111,10 @@ export default function Settings({}: RootStackScreenProps<'Settings'>) {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
+  },
+  footer: {
+    padding: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
