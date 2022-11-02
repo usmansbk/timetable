@@ -1,5 +1,6 @@
 import {memo, useCallback} from 'react';
-import {Dialog, Portal, RadioButton} from 'react-native-paper';
+import {View} from 'react-native';
+import {Button, Dialog, Portal, RadioButton} from 'react-native-paper';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
 import {selectStartOfWeek, setStartOfWeek} from '~redux/settings/slice';
 import {DAYS_OF_WEEK, formatDay} from '~utils/date';
@@ -33,6 +34,13 @@ function DayPicker({visible, onDismiss}: Props) {
             ))}
           </RadioButton.Group>
         </Dialog.Content>
+        <Dialog.Actions>
+          <View>
+            <Button uppercase onPress={onDismiss}>
+              Cancel
+            </Button>
+          </View>
+        </Dialog.Actions>
       </Dialog>
     </Portal>
   );

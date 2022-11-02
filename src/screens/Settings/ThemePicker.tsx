@@ -1,5 +1,6 @@
 import {memo, useCallback} from 'react';
-import {Dialog, Portal, RadioButton} from 'react-native-paper';
+import {View} from 'react-native';
+import {Button, Dialog, Portal, RadioButton} from 'react-native-paper';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
 import {selectAppTheme, setTheme} from '~redux/settings/slice';
 import {AppSchemeName} from '~types';
@@ -36,6 +37,13 @@ function ThemePicker({visible, onDismiss}: Props) {
             ))}
           </RadioButton.Group>
         </Dialog.Content>
+        <Dialog.Actions>
+          <View>
+            <Button uppercase onPress={onDismiss}>
+              Cancel
+            </Button>
+          </View>
+        </Dialog.Actions>
       </Dialog>
     </Portal>
   );
