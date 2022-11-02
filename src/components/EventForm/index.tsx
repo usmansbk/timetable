@@ -14,9 +14,9 @@ import {useTranslation} from 'react-i18next';
 import * as yup from 'yup';
 import {EventInput} from '~types';
 import {formatToUTCdate} from '~utils/date';
-import DateTimeInput from './DateTimeInput';
-import Confirm from './Confirm';
-import Select, {SelectOption} from './Select';
+import DateTimeInput from '../DateTimeInput';
+import Confirm from '../Confirm';
+import Select, {SelectOption} from '../Select';
 
 interface Props {
   autoFocus?: boolean;
