@@ -5,6 +5,8 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 
+export const DAYS_OF_WEEK = [0, 1, 2, 3, 4, 5, 6]; // sun - sat
+
 const UTC_DATE_FORMAT = 'YYYY-MM-DD';
 const UTC_TIME_FORMAT = 'HH:mm';
 
@@ -33,6 +35,10 @@ export function parseUTCdate(date: string) {
 
 export function parseUTCtime(time: string) {
   return dayjs.utc(time, UTC_TIME_FORMAT).toDate();
+}
+
+export function formatDay(day: number, format = 'dddd') {
+  return dayjs().day(day).format(format);
 }
 
 export default dayjs;

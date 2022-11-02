@@ -9,11 +9,7 @@ interface Props {
   onDismiss: () => void;
 }
 
-const themes: {key: AppSchemeName; label: string}[] = [
-  {key: 'system', label: 'Auto'},
-  {key: 'light', label: 'Light'},
-  {key: 'dark', label: 'Dark'},
-];
+const themes: AppSchemeName[] = ['system', 'light', 'dark'];
 
 function ThemePicker({visible, onDismiss}: Props) {
   const dispatch = useAppDispatch();
@@ -31,8 +27,12 @@ function ThemePicker({visible, onDismiss}: Props) {
           <RadioButton.Group
             value={theme as string}
             onValueChange={value => setAppTheme(value as AppSchemeName)}>
-            {themes.map(({key, label}) => (
-              <RadioButton.Item value={key as string} label={label} />
+            {themes.map(value => (
+              <RadioButton.Item
+                key={value}
+                value={value as string}
+                label={value as string}
+              />
             ))}
           </RadioButton.Group>
         </Dialog.Content>
