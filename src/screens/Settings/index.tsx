@@ -1,10 +1,11 @@
 import {useCallback, useState} from 'react';
-import {StyleSheet, ScrollView, Platform} from 'react-native';
+import {StyleSheet, ScrollView, Platform, Linking} from 'react-native';
 import {Divider, List} from 'react-native-paper';
 import {formatDay} from '~utils/date';
 import {useAppSelector} from '~redux/hooks';
 import {selectAppTheme, selectStartOfWeek} from '~redux/settings/slice';
 import {RootStackScreenProps} from '~types';
+import {APP_VERSION, SUPPORT_EMAIL} from '~constants';
 import ThemePicker from './ThemePicker';
 import DayPicker from './DayPicker';
 import DefaultReminders from './DefaultReminders';
@@ -25,6 +26,12 @@ export default function Settings({}: RootStackScreenProps<'Settings'>) {
 
   const openReminderPicker = useCallback(() => setReminderVisible(true), []);
   const closeReminderPicker = useCallback(() => setReminderVisible(false), []);
+
+  const sendEmailToSupport = useCallback(() => {
+    Linking.openURL(
+      `mailto:${SUPPORT_EMAIL}?subject=[Timetable v${APP_VERSION}]: ${Platform.OS}, ${Platform.Version}`,
+    );
+  }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -52,7 +59,7 @@ export default function Settings({}: RootStackScreenProps<'Settings'>) {
         <List.Item
           title="Contact support"
           description="Report a bug or Suggest a feature"
-          onPress={() => null}
+          onPress={sendEmailToSupport}
         />
       </List.Section>
       <ThemePicker visible={themePickerVisible} onDismiss={closeThemePicker} />
