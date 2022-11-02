@@ -1,4 +1,4 @@
-import {StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import {
   Appbar,
   HelperText,
@@ -17,6 +17,7 @@ import {formatToUTCdate} from '~utils/date';
 import DateTimeInput from '../DateTimeInput';
 import Confirm from '../Confirm';
 import Select, {SelectOption} from '../Select';
+import Repeat from './Repeat';
 
 interface Props {
   autoFocus?: boolean;
@@ -65,6 +66,7 @@ function EventForm({
           startTime: yup.string().optional(),
           endTime: yup.string().optional(),
           scheduleId: yup.string().optional(),
+          repeat: yup.object().optional(),
         })
         .required(),
     [t],
@@ -127,85 +129,94 @@ function EventForm({
             )}
             <Appbar.Action icon="check" onPress={_onSubmit} />
           </Appbar.Header>
-          <Controller
-            control={control}
-            name="title"
-            render={({field: {onBlur, onChange, value}}) => (
-              <TextInput
-                autoFocus={autoFocus}
-                label={t('Title') as string}
-                placeholder={defaultValues?.title}
-                value={value}
-                onChangeText={onChange}
-                onBlur={onBlur}
-              />
-            )}
-          />
-          {errors.title && !!touchedFields.title && (
-            <HelperText type="error" visible>
-              {errors.title.message}
-            </HelperText>
-          )}
-          <Controller
-            control={control}
-            name="startDate"
-            render={({field: {onChange, value}}) => (
-              <DateTimeInput
-                label={t('Date')}
-                onChange={onChange}
-                value={value}
-                mode="date"
-              />
-            )}
-          />
-          <View style={styles.row}>
-            <View style={styles.time}>
-              <Controller
-                control={control}
-                name="startTime"
-                render={({field: {onChange, value}}) => (
-                  <DateTimeInput
-                    optional
-                    label={t('From')}
-                    onChange={onChange}
-                    value={value}
-                    mode="time"
-                  />
-                )}
-              />
-            </View>
-            <View style={styles.time}>
-              <Controller
-                control={control}
-                name="endTime"
-                render={({field: {onChange, value}}) => (
-                  <DateTimeInput
-                    optional
-                    label={t('To')}
-                    onChange={onChange}
-                    value={value}
-                    mode="time"
-                  />
-                )}
-              />
-            </View>
-          </View>
-          {!!schedules?.length && (
+          <ScrollView>
             <Controller
               control={control}
-              name="scheduleId"
-              render={({field: {onChange, value}}) => (
-                <Select
-                  optional
-                  icon="view-day-outline"
-                  label={t('Schedule')}
+              name="title"
+              render={({field: {onBlur, onChange, value}}) => (
+                <TextInput
+                  autoFocus={autoFocus}
+                  label={t('Title') as string}
+                  placeholder={defaultValues?.title}
                   value={value}
-                  onChange={onChange}
-                  options={schedules}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
                 />
               )}
             />
-          )}
+            {errors.title && !!touchedFields.title && (
+              <HelperText type="error" visible>
+                {errors.title.message}
+              </HelperText>
+            )}
+            <Controller
+              control={control}
+              name="startDate"
+              render={({field: {onChange, value}}) => (
+                <DateTimeInput
+                  label={t('Date')}
+                  onChange={onChange}
+                  value={value}
+                  mode="date"
+                />
+              )}
+            />
+            <View style={styles.row}>
+              <View style={styles.time}>
+                <Controller
+                  control={control}
+                  name="startTime"
+                  render={({field: {onChange, value}}) => (
+                    <DateTimeInput
+                      optional
+                      label={t('From')}
+                      onChange={onChange}
+                      value={value}
+                      mode="time"
+                    />
+                  )}
+                />
+              </View>
+              <View style={styles.time}>
+                <Controller
+                  control={control}
+                  name="endTime"
+                  render={({field: {onChange, value}}) => (
+                    <DateTimeInput
+                      optional
+                      label={t('To')}
+                      onChange={onChange}
+                      value={value}
+                      mode="time"
+                    />
+                  )}
+                />
+              </View>
+            </View>
+            {!!schedules?.length && (
+              <Controller
+                control={control}
+                name="scheduleId"
+                render={({field: {onChange, value}}) => (
+                  <Select
+                    optional
+                    icon="view-day-outline"
+                    label={t('Schedule')}
+                    value={value}
+                    onChange={onChange}
+                    options={schedules}
+                  />
+                )}
+              />
+            )}
+            <Controller
+              control={control}
+              name="repeat"
+              render={({field: {value, onChange}}) => (
+                <Repeat onChange={onChange} value={value} />
+              )}
+            />
+          </ScrollView>
         </View>
       </Modal>
       <Confirm

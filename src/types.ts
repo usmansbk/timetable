@@ -58,6 +58,11 @@ declare global {
   }
 }
 
+export interface Recurrence {
+  freq: 'daily' | 'weekly' | 'monthly' | 'yearly';
+  until?: string;
+}
+
 export interface EventInput {
   id?: string;
   title: string;
@@ -65,6 +70,7 @@ export interface EventInput {
   startTime?: string | null;
   endTime?: string | null;
   scheduleId?: string | null;
+  repeat?: Recurrence;
 }
 
 export interface ScheduleInput {
