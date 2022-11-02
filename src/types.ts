@@ -11,7 +11,15 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 export type IconName = ComponentProps<typeof Icon>['name'];
 
 export type AppSchemeName = ColorSchemeName | 'system';
-export type ReminderKey = 'exact' | '5m' | '10m' | '15m' | '30m' | '1h' | '1d';
+export type ReminderKey =
+  | 'exact'
+  | '5m'
+  | '10m'
+  | '15m'
+  | '30m'
+  | '1h'
+  | '2h'
+  | '1d';
 
 export type DrawerStackParamList = {
   Timetable: undefined;

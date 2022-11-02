@@ -23,6 +23,7 @@ const initialState: State = {
     '15m': false,
     '30m': true,
     '1h': false,
+    '2h': false,
     '1d': false,
   },
 };

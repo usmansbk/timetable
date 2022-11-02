@@ -32,6 +32,10 @@ const reminders: {label: string; key: ReminderKey}[] = [
     key: '1h',
   },
   {
+    label: '2 hours before',
+    key: '2h',
+  },
+  {
     label: '1 day before',
     key: '1d',
   },
