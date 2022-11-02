@@ -129,7 +129,7 @@ function EventForm({
             )}
             <Appbar.Action icon="check" onPress={_onSubmit} />
           </Appbar.Header>
-          <ScrollView>
+          <ScrollView keyboardShouldPersistTaps="always">
             <Controller
               control={control}
               name="title"
