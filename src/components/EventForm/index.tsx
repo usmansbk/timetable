@@ -158,6 +158,7 @@ function EventForm({
                   onChange={onChange}
                   value={value}
                   mode="date"
+                  error={touchedFields.startDate && !!errors.startDate?.message}
                 />
               )}
             />

@@ -21,6 +21,7 @@ interface Props {
   icon?: IconName;
   options?: SelectOption[];
   onChange: (value: string | null) => void;
+  error?: boolean;
 }
 
 export default function Select({
@@ -31,6 +32,7 @@ export default function Select({
   options,
   onChange,
   optional,
+  error,
 }: Props) {
   const [open, setOpen] = useState(false);
   const selected = options?.find(option => value === option.value);
@@ -60,6 +62,7 @@ export default function Select({
           label={label}
           placeholder={placeholder}
           value={selected?.label || ''}
+          error={error}
         />
       </TouchableRipple>
       <Portal>

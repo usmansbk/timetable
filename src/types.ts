@@ -59,7 +59,7 @@ declare global {
 }
 
 export interface Recurrence {
-  freq: 'daily' | 'weekly' | 'monthly' | 'yearly';
+  freq: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
   until?: string;
 }
 

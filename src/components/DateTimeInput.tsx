@@ -16,9 +16,10 @@ interface Props {
   label?: string;
   mode: 'date' | 'time';
   onChange: (value: string | null) => void;
+  error?: boolean;
 }
 
-function DateTimeInput({label, mode, optional, onChange, value}: Props) {
+function DateTimeInput({label, mode, optional, onChange, value, error}: Props) {
   const [open, setOpen] = useState(false);
 
   let formattedValue;
@@ -55,6 +56,7 @@ function DateTimeInput({label, mode, optional, onChange, value}: Props) {
               <TextInput.Icon icon="close" onPress={() => onChange(null)} />
             ) : null
           }
+          error={error}
         />
       </TouchableRipple>
       {open && (
