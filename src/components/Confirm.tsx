@@ -29,7 +29,7 @@ export default function Confirm({
   return (
     <Portal>
       <Dialog visible={visible} onDismiss={onDismiss}>
-        <Dialog.Title>{title}</Dialog.Title>
+        <Dialog.Title numberOfLines={2}>{title}</Dialog.Title>
         <Dialog.Actions>
           <View>
             <Button mode="contained-tonal" onPress={onDismiss}>
