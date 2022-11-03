@@ -4,7 +4,7 @@ import {
   Portal,
   TextInput,
   TouchableRipple,
-  List,
+  RadioButton,
 } from 'react-native-paper';
 import {IconName} from '~types';
 
@@ -37,13 +37,10 @@ export default function Select({
   const [open, setOpen] = useState(false);
   const selected = options?.find(option => value === option.value);
 
-  const handleChange = useCallback(
-    (newValue: string) => () => {
-      onChange(newValue);
-      setOpen(false);
-    },
-    [],
-  );
+  const handleChange = useCallback((newValue: string) => {
+    onChange(newValue);
+    setOpen(false);
+  }, []);
 
   return (
     <>
@@ -69,18 +66,11 @@ export default function Select({
         <Dialog visible={open} onDismiss={() => setOpen(false)}>
           <Dialog.Title>{label}</Dialog.Title>
           <Dialog.Content>
-            {options?.map(({label, value}) => (
-              <List.Item
-                title={label}
-                key={value}
-                onPress={handleChange(value)}
-                right={
-                  selected?.value === value
-                    ? ({color}) => <List.Icon color={color} icon="check" />
-                    : undefined
-                }
-              />
-            ))}
+            <RadioButton.Group value={value || ''} onValueChange={handleChange}>
+              {options?.map(({label, value}) => (
+                <RadioButton.Item key={value} label={label} value={value} />
+              ))}
+            </RadioButton.Group>
           </Dialog.Content>
         </Dialog>
       </Portal>
