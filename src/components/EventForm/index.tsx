@@ -59,7 +59,6 @@ function EventForm({
           title: yup
             .string()
             .trim()
-            .min(3, () => t('Title too short'))
             .max(80, () => t('Title too long'))
             .required(() => t('Add a Title')),
           startDate: yup.string().required(),
