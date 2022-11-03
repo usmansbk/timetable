@@ -1,8 +1,8 @@
-import {memo, useCallback} from 'react';
+import {memo, useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import EventForm from '~components/EventForm';
-import {useAppDispatch} from '~redux/hooks';
-import {addEvent} from '~redux/timetable/slice';
+import {useAppDispatch, useAppSelector} from '~redux/hooks';
+import {addEvent, selectAllSchedules} from '~redux/timetable/slice';
 import {EventInput} from '~types';
 
 interface Props {
@@ -15,6 +15,7 @@ interface Props {
 function DuplicateEvent({event, visible, onDismiss, onSuccess}: Props) {
   const {t} = useTranslation();
   const dispatch = useAppDispatch();
+  const schedules = useAppSelector(selectAllSchedules);
 
   const onSubmit = useCallback(
     (values: EventInput) => {
@@ -25,6 +26,15 @@ function DuplicateEvent({event, visible, onDismiss, onSuccess}: Props) {
     [onSuccess, onDismiss],
   );
 
+  const scheduleOptions = useMemo(
+    () =>
+      schedules?.map(({title, id}) => ({
+        label: title,
+        value: id,
+      })),
+    [schedules],
+  );
+
   return (
     <EventForm
       title={t('Copy')}
@@ -32,6 +42,7 @@ function DuplicateEvent({event, visible, onDismiss, onSuccess}: Props) {
       visible={visible}
       onDismiss={onDismiss}
       onSubmit={onSubmit}
+      schedules={scheduleOptions}
     />
   );
 }
