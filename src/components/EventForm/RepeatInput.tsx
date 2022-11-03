@@ -17,7 +17,7 @@ import {Recurrence} from '~types';
 import {formatRecurrence} from '~utils/event';
 
 interface Props {
-  value?: Recurrence;
+  value?: Recurrence | null;
   onChange: (value: Recurrence | null) => void;
   error?: boolean;
 }
@@ -62,8 +62,8 @@ function RepeatInput({onChange, value, error}: Props) {
     formState: {errors},
   } = useForm<Recurrence>({
     resolver: yupResolver(schema),
-    reValidateMode: 'onSubmit',
-    defaultValues: value,
+    reValidateMode: 'onChange',
+    defaultValues: value ?? undefined,
   });
 
   const onSubmit = handleSubmit(values => {
@@ -75,7 +75,8 @@ function RepeatInput({onChange, value, error}: Props) {
     <View>
       <TouchableRipple onPress={openForm}>
         <TextInput
-          value={value && formatRecurrence(value)}
+          multiline
+          value={value ? formatRecurrence(value) : ''}
           label={t('Repeat') as string}
           editable={false}
           left={<TextInput.Icon icon="repeat" />}
