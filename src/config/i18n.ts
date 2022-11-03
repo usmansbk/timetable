@@ -5,7 +5,7 @@ import en from 'assets/locales/en/translation.json';
 i18next.use(initReactI18next).init({
   lng: 'en',
   fallbackLng: 'en',
-  debug: __DEV__,
+  debug: false,
   interpolation: {
     escapeValue: false,
   },
