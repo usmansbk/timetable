@@ -68,6 +68,7 @@ function EventForm({
           repeat: repeatSchema.nullable().optional(),
           description: yup
             .string()
+            .trim()
             .max(700, () => t('Description too long'))
             .nullable()
             .optional(),
