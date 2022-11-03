@@ -24,7 +24,7 @@ interface Props {
 
 export const schema = yup.object<Record<keyof Recurrence, yup.AnySchema>>({
   freq: yup.string().required(),
-  until: yup.string().optional(),
+  until: yup.string().nullable().optional(),
 });
 
 function RepeatInput({onChange, value, error}: Props) {

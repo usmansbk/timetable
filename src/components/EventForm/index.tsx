@@ -14,6 +14,7 @@ import {useTranslation} from 'react-i18next';
 import * as yup from 'yup';
 import {EventInput} from '~types';
 import {formatToUTCdate} from '~utils/date';
+import {validateRecurrence} from '~utils/event';
 import DateTimeInput from '../DateTimeInput';
 import Confirm from '../Confirm';
 import Select, {SelectOption} from '../Select';
@@ -65,7 +66,14 @@ function EventForm({
           startTime: yup.string().nullable().optional(),
           endTime: yup.string().nullable().optional(),
           scheduleId: yup.string().nullable().optional(),
-          repeat: repeatSchema.nullable().optional(), // TODO: validate repeat againts startDate
+          repeat: repeatSchema
+            .nullable()
+            .optional()
+            .test(
+              'minRepeat',
+              () => t('Should repeat at least once'),
+              validateRecurrence,
+            ),
           description: yup
             .string()
             .trim()
@@ -232,6 +240,11 @@ function EventForm({
               />
             )}
           />
+          {!!errors.repeat?.message && (
+            <HelperText type="error" visible>
+              {errors.repeat.message}
+            </HelperText>
+          )}
           <Controller
             control={control}
             name="description"
