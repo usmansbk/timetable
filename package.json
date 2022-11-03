@@ -53,6 +53,7 @@
     "@types/lodash.difference": "^4.5.7",
     "@types/react": "^18.0.21",
     "@types/react-native": "^0.70.4",
+    "@types/react-native-push-notification": "^8.1.1",
     "@types/react-native-vector-icons": "^6.4.12",
     "@types/react-test-renderer": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.40.1",
