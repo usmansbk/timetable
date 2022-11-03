@@ -69,8 +69,7 @@ function EventForm({
           repeat: repeatSchema.nullable().optional(),
           description: yup
             .string()
-            .min(20, () => t('Description too short'))
-            .max(400, () => t('Description too long'))
+            .max(700, () => t('Description too long'))
             .nullable()
             .optional(),
         })
@@ -97,6 +96,7 @@ function EventForm({
           endTime: null,
           scheduleId: null,
           repeat: null,
+          description: null,
         },
         defaultValues,
       ),
