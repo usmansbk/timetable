@@ -70,7 +70,8 @@ export interface EventInput {
   startTime?: string | null;
   endTime?: string | null;
   scheduleId?: string | null;
-  repeat?: Recurrence;
+  repeat?: Recurrence | null;
+  description?: string | null;
 }
 
 export interface ScheduleInput {

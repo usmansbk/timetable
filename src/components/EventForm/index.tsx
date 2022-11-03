@@ -67,6 +67,12 @@ function EventForm({
           endTime: yup.string().nullable().optional(),
           scheduleId: yup.string().nullable().optional(),
           repeat: repeatSchema.nullable().optional(),
+          description: yup
+            .string()
+            .min(20, () => t('Description too short'))
+            .max(400, () => t('Description too long'))
+            .nullable()
+            .optional(),
         })
         .required(),
     [t],
@@ -118,116 +124,135 @@ function EventForm({
   return (
     <Portal>
       <Modal visible={visible} onDismiss={onDismiss} style={styles.container}>
-        <View
-          style={{
+        <Appbar.Header>
+          <Appbar.Action icon="close" onPress={onDismiss} />
+          <Appbar.Content title={title} />
+          {!!onPressDuplicate && (
+            <Appbar.Action icon="content-copy" onPress={onPressDuplicate} />
+          )}
+          {!!onDiscard && (
+            <Appbar.Action icon="trash-can-outline" onPress={openConfirm} />
+          )}
+          <Appbar.Action icon="check" onPress={_onSubmit} />
+        </Appbar.Header>
+        <ScrollView
+          keyboardShouldPersistTaps="always"
+          contentContainerStyle={{
             backgroundColor: colors.background,
           }}>
-          <Appbar.Header>
-            <Appbar.Action icon="close" onPress={onDismiss} />
-            <Appbar.Content title={title} />
-            {!!onPressDuplicate && (
-              <Appbar.Action icon="content-copy" onPress={onPressDuplicate} />
+          <Controller
+            control={control}
+            name="title"
+            render={({field: {onBlur, onChange, value}}) => (
+              <TextInput
+                autoFocus={autoFocus}
+                label={t('Title') as string}
+                placeholder={defaultValues?.title}
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                error={!!errors.title}
+              />
             )}
-            {!!onDiscard && (
-              <Appbar.Action icon="trash-can-outline" onPress={openConfirm} />
+          />
+          {errors.title && !!touchedFields.title && (
+            <HelperText type="error" visible>
+              {errors.title.message}
+            </HelperText>
+          )}
+          <Controller
+            control={control}
+            name="startDate"
+            render={({field: {onChange, value}}) => (
+              <DateTimeInput
+                label={t('Date')}
+                onChange={onChange}
+                value={value}
+                mode="date"
+                error={!!errors.startDate}
+              />
             )}
-            <Appbar.Action icon="check" onPress={_onSubmit} />
-          </Appbar.Header>
-          <ScrollView keyboardShouldPersistTaps="always">
-            <Controller
-              control={control}
-              name="title"
-              render={({field: {onBlur, onChange, value}}) => (
-                <TextInput
-                  autoFocus={autoFocus}
-                  label={t('Title') as string}
-                  placeholder={defaultValues?.title}
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  error={!!errors.title}
-                />
-              )}
-            />
-            {errors.title && !!touchedFields.title && (
-              <HelperText type="error" visible>
-                {errors.title.message}
-              </HelperText>
-            )}
-            <Controller
-              control={control}
-              name="startDate"
-              render={({field: {onChange, value}}) => (
-                <DateTimeInput
-                  label={t('Date')}
-                  onChange={onChange}
-                  value={value}
-                  mode="date"
-                  error={!!errors.startDate}
-                />
-              )}
-            />
-            <View style={styles.row}>
-              <View style={styles.time}>
-                <Controller
-                  control={control}
-                  name="startTime"
-                  render={({field: {onChange, value}}) => (
-                    <DateTimeInput
-                      optional
-                      label={t('From')}
-                      onChange={onChange}
-                      value={value}
-                      mode="time"
-                    />
-                  )}
-                />
-              </View>
-              <View style={styles.time}>
-                <Controller
-                  control={control}
-                  name="endTime"
-                  render={({field: {onChange, value}}) => (
-                    <DateTimeInput
-                      optional
-                      label={t('To')}
-                      onChange={onChange}
-                      value={value}
-                      mode="time"
-                    />
-                  )}
-                />
-              </View>
-            </View>
-            {!!schedules?.length && (
+          />
+          <View style={styles.row}>
+            <View style={styles.time}>
               <Controller
                 control={control}
-                name="scheduleId"
+                name="startTime"
                 render={({field: {onChange, value}}) => (
-                  <Select
+                  <DateTimeInput
                     optional
-                    icon="view-day-outline"
-                    label={t('Schedule')}
-                    value={value}
+                    label={t('From')}
                     onChange={onChange}
-                    options={schedules}
+                    value={value}
+                    mode="time"
                   />
                 )}
               />
-            )}
+            </View>
+            <View style={styles.time}>
+              <Controller
+                control={control}
+                name="endTime"
+                render={({field: {onChange, value}}) => (
+                  <DateTimeInput
+                    optional
+                    label={t('To')}
+                    onChange={onChange}
+                    value={value}
+                    mode="time"
+                  />
+                )}
+              />
+            </View>
+          </View>
+          {!!schedules?.length && (
             <Controller
               control={control}
-              name="repeat"
-              render={({field: {value, onChange}}) => (
-                <RepeatInput
-                  onChange={onChange}
+              name="scheduleId"
+              render={({field: {onChange, value}}) => (
+                <Select
+                  optional
+                  icon="view-day-outline"
+                  label={t('Schedule')}
                   value={value}
-                  error={!!errors.repeat}
+                  onChange={onChange}
+                  options={schedules}
                 />
               )}
             />
-          </ScrollView>
-        </View>
+          )}
+          <Controller
+            control={control}
+            name="repeat"
+            render={({field: {value, onChange}}) => (
+              <RepeatInput
+                onChange={onChange}
+                value={value}
+                error={!!errors.repeat}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="description"
+            render={({field: {onBlur, onChange, value}}) => (
+              <TextInput
+                left={<TextInput.Icon icon="text" />}
+                multiline
+                label={t('Description') as string}
+                value={value || ''}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                error={!!errors.description}
+              />
+            )}
+          />
+          {errors.description && !!touchedFields.description && (
+            <HelperText type="error" visible>
+              {errors.description.message}
+            </HelperText>
+          )}
+        </ScrollView>
       </Modal>
       <Confirm
         title={t('Delete?')}
