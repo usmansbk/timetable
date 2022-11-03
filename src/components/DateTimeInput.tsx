@@ -49,6 +49,7 @@ function DateTimeInput({label, mode, optional, onChange, value, error}: Props) {
           left={
             <TextInput.Icon
               icon={mode === 'date' ? 'calendar-outline' : 'clock-outline'}
+              disabled
             />
           }
           right={

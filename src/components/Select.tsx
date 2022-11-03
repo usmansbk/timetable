@@ -49,7 +49,7 @@ export default function Select({
           theme={{
             roundness: 0,
           }}
-          left={icon ? <TextInput.Icon icon={icon} /> : null}
+          left={icon ? <TextInput.Icon disabled icon={icon} /> : null}
           right={
             optional && value ? (
               <TextInput.Icon icon="close" onPress={() => onChange(null)} />

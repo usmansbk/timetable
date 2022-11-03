@@ -1,6 +1,6 @@
 import {memo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {StyleSheet, ScrollView} from 'react-native';
+import {StyleSheet, ScrollView, View} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {useAppSelector} from '~redux/hooks';
 import {selectScheduleById} from '~redux/timetable/slice';
@@ -25,7 +25,7 @@ function ScheduleField({id, label}: {id: string; label: string}) {
       label={label}
       editable={false}
       value={schedule.title}
-      left={<TextInput.Icon icon="view-day-outline" />}
+      left={<TextInput.Icon disabled icon="view-day-outline" />}
     />
   );
 }
@@ -49,37 +49,43 @@ function EventDetails({event}: Props) {
         label={t('Title') as string}
         editable={false}
         value={title}
-        left={<TextInput.Icon icon="format-title" />}
+        left={<TextInput.Icon disabled icon="format-title" />}
       />
       <TextInput
         label={t('Date') as string}
         editable={false}
         value={formatUTCtoLocalDate(startDate)}
-        left={<TextInput.Icon icon="calendar" />}
+        left={<TextInput.Icon disabled icon="calendar" />}
       />
-      {!!startTime && (
-        <TextInput
-          label={t('Start time') as string}
-          editable={false}
-          value={formatUTCtoLocalTime(startTime)}
-          left={<TextInput.Icon icon="clock-time-eight-outline" />}
-        />
-      )}
-      {!!endTime && (
-        <TextInput
-          label={t('End time') as string}
-          editable={false}
-          value={formatUTCtoLocalTime(endTime)}
-          left={<TextInput.Icon icon="clock-time-four-outline" />}
-        />
-      )}
+      <View style={styles.row}>
+        {!!startTime && (
+          <View style={styles.time}>
+            <TextInput
+              label={t('From') as string}
+              editable={false}
+              value={formatUTCtoLocalTime(startTime)}
+              left={<TextInput.Icon disabled icon="clock-time-eight-outline" />}
+            />
+          </View>
+        )}
+        {!!endTime && (
+          <View style={styles.time}>
+            <TextInput
+              label={t('To') as string}
+              editable={false}
+              value={formatUTCtoLocalTime(endTime)}
+              left={<TextInput.Icon disabled icon="clock-time-four-outline" />}
+            />
+          </View>
+        )}
+      </View>
       {!!repeat && (
         <TextInput
           multiline
           label={t('Repeat') as string}
           editable={false}
           value={formatRecurrence(repeat)}
-          left={<TextInput.Icon icon="repeat" />}
+          left={<TextInput.Icon disabled icon="repeat" />}
         />
       )}
       {!!scheduleId && <ScheduleField id={scheduleId} label={t('Schedule')} />}
@@ -89,7 +95,7 @@ function EventDetails({event}: Props) {
           label={t('Description') as string}
           editable={false}
           value={description}
-          left={<TextInput.Icon icon="text" />}
+          left={<TextInput.Icon disabled icon="text" />}
         />
       )}
     </ScrollView>
@@ -99,6 +105,12 @@ function EventDetails({event}: Props) {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  time: {
+    flex: 1,
   },
 });
 

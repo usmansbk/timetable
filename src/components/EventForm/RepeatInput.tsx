@@ -79,7 +79,7 @@ function RepeatInput({onChange, value, error}: Props) {
           value={value ? formatRecurrence(value) : ''}
           label={t('Repeat') as string}
           editable={false}
-          left={<TextInput.Icon icon="repeat" />}
+          left={<TextInput.Icon disabled icon="repeat" />}
           right={
             value ? (
               <TextInput.Icon icon="close" onPress={() => onChange(null)} />
