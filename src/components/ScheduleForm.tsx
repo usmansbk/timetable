@@ -174,6 +174,7 @@ export default function ScheduleForm({
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
+            error={touchedFields.title && !!errors.title}
           />
         )}
       />

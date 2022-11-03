@@ -14,13 +14,20 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import DateTimeInput from '~components/DateTimeInput';
 import Select from '~components/Select';
 import {Recurrence} from '~types';
+import {formatRecurrence} from './util';
 
 interface Props {
   value?: Recurrence;
   onChange: (value: Recurrence | null) => void;
+  error?: boolean;
 }
 
-function Repeat({onChange, value}: Props) {
+export const schema = yup.object<Record<keyof Recurrence, yup.AnySchema>>({
+  freq: yup.string().required(),
+  until: yup.string().optional(),
+});
+
+function RepeatInput({onChange, value, error}: Props) {
   const {t} = useTranslation();
   const [open, setOpen] = useState(false);
 
@@ -49,15 +56,6 @@ function Repeat({onChange, value}: Props) {
     [t],
   );
 
-  const schema = useMemo(() => {
-    return yup
-      .object<Record<keyof Recurrence, yup.AnySchema>>({
-        freq: yup.string().required(() => t('Frequency is required')),
-        until: yup.string().optional(),
-      })
-      .required();
-  }, [t]);
-
   const {
     control,
     handleSubmit,
@@ -65,6 +63,7 @@ function Repeat({onChange, value}: Props) {
   } = useForm<Recurrence>({
     resolver: yupResolver(schema),
     reValidateMode: 'onSubmit',
+    defaultValues: value,
   });
 
   const onSubmit = handleSubmit(values => {
@@ -76,6 +75,7 @@ function Repeat({onChange, value}: Props) {
     <View>
       <TouchableRipple onPress={openForm}>
         <TextInput
+          value={value && formatRecurrence(value)}
           label={t('Repeat') as string}
           editable={false}
           left={<TextInput.Icon icon="repeat" />}
@@ -84,6 +84,7 @@ function Repeat({onChange, value}: Props) {
               <TextInput.Icon icon="close" onPress={() => onChange(null)} />
             ) : null
           }
+          error={error}
         />
       </TouchableRipple>
       <Portal>
@@ -136,4 +137,4 @@ function Repeat({onChange, value}: Props) {
   );
 }
 
-export default memo(Repeat);
+export default memo(RepeatInput);

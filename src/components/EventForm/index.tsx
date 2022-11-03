@@ -17,7 +17,7 @@ import {formatToUTCdate} from '~utils/date';
 import DateTimeInput from '../DateTimeInput';
 import Confirm from '../Confirm';
 import Select, {SelectOption} from '../Select';
-import Repeat from './Repeat';
+import RepeatInput, {schema as repeatSchema} from './RepeatInput';
 
 interface Props {
   autoFocus?: boolean;
@@ -66,7 +66,7 @@ function EventForm({
           startTime: yup.string().optional(),
           endTime: yup.string().optional(),
           scheduleId: yup.string().optional(),
-          repeat: yup.object().optional(),
+          repeat: repeatSchema.optional(),
         })
         .required(),
     [t],
@@ -141,6 +141,7 @@ function EventForm({
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
+                  error={!!errors.title}
                 />
               )}
             />
@@ -158,7 +159,7 @@ function EventForm({
                   onChange={onChange}
                   value={value}
                   mode="date"
-                  error={touchedFields.startDate && !!errors.startDate?.message}
+                  error={!!errors.startDate}
                 />
               )}
             />
@@ -214,7 +215,11 @@ function EventForm({
               control={control}
               name="repeat"
               render={({field: {value, onChange}}) => (
-                <Repeat onChange={onChange} value={value} />
+                <RepeatInput
+                  onChange={onChange}
+                  value={value}
+                  error={!!errors.repeat}
+                />
               )}
             />
           </ScrollView>
