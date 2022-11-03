@@ -8,6 +8,7 @@ import {
   nanoid,
 } from '@reduxjs/toolkit';
 import {normalize, schema} from 'normalizr';
+import difference from 'lodash.difference';
 import {EventInput, ScheduleInput} from '~types';
 import type {RootState} from '../store';
 
@@ -91,7 +92,17 @@ const timetableSlice = createSlice({
     },
     updateSchedule: {
       reducer(state, action: PayloadAction<NormalizedSchedule>) {
-        schedulesAdapter.upsertMany(state.schedules, action.payload.schedules);
+        const newSchedule = Object.values(action.payload.schedules)[0];
+        const oldSchedule = state.schedules.entities[newSchedule.id];
+
+        const removedEvents = difference(
+          oldSchedule?.events,
+          newSchedule.events,
+        );
+
+        const {id, ...changes} = newSchedule;
+        schedulesAdapter.updateOne(state.schedules, {id, changes});
+        eventsAdapter.removeMany(state.events, removedEvents);
         eventsAdapter.upsertMany(state.events, action.payload.events);
       },
       prepare(payload: ScheduleInput) {

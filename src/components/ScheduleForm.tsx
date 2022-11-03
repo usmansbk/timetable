@@ -88,7 +88,8 @@ export default function ScheduleForm({
 
   const onAddItem = useCallback(
     (input: EventInput) => {
-      append(input);
+      const {id: _omit, ...values} = input;
+      append(values);
       closeAddEventForm();
       closeEditEventForm();
     },
