@@ -9,6 +9,7 @@ import {RootStackScreenProps} from '~types';
 import DuplicateEvent from './DuplicateEvent';
 import EditEvent from './EditEvent';
 import EventDetails from './EventDetails';
+import Notification from './Notification';
 
 function Event({route, navigation}: RootStackScreenProps<'Event'>) {
   const {t} = useTranslation();
@@ -20,6 +21,13 @@ function Event({route, navigation}: RootStackScreenProps<'Event'>) {
   const [menuVisible, setMenuVisible] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [duplicateVisible, setDuplicateVisible] = useState(false);
+  const [notificationVisible, setNotificationVisible] = useState(false);
+
+  const openNotification = useCallback(() => setNotificationVisible(true), []);
+  const closeNotification = useCallback(
+    () => setNotificationVisible(false),
+    [],
+  );
 
   const openDuplicate = useCallback(() => setDuplicateVisible(true), []);
   const closeDuplicate = useCallback(() => setDuplicateVisible(false), []);
@@ -71,6 +79,7 @@ function Event({route, navigation}: RootStackScreenProps<'Event'>) {
       <Appbar.Header elevated mode="center-aligned">
         <Appbar.BackAction onPress={navigation.goBack} />
         <Appbar.Content title="" />
+        <Appbar.Action icon="bell-ring-outline" onPress={openNotification} />
         <Menu
           visible={menuVisible}
           onDismiss={closeMenu}
@@ -96,6 +105,11 @@ function Event({route, navigation}: RootStackScreenProps<'Event'>) {
         visible={confirmVisible}
         onDismiss={closeConfirm}
         onConfirm={handleDelete}
+      />
+      <Notification
+        eventId={id}
+        visible={notificationVisible}
+        onDismiss={closeNotification}
       />
     </>
   );

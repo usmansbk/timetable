@@ -160,6 +160,7 @@ function EventForm({
                 onChangeText={onChange}
                 onBlur={onBlur}
                 error={!!errors.title}
+                left={<TextInput.Icon disabled icon="format-title" />}
               />
             )}
           />
@@ -250,7 +251,7 @@ function EventForm({
             name="description"
             render={({field: {onBlur, onChange, value}}) => (
               <TextInput
-                left={<TextInput.Icon icon="text" />}
+                left={<TextInput.Icon disabled icon="text" />}
                 multiline
                 label={t('Description') as string}
                 value={value || ''}
