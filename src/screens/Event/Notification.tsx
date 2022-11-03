@@ -1,7 +1,9 @@
-import {memo} from 'react';
+import {memo, useCallback, useMemo} from 'react';
 import ReminderSelect from '~components/ReminderSelect';
-import {useAppSelector} from '~redux/hooks';
+import {useAppDispatch, useAppSelector} from '~redux/hooks';
+import {selectReminderById, setReminder} from '~redux/timetable/slice';
 import {selectDefaultReminders} from '~redux/settings/slice';
+import {ReminderKey} from '~types';
 
 interface Props {
   eventId: string;
@@ -10,14 +12,28 @@ interface Props {
 }
 
 function Notification({eventId, visible, onDismiss}: Props) {
-  const defaultValues = useAppSelector(selectDefaultReminders);
+  const dispatch = useAppDispatch();
+  const defaultReminder = useAppSelector(selectDefaultReminders);
+  const reminder = useAppSelector(state => selectReminderById(state, eventId));
+
+  const values = useMemo(
+    () => Object.assign({}, defaultReminder, reminder),
+    [defaultReminder, reminder],
+  );
+
+  const handleChange = useCallback(
+    (key: ReminderKey) => {
+      dispatch(setReminder({...values, [key]: !values[key], id: eventId}));
+    },
+    [values, eventId],
+  );
 
   return (
     <ReminderSelect
       visible={visible}
       onDismiss={onDismiss}
-      values={defaultValues}
-      onChange={console.log}
+      values={values}
+      onChange={handleChange}
     />
   );
 }

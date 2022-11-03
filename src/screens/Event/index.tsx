@@ -79,7 +79,7 @@ function Event({route, navigation}: RootStackScreenProps<'Event'>) {
       <Appbar.Header elevated mode="center-aligned">
         <Appbar.BackAction onPress={navigation.goBack} />
         <Appbar.Content title="" />
-        <Appbar.Action icon="bell-outline" onPress={openNotification} />
+        <Appbar.Action icon="bell-ring-outline" onPress={openNotification} />
         <Menu
           visible={menuVisible}
           onDismiss={closeMenu}

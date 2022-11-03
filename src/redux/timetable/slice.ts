@@ -9,13 +9,17 @@ import {
 } from '@reduxjs/toolkit';
 import {normalize, schema} from 'normalizr';
 import difference from 'lodash.difference';
-import {EventInput, ScheduleInput} from '~types';
+import {EventInput, ScheduleInput, Reminder} from '~types';
 import type {RootState} from '../store';
 
 const eventSchemaEntity = new schema.Entity('events');
 const scheduleSchemaEntity = new schema.Entity('schedules', {
   events: new schema.Array(eventSchemaEntity),
 });
+
+interface ReminderEntity extends Reminder {
+  id: string;
+}
 
 interface ScheduleEntity extends Omit<ScheduleInput, 'events'> {
   id: string;
@@ -29,6 +33,7 @@ interface EventEntity extends EventInput {
 interface TimetableState {
   schedules: EntityState<ScheduleEntity>;
   events: EntityState<EventEntity>;
+  reminders: EntityState<ReminderEntity>;
 }
 
 interface NormalizedSchedule {
@@ -45,15 +50,21 @@ const schedulesAdapter = createEntityAdapter<ScheduleEntity>({
 });
 const eventsAdapter = createEntityAdapter<EventEntity>();
 
+const remindersAdapter = createEntityAdapter<ReminderEntity>();
+
 const initialState: TimetableState = {
   schedules: schedulesAdapter.getInitialState(),
   events: eventsAdapter.getInitialState(),
+  reminders: remindersAdapter.getInitialState(),
 };
 
 const timetableSlice = createSlice({
   name: 'timetable',
   initialState,
   reducers: {
+    setReminder(state, action: PayloadAction<ReminderEntity>) {
+      remindersAdapter.upsertOne(state.reminders, action.payload);
+    },
     addSchedule: {
       reducer(state, action: PayloadAction<NormalizedSchedule>) {
         eventsAdapter.addMany(state.events, action.payload.events);
@@ -86,6 +97,7 @@ const timetableSlice = createSlice({
 
       if (schedule?.events.length) {
         eventsAdapter.removeMany(state.events, schedule.events);
+        remindersAdapter.removeMany(state.reminders, schedule.events);
       }
 
       schedulesAdapter.removeOne(state.schedules, action.payload);
@@ -102,7 +114,11 @@ const timetableSlice = createSlice({
 
         const {id, ...changes} = newSchedule;
         schedulesAdapter.updateOne(state.schedules, {id, changes});
-        eventsAdapter.removeMany(state.events, removedEvents);
+        if (removedEvents.length) {
+          eventsAdapter.removeMany(state.events, removedEvents);
+          remindersAdapter.removeMany(state.reminders, removedEvents);
+        }
+
         eventsAdapter.upsertMany(state.events, action.payload.events);
       },
       prepare(payload: ScheduleInput) {
@@ -155,6 +171,7 @@ const timetableSlice = createSlice({
       }
 
       eventsAdapter.removeOne(state.events, action.payload);
+      remindersAdapter.removeOne(state.reminders, action.payload);
     },
     updateEvent: {
       reducer(state, action: PayloadAction<NormalizedEvent>) {
@@ -203,6 +220,7 @@ export const {
   addSchedule,
   updateSchedule,
   removeSchedule,
+  setReminder,
 } = actions;
 
 export const {
@@ -231,5 +249,10 @@ export const selectScheduleEventsById = createSelector(
     );
   },
 );
+
+export const {selectAll: selectAllReminders, selectById: selectReminderById} =
+  remindersAdapter.getSelectors(
+    (state: RootState) => state.timetable.reminders,
+  );
 
 export default reducer;
