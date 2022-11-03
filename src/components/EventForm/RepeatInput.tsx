@@ -14,7 +14,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import DateTimeInput from '~components/DateTimeInput';
 import Select from '~components/Select';
 import {Recurrence} from '~types';
-import {formatRecurrence} from './util';
+import {formatRecurrence} from '~utils/event';
 
 interface Props {
   value?: Recurrence;
