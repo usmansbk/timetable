@@ -1,20 +1,23 @@
 import {memo, useCallback, useMemo} from 'react';
+import {useTranslation} from 'react-i18next';
 import EventForm from '~components/EventForm';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
-import {addEvent, selectAllSchedules} from '~redux/timetable/slice';
+import {selectAllSchedules, updateEvent} from '~redux/timetable/slice';
 import {EventInput} from '~types';
 
 interface Props {
+  event: EventInput;
   visible: boolean;
   onDismiss: () => void;
 }
 
-function AddNewEvent({visible, onDismiss}: Props) {
+function EditEvent({event, visible, onDismiss}: Props) {
+  const {t} = useTranslation();
   const dispatch = useAppDispatch();
   const schedules = useAppSelector(selectAllSchedules);
 
-  const onSubmit = useCallback((input: EventInput) => {
-    dispatch(addEvent(input));
+  const onSubmit = useCallback((values: EventInput) => {
+    dispatch(updateEvent(values));
     onDismiss();
   }, []);
 
@@ -29,7 +32,8 @@ function AddNewEvent({visible, onDismiss}: Props) {
 
   return (
     <EventForm
-      autoFocus
+      title={t('Edit')}
+      defaultValues={event}
       visible={visible}
       onDismiss={onDismiss}
       onSubmit={onSubmit}
@@ -38,4 +42,4 @@ function AddNewEvent({visible, onDismiss}: Props) {
   );
 }
 
-export default memo(AddNewEvent);
+export default memo(EditEvent);

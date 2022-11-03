@@ -1,3 +1,4 @@
+import {ComponentProps} from 'react';
 import type {ColorSchemeName} from 'react-native';
 import type {
   CompositeScreenProps,
@@ -5,8 +6,20 @@ import type {
 } from '@react-navigation/native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import type {DrawerScreenProps} from '@react-navigation/drawer';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+export type IconName = ComponentProps<typeof Icon>['name'];
 
 export type AppSchemeName = ColorSchemeName | 'system';
+export type ReminderKey =
+  | 'exact'
+  | '5m'
+  | '10m'
+  | '15m'
+  | '30m'
+  | '1h'
+  | '2h'
+  | '1d';
 
 export type DrawerStackParamList = {
   Timetable: undefined;
@@ -16,6 +29,18 @@ export type RootStackParamList = {
   AppDrawer: NavigatorScreenParams<DrawerStackParamList>;
   Settings: undefined;
   NewSchedule: undefined;
+  DuplicateSchedule: {
+    id: string;
+  };
+  EditSchedule: {
+    id: string;
+  };
+  Schedule: {
+    id: string;
+  };
+  Event: {
+    id: string;
+  };
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
@@ -33,14 +58,24 @@ declare global {
   }
 }
 
+export interface Recurrence {
+  freq: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
+  until?: string;
+}
+
 export interface EventInput {
+  id?: string;
   title: string;
   startDate: string;
   startTime?: string | null;
   endTime?: string | null;
+  scheduleId?: string | null;
+  repeat?: Recurrence | null;
+  description?: string | null;
 }
 
 export interface ScheduleInput {
+  id?: string;
   title: string;
   events: EventInput[];
 }

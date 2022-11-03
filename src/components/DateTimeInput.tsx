@@ -2,12 +2,12 @@ import {TextInput, TouchableRipple} from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {memo, useState} from 'react';
 import {
-  formatToLocalDate,
-  formatToLocalTime,
+  formatUTCtoLocalDate,
+  formatUTCtoLocalTime,
   formatToUTCdate,
   formatToUTCtime,
-  parseDate,
-  parseTime,
+  parseUTCdate,
+  parseUTCtime,
 } from '~utils/date';
 
 interface Props {
@@ -16,9 +16,10 @@ interface Props {
   label?: string;
   mode: 'date' | 'time';
   onChange: (value: string | null) => void;
+  error?: boolean;
 }
 
-function DateTimeInput({label, mode, optional, onChange, value}: Props) {
+function DateTimeInput({label, mode, optional, onChange, value, error}: Props) {
   const [open, setOpen] = useState(false);
 
   let formattedValue;
@@ -26,8 +27,10 @@ function DateTimeInput({label, mode, optional, onChange, value}: Props) {
 
   if (value) {
     formattedValue =
-      mode === 'date' ? formatToLocalDate(value) : formatToLocalTime(value);
-    parsedValue = mode === 'date' ? parseDate(value) : parseTime(value);
+      mode === 'date'
+        ? formatUTCtoLocalDate(value)
+        : formatUTCtoLocalTime(value);
+    parsedValue = mode === 'date' ? parseUTCdate(value) : parseUTCtime(value);
   } else {
     formattedValue = '';
     parsedValue = new Date();
@@ -43,11 +46,17 @@ function DateTimeInput({label, mode, optional, onChange, value}: Props) {
           value={formattedValue}
           editable={false}
           label={label}
+          left={
+            <TextInput.Icon
+              icon={mode === 'date' ? 'calendar-outline' : 'clock-outline'}
+            />
+          }
           right={
             optional && value ? (
               <TextInput.Icon icon="close" onPress={() => onChange(null)} />
             ) : null
           }
+          error={error}
         />
       </TouchableRipple>
       {open && (

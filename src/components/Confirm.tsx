@@ -1,6 +1,7 @@
 import {useCallback} from 'react';
 import {View} from 'react-native';
 import {Button, Dialog, Portal} from 'react-native-paper';
+import {useTranslation} from 'react-i18next';
 
 interface Props {
   visible: boolean;
@@ -16,9 +17,10 @@ export default function Confirm({
   visible,
   onDismiss,
   onConfirm,
-  confirmText = 'Yes',
-  dismissText = 'No',
+  confirmText,
+  dismissText,
 }: Props) {
+  const {t} = useTranslation();
   const handleConfirm = useCallback(() => {
     onDismiss();
     onConfirm();
@@ -27,16 +29,16 @@ export default function Confirm({
   return (
     <Portal>
       <Dialog visible={visible} onDismiss={onDismiss}>
-        <Dialog.Title>{title}</Dialog.Title>
+        <Dialog.Title numberOfLines={2}>{title}</Dialog.Title>
         <Dialog.Actions>
           <View>
             <Button mode="contained-tonal" onPress={onDismiss}>
-              {dismissText}
+              {dismissText || t('No')}
             </Button>
           </View>
           <View>
             <Button mode="contained" onPress={handleConfirm}>
-              {confirmText}
+              {confirmText || t('Yes')}
             </Button>
           </View>
         </Dialog.Actions>

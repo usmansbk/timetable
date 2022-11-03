@@ -3,11 +3,13 @@ import {useDrawerStatus} from '@react-navigation/drawer';
 import {BackHandler, StyleSheet, View} from 'react-native';
 import {FAB, Portal} from 'react-native-paper';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import {useTranslation} from 'react-i18next';
 import {AppDrawerScreenProps} from '~types';
 import AddNewEvent from './AddNewEvent';
 import Agenda from './Agenda';
 
 function Timetable({navigation}: AppDrawerScreenProps<'Timetable'>) {
+  const {t} = useTranslation();
   const drawerStatus = useDrawerStatus();
   const isFocused = useIsFocused();
   const [state, setState] = useState({open: false});
@@ -46,7 +48,7 @@ function Timetable({navigation}: AppDrawerScreenProps<'Timetable'>) {
           icon={state.open ? 'calendar-today' : 'plus'}
           actions={[
             {
-              label: 'Create schedule',
+              label: t('Create schedule'),
               icon: 'calendar-plus',
               onPress: () => navigation.navigate('NewSchedule'),
             },

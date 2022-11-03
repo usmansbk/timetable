@@ -10,11 +10,12 @@ import {
   DarkTheme as NavigationDarkTheme,
 } from '@react-navigation/native';
 import deepmarge from 'deepmerge';
-import {AppSchemeName} from '~types';
 import {
   MD3Typescale,
   NavigationTheme,
 } from 'react-native-paper/lib/typescript/types';
+import {useAppSelector} from '~redux/hooks';
+import {selectAppTheme} from '~redux/settings/slice';
 
 const {LightTheme, DarkTheme} = adaptNavigationTheme({
   light: NavigationLightTheme,
@@ -43,7 +44,7 @@ const CommonTheme: Partial<MD3Theme> = {
       fontFamily: 'Inter-SemiBold',
     },
     titleLarge: {
-      fontFamily: 'Inter-Bold',
+      fontFamily: 'Inter-SemiBold',
     },
     titleMedium: {
       fontFamily: 'Inter-Medium',
@@ -61,10 +62,10 @@ const CommonTheme: Partial<MD3Theme> = {
       fontFamily: 'Inter-Light',
     },
     labelLarge: {
-      fontFamily: 'Inter-Regular',
+      fontFamily: 'Inter-Medium',
     },
     labelMedium: {
-      fontFamily: 'Inter-Light',
+      fontFamily: 'Inter-Regular',
     },
     labelSmall: {
       fontFamily: 'Inter-ExtraLight',
@@ -86,7 +87,8 @@ const CombinedDarkTheme = deepmarge.all([
   CommonTheme,
 ]) as Theme;
 
-export const useAppTheme = (appScheme?: AppSchemeName) => {
+export const useAppTheme = () => {
+  const appScheme = useAppSelector(selectAppTheme);
   const scheme = useColorScheme();
 
   if (appScheme === 'system') {

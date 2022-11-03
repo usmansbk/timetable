@@ -1,0 +1,7 @@
+{
+  "theme_system": "System default",
+  "theme_light": "Light",
+  "theme_dark": "Dark",
+  "confirm_delete_event": "Delete \"{{title}}\"?",
+  "confirm_delete_schedule": "Delete \"{{title}}\"?"
+}

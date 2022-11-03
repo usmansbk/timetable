@@ -5,7 +5,10 @@ import {
   DrawerHeaderProps,
 } from '@react-navigation/drawer';
 import {memo} from 'react';
+import {useTranslation} from 'react-i18next';
 import {Appbar, Drawer as PaperDrawer} from 'react-native-paper';
+import {useAppSelector} from '~redux/hooks';
+import {selectAllSchedules} from '~redux/timetable/slice';
 import {DrawerStackParamList, RootStackScreenProps} from '~types';
 import Timetable from './Timetable';
 
@@ -13,15 +16,18 @@ const Drawer = createDrawerNavigator<DrawerStackParamList>();
 
 function DrawerNavigationBar({navigation, options}: DrawerHeaderProps) {
   return (
-    <Appbar elevated mode="center-aligned">
+    <Appbar.Header elevated mode="center-aligned">
       <Appbar.Action icon="menu" onPress={navigation.openDrawer} />
       <Appbar.Content title={options.title} />
-    </Appbar>
+    </Appbar.Header>
   );
 }
 
 function AppDrawerContent(props: DrawerContentComponentProps) {
+  const {t} = useTranslation();
   const {navigation, state} = props;
+  const schedules = useAppSelector(selectAllSchedules);
+
   return (
     <DrawerContentScrollView {...props}>
       {state.routes.map(({name, key}, index) => (
@@ -30,10 +36,20 @@ function AppDrawerContent(props: DrawerContentComponentProps) {
           key={key}
           label={name}
           onPress={() => navigation.navigate(name)}
+          icon="view-day"
+        />
+      ))}
+      {schedules.map(({title, id}) => (
+        <PaperDrawer.Item
+          key={id}
+          label={title}
+          onPress={() => navigation.navigate('Schedule', {id})}
+          icon="view-day-outline"
         />
       ))}
       <PaperDrawer.Item
-        label="Settings"
+        icon="cog-outline"
+        label={t('Settings')}
         onPress={() => navigation.navigate('Settings')}
       />
     </DrawerContentScrollView>
@@ -41,6 +57,7 @@ function AppDrawerContent(props: DrawerContentComponentProps) {
 }
 
 function AppDrawer({}: RootStackScreenProps<'AppDrawer'>) {
+  const {t} = useTranslation();
   return (
     <Drawer.Navigator
       initialRouteName="Timetable"
@@ -54,7 +71,7 @@ function AppDrawer({}: RootStackScreenProps<'AppDrawer'>) {
         name="Timetable"
         component={Timetable}
         options={{
-          title: 'Timetable',
+          title: t('Timetable'),
         }}
       />
     </Drawer.Navigator>

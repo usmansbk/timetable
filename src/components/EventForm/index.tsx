@@ -1,4 +1,4 @@
-import {StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import {
   Appbar,
   HelperText,
@@ -10,11 +10,15 @@ import {
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useForm, Controller} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
+import {useTranslation} from 'react-i18next';
 import * as yup from 'yup';
 import {EventInput} from '~types';
 import {formatToUTCdate} from '~utils/date';
-import DateTimeInput from './DateTimeInput';
-import Confirm from './Confirm';
+import {validateRecurrence} from '~utils/event';
+import DateTimeInput from '../DateTimeInput';
+import Confirm from '../Confirm';
+import Select, {SelectOption} from '../Select';
+import RepeatInput, {schema as repeatSchema} from './RepeatInput';
 
 interface Props {
   autoFocus?: boolean;
@@ -26,6 +30,7 @@ interface Props {
   title?: string;
   defaultValues?: EventInput;
   resetOnSubmit?: boolean;
+  schedules?: SelectOption[];
 }
 
 function EventForm({
@@ -38,26 +43,46 @@ function EventForm({
   title,
   defaultValues,
   resetOnSubmit,
+  schedules,
 }: Props) {
+  const {t} = useTranslation();
   const {colors} = useTheme();
   const [confirmVisible, setConfirmVisible] = useState(false);
+
+  const openConfirm = useCallback(() => setConfirmVisible(true), []);
+  const closeConfirm = useCallback(() => setConfirmVisible(false), []);
 
   const schema = useMemo(
     () =>
       yup
         .object<Record<keyof EventInput, yup.AnySchema>>({
+          id: yup.string().optional(),
           title: yup
             .string()
             .trim()
-            .min(3, 'Title too short')
-            .max(80, 'Title too long')
-            .required('Add a Title'),
+            .max(80, () => t('Title too long'))
+            .required(() => t('Add a Title')),
           startDate: yup.string().required(),
-          startTime: yup.string().optional(),
-          endTime: yup.string().optional(),
+          startTime: yup.string().nullable().optional(),
+          endTime: yup.string().nullable().optional(),
+          scheduleId: yup.string().nullable().optional(),
+          repeat: repeatSchema
+            .nullable()
+            .optional()
+            .test(
+              'minRepeat',
+              () => t('Should repeat at least once'),
+              validateRecurrence,
+            ),
+          description: yup
+            .string()
+            .trim()
+            .max(700, () => t('Description too long'))
+            .nullable()
+            .optional(),
         })
         .required(),
-    [],
+    [t],
   );
 
   const {
@@ -75,6 +100,11 @@ function EventForm({
         {
           title: '',
           startDate: formatToUTCdate(new Date()),
+          startTime: null,
+          endTime: null,
+          scheduleId: null,
+          repeat: null,
+          description: null,
         },
         defaultValues,
       ),
@@ -82,7 +112,7 @@ function EventForm({
   }, [reset, defaultValues]);
 
   const _onSubmit = handleSubmit(values => {
-    onSubmit(values);
+    onSubmit(schema.cast(values, {stripUnknown: true}));
     if (resetOnSubmit) {
       handleReset();
     }
@@ -102,35 +132,34 @@ function EventForm({
   return (
     <Portal>
       <Modal visible={visible} onDismiss={onDismiss} style={styles.container}>
-        <View
-          style={{
+        <Appbar.Header>
+          <Appbar.Action icon="close" onPress={onDismiss} />
+          <Appbar.Content title={title} />
+          {!!onPressDuplicate && (
+            <Appbar.Action icon="content-copy" onPress={onPressDuplicate} />
+          )}
+          {!!onDiscard && (
+            <Appbar.Action icon="trash-can-outline" onPress={openConfirm} />
+          )}
+          <Appbar.Action icon="check" onPress={_onSubmit} />
+        </Appbar.Header>
+        <ScrollView
+          keyboardShouldPersistTaps="always"
+          contentContainerStyle={{
             backgroundColor: colors.background,
           }}>
-          <Appbar.Header>
-            <Appbar.Action icon="close" onPress={onDismiss} />
-            <Appbar.Content title={title} />
-            {!!onPressDuplicate && (
-              <Appbar.Action icon="content-copy" onPress={onPressDuplicate} />
-            )}
-            {!!onDiscard && (
-              <Appbar.Action
-                icon="trash-can-outline"
-                onPress={() => setConfirmVisible(true)}
-              />
-            )}
-            <Appbar.Action icon="check" onPress={_onSubmit} />
-          </Appbar.Header>
           <Controller
             control={control}
             name="title"
             render={({field: {onBlur, onChange, value}}) => (
               <TextInput
                 autoFocus={autoFocus}
-                label="Title"
+                label={t('Title') as string}
                 placeholder={defaultValues?.title}
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
+                error={!!errors.title}
               />
             )}
           />
@@ -144,10 +173,11 @@ function EventForm({
             name="startDate"
             render={({field: {onChange, value}}) => (
               <DateTimeInput
-                label="Date"
+                label={t('Date')}
                 onChange={onChange}
                 value={value}
                 mode="date"
+                error={!!errors.startDate}
               />
             )}
           />
@@ -159,7 +189,7 @@ function EventForm({
                 render={({field: {onChange, value}}) => (
                   <DateTimeInput
                     optional
-                    label="From"
+                    label={t('From')}
                     onChange={onChange}
                     value={value}
                     mode="time"
@@ -174,7 +204,7 @@ function EventForm({
                 render={({field: {onChange, value}}) => (
                   <DateTimeInput
                     optional
-                    label="To"
+                    label={t('To')}
                     onChange={onChange}
                     value={value}
                     mode="time"
@@ -183,13 +213,65 @@ function EventForm({
               />
             </View>
           </View>
-        </View>
+          {!!schedules?.length && (
+            <Controller
+              control={control}
+              name="scheduleId"
+              render={({field: {onChange, value}}) => (
+                <Select
+                  optional
+                  icon="view-day-outline"
+                  label={t('Schedule')}
+                  value={value}
+                  onChange={onChange}
+                  options={schedules}
+                />
+              )}
+            />
+          )}
+          <Controller
+            control={control}
+            name="repeat"
+            render={({field: {value, onChange}}) => (
+              <RepeatInput
+                onChange={onChange}
+                value={value}
+                error={!!errors.repeat}
+              />
+            )}
+          />
+          {!!errors.repeat?.message && (
+            <HelperText type="error" visible>
+              {errors.repeat.message}
+            </HelperText>
+          )}
+          <Controller
+            control={control}
+            name="description"
+            render={({field: {onBlur, onChange, value}}) => (
+              <TextInput
+                left={<TextInput.Icon icon="text" />}
+                multiline
+                label={t('Description') as string}
+                value={value || ''}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                error={!!errors.description}
+              />
+            )}
+          />
+          {errors.description && !!touchedFields.description && (
+            <HelperText type="error" visible>
+              {errors.description.message}
+            </HelperText>
+          )}
+        </ScrollView>
       </Modal>
       <Confirm
-        title="Delete?"
+        title={t('Delete?')}
         visible={confirmVisible}
         onConfirm={handleDiscard}
-        onDismiss={() => setConfirmVisible(false)}
+        onDismiss={closeConfirm}
       />
     </Portal>
   );

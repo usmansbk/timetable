@@ -5,6 +5,8 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 
+export const DAYS_OF_WEEK = [0, 1, 2, 3, 4, 5, 6]; // sun - sat
+
 const UTC_DATE_FORMAT = 'YYYY-MM-DD';
 const UTC_TIME_FORMAT = 'HH:mm';
 
@@ -16,20 +18,27 @@ export function formatToUTCtime(date: Date) {
   return dayjs(date).utc().format(UTC_TIME_FORMAT);
 }
 
-export function formatToLocalDate(date: string) {
-  return dayjs.utc(date, UTC_DATE_FORMAT).local().format('ddd, DD MMM YYYY');
+export function formatUTCtoLocalDate(
+  date: string,
+  format = 'ddd, DD MMM YYYY',
+) {
+  return dayjs.utc(date, UTC_DATE_FORMAT).local().format(format);
 }
 
-export function formatToLocalTime(date: string) {
-  return dayjs.utc(date, UTC_TIME_FORMAT).local().format('HH:mm');
+export function formatUTCtoLocalTime(date: string, format = 'HH:mm') {
+  return dayjs.utc(date, UTC_TIME_FORMAT).local().format(format);
 }
 
-export function parseDate(date: string) {
+export function parseUTCdate(date: string) {
   return dayjs.utc(date, UTC_DATE_FORMAT).toDate();
 }
 
-export function parseTime(date: string) {
-  return dayjs.utc(date, UTC_TIME_FORMAT).toDate();
+export function parseUTCtime(time: string) {
+  return dayjs.utc(time, UTC_TIME_FORMAT).toDate();
+}
+
+export function formatDay(day: number, format = 'dddd') {
+  return dayjs().day(day).format(format);
 }
 
 export default dayjs;
