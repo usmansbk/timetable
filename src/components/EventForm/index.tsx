@@ -65,7 +65,7 @@ function EventForm({
           startTime: yup.string().nullable().optional(),
           endTime: yup.string().nullable().optional(),
           scheduleId: yup.string().nullable().optional(),
-          repeat: repeatSchema.nullable().optional(),
+          repeat: repeatSchema.nullable().optional(), // TODO: validate repeat againts startDate
           description: yup
             .string()
             .trim()

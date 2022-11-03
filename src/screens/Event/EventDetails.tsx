@@ -7,6 +7,7 @@ interface Props {
   event: EventInput;
 }
 
+// TODO: event defails
 function EventDetails({event}: Props) {
   const {title} = event;
 
