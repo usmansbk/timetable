@@ -158,7 +158,27 @@ const timetableSlice = createSlice({
     },
     updateEvent: {
       reducer(state, action: PayloadAction<NormalizedEvent>) {
-        eventsAdapter.upsertMany(state.events, action.payload.events);
+        const newEvent = Object.values(action.payload.events)[0];
+        const oldEvent = state.events.entities[newEvent.id];
+        const {id, ...changes} = newEvent;
+
+        if (newEvent.scheduleId !== oldEvent?.scheduleId) {
+          if (newEvent.scheduleId) {
+            const to = state.schedules.entities[newEvent.scheduleId];
+            if (to) {
+              to.events = to.events.concat(id);
+            }
+          }
+
+          if (oldEvent?.scheduleId) {
+            const from = state.schedules.entities[oldEvent.scheduleId];
+            if (from) {
+              from.events = from.events.filter(eventId => eventId !== id);
+            }
+          }
+        }
+
+        eventsAdapter.updateOne(state.events, {id, changes});
       },
       prepare(payload: EventInput) {
         const normalized = normalize<any, NormalizedEvent>(

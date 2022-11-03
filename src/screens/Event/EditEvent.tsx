@@ -1,8 +1,8 @@
-import {memo, useCallback} from 'react';
+import {memo, useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import EventForm from '~components/EventForm';
-import {useAppDispatch} from '~redux/hooks';
-import {updateEvent} from '~redux/timetable/slice';
+import {useAppDispatch, useAppSelector} from '~redux/hooks';
+import {selectAllSchedules, updateEvent} from '~redux/timetable/slice';
 import {EventInput} from '~types';
 
 interface Props {
@@ -14,11 +14,21 @@ interface Props {
 function EditEvent({event, visible, onDismiss}: Props) {
   const {t} = useTranslation();
   const dispatch = useAppDispatch();
+  const schedules = useAppSelector(selectAllSchedules);
 
   const onSubmit = useCallback((values: EventInput) => {
     dispatch(updateEvent(values));
     onDismiss();
   }, []);
+
+  const scheduleOptions = useMemo(
+    () =>
+      schedules?.map(({title, id}) => ({
+        label: title,
+        value: id,
+      })),
+    [schedules],
+  );
 
   return (
     <EventForm
@@ -27,6 +37,7 @@ function EditEvent({event, visible, onDismiss}: Props) {
       visible={visible}
       onDismiss={onDismiss}
       onSubmit={onSubmit}
+      schedules={scheduleOptions}
     />
   );
 }
