@@ -63,10 +63,10 @@ function EventForm({
             .max(80, () => t('Title too long'))
             .required(() => t('Add a Title')),
           startDate: yup.string().required(),
-          startTime: yup.string().optional(),
-          endTime: yup.string().optional(),
-          scheduleId: yup.string().optional(),
-          repeat: repeatSchema.optional(),
+          startTime: yup.string().nullable().optional(),
+          endTime: yup.string().nullable().optional(),
+          scheduleId: yup.string().nullable().optional(),
+          repeat: repeatSchema.nullable().optional(),
         })
         .required(),
     [t],
@@ -87,6 +87,10 @@ function EventForm({
         {
           title: '',
           startDate: formatToUTCdate(new Date()),
+          startTime: null,
+          endTime: null,
+          scheduleId: null,
+          repeat: null,
         },
         defaultValues,
       ),

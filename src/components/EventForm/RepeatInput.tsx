@@ -59,7 +59,7 @@ function RepeatInput({onChange, value, error}: Props) {
   const {
     control,
     handleSubmit,
-    formState: {errors, touchedFields},
+    formState: {errors},
   } = useForm<Recurrence>({
     resolver: yupResolver(schema),
     reValidateMode: 'onSubmit',
@@ -67,7 +67,7 @@ function RepeatInput({onChange, value, error}: Props) {
   });
 
   const onSubmit = handleSubmit(values => {
-    onChange(values);
+    onChange(schema.cast(values, {stripUnknown: true}));
     closeForm();
   });
 
@@ -101,7 +101,7 @@ function RepeatInput({onChange, value, error}: Props) {
                   onChange={onChange}
                   label={t('Repeat')}
                   options={options}
-                  error={touchedFields.freq && !!errors.freq?.message}
+                  error={!!errors.freq}
                 />
               )}
             />
@@ -115,6 +115,7 @@ function RepeatInput({onChange, value, error}: Props) {
                   value={value}
                   label={t('Until')}
                   onChange={onChange}
+                  error={!!errors.until}
                 />
               )}
             />
