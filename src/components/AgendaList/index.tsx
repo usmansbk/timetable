@@ -61,7 +61,7 @@ function AgendaList<T extends EventInput>({
   const {t} = useTranslation();
   const [mode, setMode] = useState(modes.UPCOMING);
 
-  const [upcoming, setUpcoming] = useState<T[]>(['2022-11-04']);
+  const [upcoming, setUpcoming] = useState<T[]>([]);
   const [hasUpcoming, setHasUpcoming] = useState(false);
 
   const [past, setPast] = useState<T[]>([]);
