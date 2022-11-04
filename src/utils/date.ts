@@ -59,7 +59,7 @@ export function currentUTCTime() {
   return dayjs.utc().toDate();
 }
 
-export function combineUTCDateTime(utcDate: DateType, utcTime?: string | null) {
+export function setUTCDateTime(utcDate: DateType, utcTime?: string | null) {
   let date = dayjs.utc(utcDate);
 
   if (utcTime) {

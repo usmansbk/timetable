@@ -6,7 +6,7 @@ import {Platform} from 'react-native';
 import Notification, {CHANNEL_ID} from '~config/notifications';
 import {EventInput, Recurrence, Reminder, ReminderKey} from '~types';
 import dayjs, {
-  combineUTCDateTime,
+  setUTCDateTime,
   currentUTCTime,
   parseUTCtoLocalDate,
 } from './date';
@@ -47,7 +47,7 @@ function scheduleNotification(
 ) {
   const {title, startDate, repeat, startTime} = event;
 
-  const startAt = combineUTCDateTime(startDate, startTime);
+  const startAt = setUTCDateTime(startDate, startTime);
 
   Object.keys(reminder).forEach(key => {
     const reminderKey = key as ReminderKey;
