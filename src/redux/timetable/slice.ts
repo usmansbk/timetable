@@ -250,9 +250,12 @@ export const selectScheduleEventsById = createSelector(
   },
 );
 
-export const {selectAll: selectAllReminders, selectById: selectReminderById} =
-  remindersAdapter.getSelectors(
-    (state: RootState) => state.timetable.reminders,
-  );
+export const {
+  selectAll: selectAllReminders,
+  selectById: selectReminderById,
+  selectEntities: selectReminderEntities,
+} = remindersAdapter.getSelectors(
+  (state: RootState) => state.timetable.reminders,
+);
 
 export default reducer;

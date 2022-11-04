@@ -1,13 +1,24 @@
 import {useNavigation} from '@react-navigation/native';
-import {memo, useCallback} from 'react';
+import {memo, useCallback, useEffect} from 'react';
+import {InteractionManager} from 'react-native';
 import AgendaList from '~components/AgendaList';
 import {useAppSelector} from '~redux/hooks';
-import {selectAllEvents} from '~redux/timetable/slice';
+import {
+  selectDefaultReminders,
+  selectNotificationSound,
+  selectNotificationVibration,
+} from '~redux/settings/slice';
+import {selectAllEvents, selectReminderEntities} from '~redux/timetable/slice';
 import {EventInput} from '~types';
+import {scheduleNotifications} from '~utils/notifications';
 
 function Agenda() {
   const navigation = useNavigation();
   const events = useAppSelector(selectAllEvents);
+  const reminders = useAppSelector(selectReminderEntities);
+  const defaultReminder = useAppSelector(selectDefaultReminders);
+  const playNotificationSound = useAppSelector(selectNotificationSound);
+  const enableVibration = useAppSelector(selectNotificationVibration);
 
   const onPressItem = useCallback(
     (item: EventInput) => {
@@ -19,6 +30,26 @@ function Agenda() {
     },
     [navigation],
   );
+
+  useEffect(() => {
+    if (events.length) {
+      InteractionManager.runAfterInteractions(() => {
+        scheduleNotifications({
+          events,
+          reminders,
+          defaultReminder,
+          playSound: playNotificationSound,
+          vibrate: enableVibration,
+        });
+      });
+    }
+  }, [
+    events,
+    reminders,
+    defaultReminder,
+    playNotificationSound,
+    enableVibration,
+  ]);
 
   return <AgendaList items={events} onPressItem={onPressItem} />;
 }

@@ -6,6 +6,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import {useTranslation} from 'react-i18next';
+import omit from 'lodash.omit';
 import {EventInput, FieldError, ScheduleInput} from '~types';
 import EmptyState from './EmptyState';
 import Confirm from './Confirm';
@@ -88,7 +89,7 @@ export default function ScheduleForm({
 
   const onAddItem = useCallback(
     (input: EventInput) => {
-      const {id: _omit, ...values} = input;
+      const values = omit(input, 'id');
       append(values);
       closeAddEventForm();
       closeEditEventForm();

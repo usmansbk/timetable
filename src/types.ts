@@ -13,14 +13,14 @@ export type IconName = ComponentProps<typeof Icon>['name'];
 export type AppSchemeName = ColorSchemeName | 'system';
 
 export interface Reminder {
-  exact: boolean;
-  '5m': boolean;
-  '10m': boolean;
-  '15m': boolean;
-  '30m': boolean;
-  '1h': boolean;
-  '2h': boolean;
-  '1d': boolean;
+  '0_m': boolean;
+  '5_m': boolean;
+  '10_m': boolean;
+  '15_m': boolean;
+  '30_m': boolean;
+  '1_h': boolean;
+  '2_h': boolean;
+  '1_d': boolean;
 }
 
 export type ReminderKey = keyof Reminder;

@@ -5,8 +5,9 @@ import {Provider as StoreProvider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import {useAppTheme} from '~config/theme';
 import store, {persistor} from '~redux/store';
-import '~config/i18n';
 import Screens from '~screens';
+import '~config/i18n';
+import '~config/notifications';
 
 function Main() {
   const theme = useAppTheme();
