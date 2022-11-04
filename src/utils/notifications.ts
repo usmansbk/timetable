@@ -53,7 +53,7 @@ function scheduleNotification(
     const reminderKey = key as ReminderKey;
 
     if (reminder[reminderKey]) {
-      const [value, unit] = key.split('_');
+      const [value, unit] = reminderKey.split('_');
 
       const remindAt = startAt.subtract(
         Number.parseInt(value, 10),
