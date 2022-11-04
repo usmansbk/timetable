@@ -100,6 +100,7 @@ const getRepeatType = (freq: Recurrence['freq']) => {
       return Platform.OS === 'android' ? 'time' : 'year';
     }
     default: {
+      return 'time' as never;
     }
   }
 };
