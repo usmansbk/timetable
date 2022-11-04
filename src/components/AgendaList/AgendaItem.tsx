@@ -1,7 +1,9 @@
 import {memo} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Title, TouchableRipple} from 'react-native-paper';
+import {Text, TouchableRipple} from 'react-native-paper';
 import {EventInput} from '~types';
+import {formatEventTime} from '~utils/event';
+import {ITEM_HEIGHT} from './constants';
 
 interface Props {
   item: EventInput;
@@ -9,12 +11,20 @@ interface Props {
 }
 
 function AgendaItem({item, onPress}: Props) {
-  const {title} = item;
+  const {title, startTime, endTime} = item;
 
+  const time = formatEventTime(startTime, endTime);
   return (
     <TouchableRipple onPress={onPress}>
       <View style={styles.container}>
-        <Title>{title}</Title>
+        <Text variant="titleSmall" numberOfLines={1}>
+          {title}
+        </Text>
+        {!!time && (
+          <Text variant="bodySmall" numberOfLines={1}>
+            {time}
+          </Text>
+        )}
       </View>
     </TouchableRipple>
   );
@@ -24,7 +34,7 @@ export default memo(AgendaItem);
 
 const styles = StyleSheet.create({
   container: {
-    height: 40,
+    height: ITEM_HEIGHT,
     paddingHorizontal: 16,
     justifyContent: 'center',
   },

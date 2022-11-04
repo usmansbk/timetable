@@ -3,7 +3,7 @@ import capitalize from 'lodash.capitalize';
 import {Language} from 'rrule/dist/esm/nlp/i18n';
 import {Dayjs} from 'dayjs';
 import {EventInput, Recurrence} from '~types';
-import {currentUTCDate, parseUTCdate} from '~utils/date';
+import {currentUTCDate, formatUTCtoLocalTime, parseUTCdate} from '~utils/date';
 
 export function formatRecurrence(input: Recurrence, lng?: Language) {
   const {freq, until} = input;
@@ -42,4 +42,22 @@ export function getNextEventDate(event: EventInput, after?: string) {
   const rule = createDateRule(startDate, repeat);
 
   return rule.after(after ? parseUTCdate(after) : currentUTCDate(), true);
+}
+
+export function formatEventTime(
+  startTime?: string | null,
+  endTime?: string | null,
+) {
+  const from = startTime && formatUTCtoLocalTime(startTime);
+  const to = endTime && formatUTCtoLocalTime(endTime);
+
+  if (from && to) {
+    return `${from}-${to}`;
+  }
+
+  if (from) {
+    return from;
+  }
+
+  return null;
 }
