@@ -25,6 +25,7 @@ function Agenda() {
       if (item.id) {
         navigation.navigate('Event', {
           id: item.id,
+          date: item.startDate,
         });
       }
     },
