@@ -1,8 +1,19 @@
 import {memo, useCallback, useState} from 'react';
-import {Divider, IconButton, TouchableRipple} from 'react-native-paper';
+import {
+  Divider,
+  IconButton,
+  Text,
+  TouchableRipple,
+  useTheme,
+} from 'react-native-paper';
 import {FlashList, FlashListProps, ListRenderItem} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
-import {StyleSheet, View} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  RefreshControl,
+  RefreshControlProps,
+} from 'react-native';
 import EmptyState from '~components/EmptyState';
 import {EventInput} from '~types';
 import AgendaItem from './AgendaItem';
@@ -18,6 +29,8 @@ interface Props<T extends EventInput> {
   onPressItem: (item: T, index: number) => void;
   keyExtractor?: FlashListProps<T>['keyExtractor'];
   listEmptyMessage?: string;
+  onRefresh?: RefreshControlProps['onRefresh'];
+  refreshing?: RefreshControlProps['refreshing'];
 }
 
 function AgendaList<T extends EventInput>({
@@ -25,7 +38,10 @@ function AgendaList<T extends EventInput>({
   listEmptyMessage,
   onPressItem,
   keyExtractor,
+  onRefresh,
+  refreshing = false,
 }: Props<T>) {
+  const {colors} = useTheme();
   const {t} = useTranslation();
   const [mode, setMode] = useState(modes.UPCOMING);
 
@@ -43,14 +59,26 @@ function AgendaList<T extends EventInput>({
 
   const handlePressItem = useCallback(
     (item: T, index: number) => () => onPressItem(item, index),
-    [],
+    [onPressItem],
   );
+
+  const renderSectionHeader = useCallback((item: string) => {
+    return (
+      <View style={styles.sectionHeader}>
+        <Text>{item}</Text>
+      </View>
+    );
+  }, []);
 
   const renderItem: ListRenderItem<T> = useCallback(
     ({item, index}) => {
+      if (typeof item === 'string') {
+        return renderSectionHeader(item);
+      }
+
       return <AgendaItem item={item} onPress={handlePressItem(item, index)} />;
     },
-    [handlePressItem],
+    [handlePressItem, renderSectionHeader],
   );
 
   const renderFooter = useCallback(() => <View style={styles.footer} />, []);
@@ -93,6 +121,15 @@ function AgendaList<T extends EventInput>({
       getItemType={getItemType}
       data={isPast ? past : upcoming}
       renderItem={renderItem}
+      refreshControl={
+        onRefresh ? (
+          <RefreshControl
+            colors={[colors.primary]}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        ) : undefined
+      }
       estimatedItemSize={ITEM_HEIGHT}
       ItemSeparatorComponent={Divider}
       showsVerticalScrollIndicator={false}
@@ -110,6 +147,11 @@ const styles = StyleSheet.create({
     height: ITEM_HEIGHT,
   },
   header: {
+    height: ITEM_HEIGHT,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  sectionHeader: {
     height: ITEM_HEIGHT,
     justifyContent: 'center',
     alignItems: 'center',
