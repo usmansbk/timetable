@@ -16,7 +16,7 @@ export const DAYS_OF_WEEK = [0, 1, 2, 3, 4, 5, 6]; // sun - sat
 const UTC_DATE_FORMAT = 'YYYY-MM-DD';
 const UTC_TIME_FORMAT = 'HH:mm';
 
-type DateType = string | Date | Dayjs;
+export type DateType = string | Date | Dayjs;
 
 export function formatDateToUTC(date?: DateType) {
   return dayjs(date).utc().format(UTC_DATE_FORMAT);

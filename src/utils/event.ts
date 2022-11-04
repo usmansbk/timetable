@@ -1,9 +1,8 @@
 import {Frequency, RRule} from 'rrule';
 import capitalize from 'lodash.capitalize';
 import {Language} from 'rrule/dist/esm/nlp/i18n';
-import {Dayjs} from 'dayjs';
 import {EventInput, Recurrence} from '~types';
-import {currentUTCDate, parseUTCdate} from '~utils/date';
+import {currentUTCDate, parseUTCdate, DateType} from '~utils/date';
 
 export function formatRecurrence(input: Recurrence, lng?: Language) {
   const {freq, until} = input;
@@ -20,7 +19,7 @@ export function createDateRule({
   repeat,
   startOfWeek,
 }: {
-  startDate: string | Dayjs;
+  startDate: DateType;
   repeat?: Recurrence | null;
   startOfWeek?: number;
 }) {
