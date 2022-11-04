@@ -8,7 +8,6 @@ import * as yup from 'yup';
 import {useTranslation} from 'react-i18next';
 import omit from 'lodash.omit';
 import {EventInput, FieldError, ScheduleInput} from '~types';
-import EmptyState from './EmptyState';
 import Confirm from './Confirm';
 import EventForm from './EventForm';
 import AgendaList from './AgendaList';
@@ -187,7 +186,7 @@ export default function ScheduleForm({
       )}
       <AgendaList
         items={fields}
-        ListEmptyComponent={<EmptyState title={t('Add Events')} />}
+        listEmptyMessage={t('Add Events')}
         onPressItem={onPressItem}
       />
       <FAB
