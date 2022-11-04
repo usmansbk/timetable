@@ -19,6 +19,7 @@
     "@react-navigation/native": "^6.0.13",
     "@react-navigation/native-stack": "^6.9.1",
     "@reduxjs/toolkit": "^1.8.6",
+    "@shopify/flash-list": "^1.3.1",
     "dayjs": "^1.11.6",
     "deepmerge": "^4.2.2",
     "i18next": "^22.0.4",

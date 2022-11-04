@@ -3,5 +3,14 @@
   "theme_light": "Light",
   "theme_dark": "Dark",
   "confirm_delete_event": "Delete \"{{title}}\"?",
-  "confirm_delete_schedule": "Delete \"{{title}}\"?"
+  "confirm_delete_schedule": "Delete \"{{title}}\"?",
+  "0_m": "Exact time",
+  "5_m": "5 minutes before",
+  "10_m": "10 minutes before",
+  "15_m": "15 minutes before",
+  "30_m": "30 minutes before",
+  "1_h": "1 hour before",
+  "2_h": "2 hours before",
+  "1_d": "1 day before",
+  "event_ends_at": "Ends {{time}}"
 }

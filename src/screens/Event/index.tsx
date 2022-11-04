@@ -13,7 +13,7 @@ import Notification from './Notification';
 
 function Event({route, navigation}: RootStackScreenProps<'Event'>) {
   const {t} = useTranslation();
-  const {id} = route.params;
+  const {id, date} = route.params;
   const dispatch = useAppDispatch();
   const event = useAppSelector(state => selectEventById(state, id));
 
@@ -92,7 +92,7 @@ function Event({route, navigation}: RootStackScreenProps<'Event'>) {
           <Menu.Item title={t('Delete')} onPress={handleMenuPress('delete')} />
         </Menu>
       </Appbar.Header>
-      <EventDetails event={event} />
+      <EventDetails date={date} event={event} />
       <EditEvent event={event} visible={editVisible} onDismiss={closeEdit} />
       <DuplicateEvent
         event={event}

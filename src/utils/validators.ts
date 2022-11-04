@@ -8,7 +8,7 @@ export function validateRecurrence(repeat: Recurrence | null, ctx: any) {
   }
 
   const {startDate} = ctx.parent;
-  const rule = createDateRule(startDate, repeat);
+  const rule = createDateRule({startDate, repeat});
   const next = rule?.after(parseUTCdate(startDate));
   return !!next;
 }

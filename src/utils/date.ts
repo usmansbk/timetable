@@ -3,24 +3,30 @@ import utc from 'dayjs/plugin/utc';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
+import calendar from 'dayjs/plugin/calendar';
 
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
+dayjs.extend(calendar);
 
 export const DAYS_OF_WEEK = [0, 1, 2, 3, 4, 5, 6]; // sun - sat
 
 const UTC_DATE_FORMAT = 'YYYY-MM-DD';
 const UTC_TIME_FORMAT = 'HH:mm';
 
-type DateType = string | Date | Dayjs;
+export type DateType = string | Date | Dayjs;
 
-export function formatToUTCdate(date?: DateType) {
+export function formatUTCDate(date: DateType) {
+  return dayjs.utc(date).format(UTC_DATE_FORMAT);
+}
+
+export function formatDateToUTC(date?: DateType) {
   return dayjs(date).utc().format(UTC_DATE_FORMAT);
 }
 
-export function formatToUTCtime(date: DateType) {
+export function formatTimeToUTC(date: DateType) {
   return dayjs(date).utc().format(UTC_TIME_FORMAT);
 }
 
@@ -59,7 +65,11 @@ export function currentUTCTime() {
   return dayjs.utc().toDate();
 }
 
-export function combineUTCDateTime(utcDate: DateType, utcTime?: string | null) {
+export function currentUTCDate() {
+  return dayjs.utc().startOf('day').toDate();
+}
+
+export function setUTCDateTime(utcDate: DateType, utcTime?: string | null) {
   let date = dayjs.utc(utcDate);
 
   if (utcTime) {
@@ -67,6 +77,17 @@ export function combineUTCDateTime(utcDate: DateType, utcTime?: string | null) {
     date = date.hour(time.hour()).minute(time.minute());
   }
   return date;
+}
+
+export function formatCalendarDate(date: string) {
+  return dayjs(parseUTCtoLocalDate(date)).calendar(null, {
+    sameDay: '[Today], dddd, D MMMM',
+    nextDay: '[Tomorrow], dddd, D MMMM',
+    nextWeek: 'dddd, D MMMM',
+    lastDay: '[Yesterday], dddd, D MMMM',
+    lastWeek: 'dddd, D MMMM',
+    sameElse: 'dddd, D MMMM, YYYY',
+  });
 }
 
 export default dayjs;

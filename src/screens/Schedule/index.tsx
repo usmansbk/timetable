@@ -25,6 +25,7 @@ const Items = memo(({scheduleId}: {scheduleId: string}) => {
       if (item.id) {
         navigation.navigate('Event', {
           id: item.id,
+          date: item.startDate,
         });
       }
     },

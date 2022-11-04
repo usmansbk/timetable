@@ -6,7 +6,7 @@ import {Platform} from 'react-native';
 import Notification, {CHANNEL_ID} from '~config/notifications';
 import {EventInput, Recurrence, Reminder, ReminderKey} from '~types';
 import dayjs, {
-  combineUTCDateTime,
+  setUTCDateTime,
   currentUTCTime,
   parseUTCtoLocalDate,
 } from './date';
@@ -45,9 +45,9 @@ function scheduleNotification(
   reminder: Reminder,
   {playSound, vibrate}: ScheduleNotificationOptions,
 ) {
-  const {title, startDate, repeat, startTime} = event;
+  const {id, title, startDate, repeat, startTime} = event;
 
-  const startAt = combineUTCDateTime(startDate, startTime);
+  const startAt = setUTCDateTime(startDate, startTime);
 
   Object.keys(reminder).forEach(key => {
     const reminderKey = key as ReminderKey;
@@ -60,7 +60,7 @@ function scheduleNotification(
         unit as ManipulateType,
       );
 
-      const rule = createDateRule(remindAt, repeat);
+      const rule = createDateRule({startDate: remindAt, repeat});
       const fireDate = rule?.after(currentUTCTime(), true);
 
       if (fireDate) {
@@ -71,6 +71,7 @@ function scheduleNotification(
 
         Notification.localNotificationSchedule({
           channelId: CHANNEL_ID,
+          group: id,
           title,
           message: capitalize(message),
           date,

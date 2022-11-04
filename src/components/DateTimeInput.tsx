@@ -4,8 +4,8 @@ import {memo, useState} from 'react';
 import {
   formatUTCtoLocalDate,
   formatUTCtoLocalTime,
-  formatToUTCdate,
-  formatToUTCtime,
+  formatDateToUTC,
+  formatTimeToUTC,
   parseUTCtoLocalDate,
   parseUTCtoLocalTime,
 } from '~utils/date';
@@ -63,14 +63,13 @@ function DateTimeInput({label, mode, optional, onChange, value, error}: Props) {
       </TouchableRipple>
       {open && (
         <DateTimePicker
-          minimumDate={new Date()}
           mode={mode}
           value={parsedValue}
           onChange={(e, date) => {
             setOpen(false);
             if (e.type === 'set' && date) {
               onChange(
-                mode === 'date' ? formatToUTCdate(date) : formatToUTCtime(date),
+                mode === 'date' ? formatDateToUTC(date) : formatTimeToUTC(date),
               );
             }
           }}
