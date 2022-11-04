@@ -1,4 +1,4 @@
-import {memo, useCallback, useMemo, useState} from 'react';
+import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {
   Divider,
   IconButton,
@@ -14,12 +14,12 @@ import {
   RefreshControl,
   RefreshControlProps,
 } from 'react-native';
-import {formatCalendarDate} from '~utils/date';
 import EmptyState from '~components/EmptyState';
-import {EventInput} from '~types';
+import {formatCalendarDate} from '~utils/date';
 import calendarGenerator, {AgendaItemT} from '~utils/calendar';
 import {useAppSelector} from '~redux/hooks';
 import {selectStartOfWeek} from '~redux/settings/slice';
+import {EventInput} from '~types';
 import AgendaItem from './AgendaItem';
 import {ITEM_HEIGHT} from './constants';
 
@@ -79,6 +79,14 @@ function AgendaList<T extends EventInput>({
 
   const [past, setPast] = useState<AgendaItemT[]>([]);
   const [hasPast, setHasPast] = useState(false);
+
+  useEffect(() => {
+    const section = upcomingCalendar.next();
+    if (!section.done) {
+      setUpcoming(section.value);
+    }
+    setHasUpcoming(!section.done);
+  }, [upcomingCalendar]);
 
   const [initialScrollIndex, setInitialScrollIndex] = useState(0);
 

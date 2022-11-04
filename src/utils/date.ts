@@ -18,6 +18,10 @@ const UTC_TIME_FORMAT = 'HH:mm';
 
 export type DateType = string | Date | Dayjs;
 
+export function formatUTCDate(date: DateType) {
+  return dayjs.utc(date).format(UTC_DATE_FORMAT);
+}
+
 export function formatDateToUTC(date?: DateType) {
   return dayjs(date).utc().format(UTC_DATE_FORMAT);
 }
