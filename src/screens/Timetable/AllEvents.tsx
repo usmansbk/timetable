@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {memo, useCallback, useEffect} from 'react';
 import {InteractionManager} from 'react-native';
-import AgendaList from '~components/Agenda/AgendaList';
+import Agenda from '~components/Agenda';
 import {useAppSelector} from '~redux/hooks';
 import {
   selectDefaultReminders,
@@ -12,7 +12,7 @@ import {selectAllEvents, selectReminderEntities} from '~redux/timetable/slice';
 import {EventInput} from '~types';
 import {scheduleNotifications} from '~utils/notifications';
 
-function Agenda() {
+function AllEvents() {
   const navigation = useNavigation();
   const events = useAppSelector(selectAllEvents);
   const reminders = useAppSelector(selectReminderEntities);
@@ -52,7 +52,7 @@ function Agenda() {
     enableVibration,
   ]);
 
-  return <AgendaList items={events} onPressItem={onPressItem} />;
+  return <Agenda items={events} onPressItem={onPressItem} />;
 }
 
-export default memo(Agenda);
+export default memo(AllEvents);

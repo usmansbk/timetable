@@ -6,7 +6,7 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import {AppDrawerScreenProps} from '~types';
 import AddNewEvent from './AddNewEvent';
-import Agenda from './Agenda';
+import AllEvents from './AllEvents';
 
 function Timetable({navigation}: AppDrawerScreenProps<'Timetable'>) {
   const {t} = useTranslation();
@@ -39,7 +39,7 @@ function Timetable({navigation}: AppDrawerScreenProps<'Timetable'>) {
 
   return (
     <View style={styles.container}>
-      <Agenda />
+      <AllEvents />
       <Portal>
         <FAB.Group
           style={styles.fab}
