@@ -43,21 +43,3 @@ export function getNextEventDate(event: EventInput, after?: string) {
 
   return rule.after(after ? parseUTCdate(after) : currentUTCDate(), true);
 }
-
-export function formatEventTime(
-  startTime?: string | null,
-  endTime?: string | null,
-) {
-  const from = startTime && formatUTCtoLocalTime(startTime);
-  const to = endTime && formatUTCtoLocalTime(endTime);
-
-  if (from && to) {
-    return `${from}-${to}`;
-  }
-
-  if (from) {
-    return from;
-  }
-
-  return null;
-}
