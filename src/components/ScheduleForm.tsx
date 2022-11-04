@@ -32,10 +32,6 @@ export default function ScheduleForm({
   const [addEventVisible, setAddEventVisible] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
-  const onPressItem = useCallback((_item: EventInput, index: number) => {
-    setEditIndex(index);
-  }, []);
-
   const closeConfirmDialog = useCallback(() => setConfirmVisible(false), []);
   const closeAddEventForm = useCallback(() => setAddEventVisible(false), []);
   const closeEditEventForm = useCallback(() => setEditIndex(null), []);
@@ -85,6 +81,14 @@ export default function ScheduleForm({
     name: 'events',
     keyName: 'key',
   });
+
+  const onPressItem = useCallback(
+    (item: EventInput & {key?: string}) => {
+      const index = fields.findIndex(field => field.key === item.key);
+      setEditIndex(index);
+    },
+    [fields],
+  );
 
   const onAddItem = useCallback(
     (input: EventInput) => {

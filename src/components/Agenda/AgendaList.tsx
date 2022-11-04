@@ -61,7 +61,7 @@ const modes = {
 
 interface Props<T extends EventInput> {
   items: T[];
-  onPressItem: (item: EventInput, index: number) => void;
+  onPressItem: (item: EventInput) => void;
   keyExtractor?: FlashListProps<AgendaItemT>['keyExtractor'];
   onScroll?: FlashListProps<AgendaItemT>['onScroll'];
   listEmptyMessage?: string;
@@ -228,17 +228,17 @@ function AgendaList<T extends EventInput>(
   }, [scrollToTop]);
 
   const handlePressItem = useCallback(
-    (item: EventInput, index: number) => () => onPressItem(item, index),
+    (item: EventInput) => () => onPressItem(item),
     [onPressItem],
   );
 
   const renderItem: ListRenderItem<AgendaItemT> = useCallback(
-    ({item, index}) => {
+    ({item}) => {
       if (typeof item === 'string') {
         return <DayHeader item={item} />;
       }
 
-      return <AgendaItem item={item} onPress={handlePressItem(item, index)} />;
+      return <AgendaItem item={item} onPress={handlePressItem(item)} />;
     },
     [handlePressItem],
   );

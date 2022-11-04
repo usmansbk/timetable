@@ -4,7 +4,7 @@ import AgendaList from './AgendaList';
 
 interface Props<T extends EventInput> {
   items: T[];
-  onPressItem: (item: EventInput, index: number) => void;
+  onPressItem: (item: EventInput) => void;
 }
 
 function Agenda<T extends EventInput>({items, onPressItem}: Props<T>) {
