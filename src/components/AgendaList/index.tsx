@@ -17,7 +17,7 @@ import {
 import {formatCalendarDate} from '~utils/date';
 import EmptyState from '~components/EmptyState';
 import {EventInput} from '~types';
-import calendarGenerator from '~utils/calendar';
+import calendarGenerator, {AgendaItemT} from '~utils/calendar';
 import {useAppSelector} from '~redux/hooks';
 import {selectStartOfWeek} from '~redux/settings/slice';
 import AgendaItem from './AgendaItem';
@@ -30,8 +30,8 @@ const modes = {
 
 interface Props<T extends EventInput> {
   items: T[];
-  onPressItem: (item: T, index: number) => void;
-  keyExtractor?: FlashListProps<T>['keyExtractor'];
+  onPressItem: (item: EventInput, index: number) => void;
+  keyExtractor?: FlashListProps<AgendaItemT>['keyExtractor'];
   listEmptyMessage?: string;
   onRefresh?: RefreshControlProps['onRefresh'];
   refreshing?: RefreshControlProps['refreshing'];
@@ -74,10 +74,10 @@ function AgendaList<T extends EventInput>({
     [items, startOfWeek],
   );
 
-  const [upcoming, setUpcoming] = useState<T[]>([]);
+  const [upcoming, setUpcoming] = useState<AgendaItemT[]>([]);
   const [hasUpcoming, setHasUpcoming] = useState(false);
 
-  const [past, setPast] = useState<T[]>([]);
+  const [past, setPast] = useState<AgendaItemT[]>([]);
   const [hasPast, setHasPast] = useState(false);
 
   const [initialScrollIndex, setInitialScrollIndex] = useState(0);
@@ -89,11 +89,11 @@ function AgendaList<T extends EventInput>({
   }, []);
 
   const handlePressItem = useCallback(
-    (item: T, index: number) => () => onPressItem(item, index),
+    (item: EventInput, index: number) => () => onPressItem(item, index),
     [onPressItem],
   );
 
-  const renderItem: ListRenderItem<T> = useCallback(
+  const renderItem: ListRenderItem<AgendaItemT> = useCallback(
     ({item, index}) => {
       if (typeof item === 'string') {
         return <DayHeader item={item} />;
@@ -118,7 +118,7 @@ function AgendaList<T extends EventInput>({
   );
 
   const _keyExtractor = useCallback(
-    (item: T, index: number) => {
+    (item: AgendaItemT, index: number) => {
       if (typeof item === 'string') {
         return mode + item + index;
       }
@@ -128,7 +128,7 @@ function AgendaList<T extends EventInput>({
     [mode],
   );
 
-  const getItemType = useCallback((item: T) => {
+  const getItemType = useCallback((item: AgendaItemT) => {
     return typeof item === 'string' ? 'sectionHeader' : 'row';
   }, []);
 
