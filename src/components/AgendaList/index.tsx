@@ -62,8 +62,16 @@ function AgendaList<T extends EventInput>({
 }: Props<T>) {
   const {colors} = useTheme();
   const {t} = useTranslation();
-  const [mode, setMode] = useState(modes.UPCOMING);
   const startOfWeek = useAppSelector(selectStartOfWeek);
+
+  const [mode, setMode] = useState(modes.UPCOMING);
+  const [initialScrollIndex, setInitialScrollIndex] = useState(0);
+
+  const [upcoming, setUpcoming] = useState<AgendaItemT[]>([]);
+  const [hasUpcoming, setHasUpcoming] = useState(false);
+
+  const [past, setPast] = useState<AgendaItemT[]>([]);
+  const [hasPast, setHasPast] = useState(false);
 
   const pastCalendar = useMemo(
     () => calendarGenerator(items, {startOfWeek, past: true}),
@@ -74,12 +82,6 @@ function AgendaList<T extends EventInput>({
     [items, startOfWeek],
   );
 
-  const [upcoming, setUpcoming] = useState<AgendaItemT[]>([]);
-  const [hasUpcoming, setHasUpcoming] = useState(false);
-
-  const [past, setPast] = useState<AgendaItemT[]>([]);
-  const [hasPast, setHasPast] = useState(false);
-
   useEffect(() => {
     const section = upcomingCalendar.next();
     if (!section.done) {
@@ -87,8 +89,6 @@ function AgendaList<T extends EventInput>({
     }
     setHasUpcoming(!section.done);
   }, [upcomingCalendar]);
-
-  const [initialScrollIndex, setInitialScrollIndex] = useState(0);
 
   const toggleMode = useCallback(() => {
     setMode(currentMode =>
