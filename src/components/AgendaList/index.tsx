@@ -58,6 +58,7 @@ interface Props<T extends EventInput> {
   items: T[];
   onPressItem: (item: EventInput, index: number) => void;
   keyExtractor?: FlashListProps<AgendaItemT>['keyExtractor'];
+  onScroll?: FlashListProps<AgendaItemT>['onScroll'];
   listEmptyMessage?: string;
   onRefresh?: RefreshControlProps['onRefresh'];
   refreshing?: RefreshControlProps['refreshing'];
@@ -66,6 +67,7 @@ interface Props<T extends EventInput> {
 interface AgendaListHandle {
   scrollToTop: () => void;
   scrollToDate: (date: string) => void;
+  prepareForLayoutAnimationRender: () => void;
 }
 
 function AgendaList<T extends EventInput>(
@@ -76,6 +78,7 @@ function AgendaList<T extends EventInput>(
     keyExtractor,
     onRefresh,
     refreshing = false,
+    onScroll,
   }: Props<T>,
   forwardedRef: ForwardedRef<AgendaListHandle>,
 ) {
@@ -203,11 +206,10 @@ function AgendaList<T extends EventInput>(
   }, [items, getPastItems, getUpcomingItems]);
 
   useImperativeHandle(forwardedRef, () => ({
-    scrollToTop() {
-      scrollToTop();
-    },
-    scrollToDate(date) {
-      scrollToDate(date);
+    scrollToTop,
+    scrollToDate,
+    prepareForLayoutAnimationRender() {
+      listRef.current?.prepareForLayoutAnimationRender();
     },
   }));
 
@@ -289,6 +291,7 @@ function AgendaList<T extends EventInput>(
       estimatedItemSize={ITEM_HEIGHT}
       estimatedFirstItemOffset={ITEM_HEIGHT}
       onEndReached={onEndReached}
+      onScroll={onScroll}
       ItemSeparatorComponent={Divider}
       showsVerticalScrollIndicator={false}
       keyExtractor={keyExtractor || _keyExtractor}
