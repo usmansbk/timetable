@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {memo, useCallback, useEffect} from 'react';
 import {InteractionManager} from 'react-native';
-import AgendaList from '~components/AgendaList';
+import AgendaList from '~components/Agenda/AgendaList';
 import {useAppSelector} from '~redux/hooks';
 import {
   selectDefaultReminders,
