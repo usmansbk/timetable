@@ -35,7 +35,7 @@ function EventDetails({event, date}: Props) {
   const {t} = useTranslation();
   const {title, startTime, endTime, description, repeat, scheduleId} = event;
 
-  const startDate = getNextEventDate(event, date);
+  const startDate = getNextEventDate(event, date) || event.startDate;
 
   return (
     <ScrollView style={styles.container}>
