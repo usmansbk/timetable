@@ -1,4 +1,4 @@
-import {memo, useCallback, useEffect, useMemo, useState} from 'react';
+import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   Divider,
   IconButton,
@@ -13,9 +13,10 @@ import {
   View,
   RefreshControl,
   RefreshControlProps,
+  InteractionManager,
 } from 'react-native';
 import EmptyState from '~components/EmptyState';
-import {formatCalendarDate} from '~utils/date';
+import {currentUTCDate, formatCalendarDate, formatUTCDate} from '~utils/date';
 import calendarGenerator, {AgendaItemT} from '~utils/calendar';
 import {useAppSelector} from '~redux/hooks';
 import {selectStartOfWeek} from '~redux/settings/slice';
@@ -60,12 +61,12 @@ function AgendaList<T extends EventInput>({
   onRefresh,
   refreshing = false,
 }: Props<T>) {
+  const listRef = useRef<FlashList<AgendaItemT>>(null);
   const {colors} = useTheme();
   const {t} = useTranslation();
   const startOfWeek = useAppSelector(selectStartOfWeek);
 
   const [mode, setMode] = useState(modes.UPCOMING);
-  const [initialScrollIndex, setInitialScrollIndex] = useState(0);
 
   const [upcoming, setUpcoming] = useState<AgendaItemT[]>([]);
   const [hasMoreUpcoming, setHasMoreUpcoming] = useState(true);
@@ -149,30 +150,46 @@ function AgendaList<T extends EventInput>({
   }, [getPastItems, hasMorePast]);
 
   const onEndReached = useCallback(() => {
-    if (mode === modes.PAST) {
-      loadPast();
-    } else {
-      loadUpcoming();
-    }
+    InteractionManager.runAfterInteractions(
+      mode === modes.PAST ? loadPast : loadUpcoming,
+    );
   }, [loadPast, loadUpcoming, mode]);
 
-  useEffect(() => {
-    if (items.length) {
-      const upcomingResult = getUpcomingItems();
-      const pastResult = getPastItems();
+  const scrollToDate = useCallback(
+    (item: string) => {
+      listRef.current?.scrollToItem({
+        item,
+        viewPosition: 0,
+        animated: true,
+      });
+    },
+    [listRef.current],
+  );
 
-      setPast(pastResult.data);
-      setHasMorePast(pastResult.hasMore);
-      setUpcoming(upcomingResult.data);
-      setHasMoreUpcoming(upcomingResult.hasMore);
-    }
+  const scrollToTop = useCallback(() => {
+    scrollToDate(formatUTCDate(currentUTCDate()));
+  }, [scrollToDate]);
+
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      if (items.length) {
+        const upcomingResult = getUpcomingItems();
+        const pastResult = getPastItems();
+
+        setPast(pastResult.data);
+        setHasMorePast(pastResult.hasMore);
+        setUpcoming(upcomingResult.data);
+        setHasMoreUpcoming(upcomingResult.hasMore);
+      }
+    });
   }, [items, getPastItems, getUpcomingItems]);
 
   const toggleMode = useCallback(() => {
     setMode(currentMode =>
       currentMode === modes.PAST ? modes.UPCOMING : modes.PAST,
     );
-  }, []);
+    InteractionManager.runAfterInteractions(scrollToTop);
+  }, [scrollToTop]);
 
   const handlePressItem = useCallback(
     (item: EventInput, index: number) => () => onPressItem(item, index),
@@ -226,6 +243,7 @@ function AgendaList<T extends EventInput>({
 
   return (
     <FlashList
+      ref={listRef}
       inverted={isPast}
       getItemType={getItemType}
       data={isPast ? past : upcoming}
@@ -239,7 +257,7 @@ function AgendaList<T extends EventInput>({
           />
         ) : undefined
       }
-      initialScrollIndex={initialScrollIndex}
+      initialScrollIndex={0}
       keyboardShouldPersistTaps="always"
       estimatedItemSize={ITEM_HEIGHT}
       estimatedFirstItemOffset={ITEM_HEIGHT}
