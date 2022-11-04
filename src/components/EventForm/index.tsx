@@ -14,7 +14,7 @@ import {useTranslation} from 'react-i18next';
 import * as yup from 'yup';
 import {EventInput} from '~types';
 import {formatToUTCdate} from '~utils/date';
-import {validateRecurrence} from '~utils/event';
+import {validateRecurrence} from '~utils/validators';
 import DateTimeInput from '../DateTimeInput';
 import Confirm from '../Confirm';
 import Select, {SelectOption} from '../Select';
