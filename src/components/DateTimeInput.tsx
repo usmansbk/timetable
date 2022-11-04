@@ -6,8 +6,8 @@ import {
   formatUTCtoLocalTime,
   formatToUTCdate,
   formatToUTCtime,
-  parseUTCdate,
-  parseUTCtime,
+  parseUTCtoLocaldate,
+  parseUTCtoLocaltime,
 } from '~utils/date';
 
 interface Props {
@@ -30,7 +30,8 @@ function DateTimeInput({label, mode, optional, onChange, value, error}: Props) {
       mode === 'date'
         ? formatUTCtoLocalDate(value)
         : formatUTCtoLocalTime(value);
-    parsedValue = mode === 'date' ? parseUTCdate(value) : parseUTCtime(value);
+    parsedValue =
+      mode === 'date' ? parseUTCtoLocaldate(value) : parseUTCtoLocaltime(value);
   } else {
     formattedValue = '';
     parsedValue = new Date();

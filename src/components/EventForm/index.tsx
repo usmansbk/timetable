@@ -99,7 +99,7 @@ function EventForm({
       Object.assign(
         {
           title: '',
-          startDate: formatToUTCdate(new Date()),
+          startDate: formatToUTCdate(),
           startTime: null,
           endTime: null,
           scheduleId: null,

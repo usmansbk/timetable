@@ -1,14 +1,14 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '~redux/store';
 import {DAYS_OF_WEEK} from '~utils/date';
-import {AppSchemeName, ReminderKey} from '~types';
+import {AppSchemeName, Reminder, ReminderKey} from '~types';
 
 interface State {
   theme: AppSchemeName;
   startOfWeek: number;
   playSound: boolean;
   vibrate: boolean;
-  defaultReminders: {[key: string]: boolean};
+  defaultReminders: Reminder;
 }
 
 const initialState: State = {
