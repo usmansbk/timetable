@@ -1,6 +1,8 @@
 import {Dictionary} from '@reduxjs/toolkit';
-import Notification from '~config/notifications';
-import {EventInput, Reminder} from '~types';
+import {ManipulateType} from 'dayjs';
+import capitalize from 'lodash.capitalize';
+import Notification, {CHANNEL_ID} from '~config/notifications';
+import {EventInput, Reminder, ReminderKey} from '~types';
 import dayjs, {
   combineUTCDateTime,
   currentUTCTime,
@@ -40,22 +42,35 @@ function scheduleNotification(
 ) {
   const {title, startDate, repeat, startTime} = event;
 
-  const startAt = combineUTCDateTime(startDate, startTime);
-  const rule = createDateRule(startAt, repeat);
+  const eventDateTime = combineUTCDateTime(startDate, startTime);
+  const rule = createDateRule(eventDateTime, repeat);
   const utcDate = rule?.after(currentUTCTime(), true);
 
   if (utcDate) {
-    const date = parseUTCtoLocalDate(utcDate);
-    const day = dayjs(date);
+    const startAt = dayjs(parseUTCtoLocalDate(utcDate));
+
     Object.keys(reminder).forEach(key => {
-      Notification.localNotificationSchedule({
-        title,
-        message: '',
-        date,
-        allowWhileIdle: true,
-        playSound,
-        vibrate,
-      });
+      const reminderKey = key as ReminderKey;
+
+      if (reminder[reminderKey]) {
+        const [value, unit] = key.split('_');
+        const fireDate = dayjs(startAt).subtract(
+          Number.parseInt(value, 10),
+          unit as ManipulateType,
+        );
+        console.log(fireDate);
+
+        Notification.localNotificationSchedule({
+          channelId: CHANNEL_ID,
+          title,
+          message: capitalize(startAt.from(fireDate)),
+          date: fireDate.toDate(),
+          allowWhileIdle: true,
+          playSound,
+          vibrate,
+          repeatTime: 1,
+        });
+      }
     });
   }
 }

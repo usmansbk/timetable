@@ -17,14 +17,14 @@ const initialState: State = {
   playSound: true,
   vibrate: true,
   defaultReminders: {
-    exact: true,
-    '5m': true,
-    '10m': true,
-    '15m': false,
-    '30m': true,
-    '1h': false,
-    '2h': false,
-    '1d': false,
+    '0_m': true,
+    '5_m': true,
+    '10_m': true,
+    '15_m': false,
+    '30_m': true,
+    '1_h': false,
+    '2_h': false,
+    '1_d': false,
   },
 };
 

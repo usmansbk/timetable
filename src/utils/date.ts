@@ -1,9 +1,11 @@
 import dayjs, {Dayjs} from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
+dayjs.extend(relativeTime);
 
 export const DAYS_OF_WEEK = [0, 1, 2, 3, 4, 5, 6]; // sun - sat
 
