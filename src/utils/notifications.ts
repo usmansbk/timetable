@@ -45,7 +45,7 @@ function scheduleNotification(
   reminder: Reminder,
   {playSound, vibrate}: ScheduleNotificationOptions,
 ) {
-  const {title, startDate, repeat, startTime} = event;
+  const {id, title, startDate, repeat, startTime} = event;
 
   const startAt = setUTCDateTime(startDate, startTime);
 
@@ -71,6 +71,7 @@ function scheduleNotification(
 
         Notification.localNotificationSchedule({
           channelId: CHANNEL_ID,
+          group: id,
           title,
           message: capitalize(message),
           date,
