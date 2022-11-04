@@ -73,6 +73,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   fab: {
-    bottom: 48,
+    paddingBottom: 48,
   },
 });
