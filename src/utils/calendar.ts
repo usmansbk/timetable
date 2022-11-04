@@ -97,5 +97,5 @@ export default function* calendarGenerator(
     }
   }
 
-  return null;
+  return null as never;
 }
