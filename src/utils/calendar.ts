@@ -91,7 +91,7 @@ export default function* calendarGenerator(
     const title = formatUTCDate(date);
     const events = getEventsByDate({items, date, startOfWeek});
     const data = events.map(event => ({...event, startDate: title}));
-    yield [title, ...data];
+    yield past ? [...data, title] : [title, ...data];
 
     const nextDate = past ? rules.before(date) : rules.after(date);
 

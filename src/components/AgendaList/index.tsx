@@ -21,7 +21,7 @@ import {useAppSelector} from '~redux/hooks';
 import {selectStartOfWeek} from '~redux/settings/slice';
 import {EventInput} from '~types';
 import AgendaItem from './AgendaItem';
-import {ITEM_HEIGHT} from './constants';
+import {ITEM_HEIGHT, MAX_NUM_OF_DAYS_PER_BATCH} from './constants';
 
 const modes = {
   PAST: 'PAST',
@@ -68,10 +68,10 @@ function AgendaList<T extends EventInput>({
   const [initialScrollIndex, setInitialScrollIndex] = useState(0);
 
   const [upcoming, setUpcoming] = useState<AgendaItemT[]>([]);
-  const [hasUpcoming, setHasUpcoming] = useState(false);
+  const [hasUpcoming, setHasUpcoming] = useState(true);
 
   const [past, setPast] = useState<AgendaItemT[]>([]);
-  const [hasPast, setHasPast] = useState(false);
+  const [hasPast, setHasPast] = useState(true);
 
   const pastCalendar = useMemo(
     () => calendarGenerator(items, {startOfWeek, past: true}),
@@ -82,13 +82,91 @@ function AgendaList<T extends EventInput>({
     [items, startOfWeek],
   );
 
-  useEffect(() => {
-    const section = upcomingCalendar.next();
-    if (!section.done) {
-      setUpcoming(section.value);
+  const getUpcomingItems = useCallback(
+    (maxNumDays = MAX_NUM_OF_DAYS_PER_BATCH) => {
+      const data: AgendaItemT[] = [];
+      let hasMore = hasUpcoming;
+
+      for (let i = 0; i < maxNumDays; i += 1) {
+        const section = upcomingCalendar.next();
+        if (!section.done) {
+          data.push(...section.value);
+        } else {
+          hasMore = !section.done;
+          break;
+        }
+      }
+
+      return {
+        data,
+        hasMore,
+      };
+    },
+    [upcomingCalendar],
+  );
+
+  const getPastItems = useCallback(
+    (maxNumDays = MAX_NUM_OF_DAYS_PER_BATCH) => {
+      const data: AgendaItemT[] = [];
+      let hasMore = hasPast;
+
+      for (let i = 0; i < maxNumDays; i += 1) {
+        const section = pastCalendar.next();
+        if (!section.done) {
+          data.push(...section.value);
+        } else {
+          hasMore = !section.done;
+          break;
+        }
+      }
+
+      return {
+        data,
+        hasMore,
+      };
+    },
+    [pastCalendar],
+  );
+
+  const loadUpcoming = useCallback(() => {
+    if (hasUpcoming) {
+      const {data, hasMore} = getUpcomingItems();
+      if (data.length) {
+        setUpcoming(currentData => [...currentData, ...data]);
+      }
+      setHasUpcoming(hasMore);
     }
-    setHasUpcoming(!section.done);
-  }, [upcomingCalendar]);
+  }, [getUpcomingItems, hasUpcoming]);
+
+  const loadPast = useCallback(() => {
+    if (hasPast) {
+      const {data, hasMore} = getPastItems();
+      if (data.length) {
+        setPast(currentData => [...currentData, ...data]);
+      }
+      setHasPast(hasMore);
+    }
+  }, [getPastItems, hasPast]);
+
+  const onEndReached = useCallback(() => {
+    if (mode === modes.PAST) {
+      loadPast();
+    } else {
+      loadUpcoming();
+    }
+  }, [loadPast, loadUpcoming, mode]);
+
+  useEffect(() => {
+    if (items.length) {
+      const upcomingResult = getUpcomingItems();
+      const pastResult = getPastItems();
+
+      setPast(pastResult.data);
+      setHasPast(pastResult.hasMore);
+      setUpcoming(upcomingResult.data);
+      setHasUpcoming(upcomingResult.hasMore);
+    }
+  }, [items, getPastItems, getUpcomingItems]);
 
   const toggleMode = useCallback(() => {
     setMode(currentMode =>
@@ -165,13 +243,12 @@ function AgendaList<T extends EventInput>({
       keyboardShouldPersistTaps="always"
       estimatedItemSize={ITEM_HEIGHT}
       estimatedFirstItemOffset={ITEM_HEIGHT}
+      onEndReached={onEndReached}
       ItemSeparatorComponent={Divider}
       showsVerticalScrollIndicator={false}
       keyExtractor={keyExtractor || _keyExtractor}
       ListHeaderComponent={renderHeader}
-      ListFooterComponent={
-        (isPast ? hasPast : hasUpcoming) ? renderFooter : null
-      }
+      ListFooterComponent={renderFooter}
     />
   );
 }
