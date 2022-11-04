@@ -3,7 +3,7 @@ import capitalize from 'lodash.capitalize';
 import {Language} from 'rrule/dist/esm/nlp/i18n';
 import {Dayjs} from 'dayjs';
 import {EventInput, Recurrence} from '~types';
-import {currentUTCDate, formatUTCtoLocalTime, parseUTCdate} from '~utils/date';
+import {currentUTCDate, parseUTCdate} from '~utils/date';
 
 export function formatRecurrence(input: Recurrence, lng?: Language) {
   const {freq, until} = input;
