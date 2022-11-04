@@ -26,7 +26,12 @@ import {
   InteractionManager,
 } from 'react-native';
 import EmptyState from '~components/EmptyState';
-import {currentUTCDate, formatCalendarDate, formatUTCDate} from '~utils/date';
+import {
+  currentUTCDate,
+  formatCalendarDate,
+  formatDateToUTC,
+  formatUTCDate,
+} from '~utils/date';
 import calendarGenerator, {AgendaItemT} from '~utils/calendar';
 import {useAppSelector} from '~redux/hooks';
 import {selectStartOfWeek} from '~redux/settings/slice';
@@ -62,6 +67,7 @@ interface Props<T extends EventInput> {
   listEmptyMessage?: string;
   onRefresh?: RefreshControlProps['onRefresh'];
   refreshing?: RefreshControlProps['refreshing'];
+  selectedDate?: string;
 }
 
 interface AgendaListHandle {
@@ -77,8 +83,9 @@ function AgendaList<T extends EventInput>(
     onPressItem,
     keyExtractor,
     onRefresh,
-    refreshing = false,
     onScroll,
+    refreshing = false,
+    selectedDate = formatDateToUTC(),
   }: Props<T>,
   forwardedRef: ForwardedRef<AgendaListHandle>,
 ) {
@@ -96,12 +103,12 @@ function AgendaList<T extends EventInput>(
   const [hasMorePast, setHasMorePast] = useState(true);
 
   const pastCalendar = useMemo(
-    () => calendarGenerator(items, {startOfWeek, past: true}),
-    [items, startOfWeek],
+    () => calendarGenerator(items, {startOfWeek, past: true, selectedDate}),
+    [items, startOfWeek, selectedDate],
   );
   const upcomingCalendar = useMemo(
-    () => calendarGenerator(items, {startOfWeek}),
-    [items, startOfWeek],
+    () => calendarGenerator(items, {startOfWeek, selectedDate}),
+    [items, startOfWeek, selectedDate],
   );
 
   const getUpcomingItems = useCallback(
