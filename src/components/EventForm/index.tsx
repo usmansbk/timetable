@@ -14,7 +14,7 @@ import {useTranslation} from 'react-i18next';
 import * as yup from 'yup';
 import {EventInput} from '~types';
 import {formatDateToUTC} from '~utils/date';
-import {validateRecurrence, validateStartTime} from '~utils/validators';
+import {validateRecurrence} from '~utils/validators';
 import DateTimeInput from '../DateTimeInput';
 import Confirm from '../Confirm';
 import Select, {SelectOption} from '../Select';
@@ -64,15 +64,7 @@ function EventForm({
             .required(() => t('Add a Title')),
           startDate: yup.string().required(),
           startTime: yup.string().nullable().optional(),
-          endTime: yup
-            .string()
-            .nullable()
-            .optional()
-            .test(
-              'startTimeRequired',
-              () => t('Start time is required'),
-              validateStartTime,
-            ),
+          endTime: yup.string().nullable().optional(),
           scheduleId: yup.string().nullable().optional(),
           repeat: repeatSchema
             .nullable()
@@ -202,7 +194,7 @@ function EventForm({
                     onChange={onChange}
                     value={value}
                     mode="time"
-                    error={!!errors.endTime}
+                    error={!!errors.startTime}
                   />
                 )}
               />
@@ -218,16 +210,12 @@ function EventForm({
                     onChange={onChange}
                     value={value}
                     mode="time"
+                    error={!!errors.endTime}
                   />
                 )}
               />
             </View>
           </View>
-          {!!errors.endTime && (
-            <HelperText type="error" visible>
-              {errors.endTime.message}
-            </HelperText>
-          )}
           {!!schedules?.length && (
             <Controller
               control={control}
