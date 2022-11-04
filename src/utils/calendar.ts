@@ -1,6 +1,6 @@
 import {RRuleSet} from 'rrule';
 import {EventInput} from '~types';
-import dayjs, {currentUTCDate, formatUTCDate, parseUTCdate} from './date';
+import dayjs, {currentUTCDate, formatUTCDate} from './date';
 import {createDateRule} from './event';
 
 export type AgendaItemT = string | EventInput;
@@ -34,12 +34,12 @@ function matches(item: EventInput, utcDate: Date, startOfWeek: number) {
 
   const nextDate = rule.after(utcDate, true);
 
-  return !!nextDate && dayjs.utc(nextDate).isSame(startDate, 'date');
+  return !!nextDate && dayjs.utc(utcDate).isSame(nextDate, 'date');
 }
 
 function getDateEvents(items: EventInput[], date: Date, startOfWeek: number) {
   return items
-    .filter(item => !matches(item, date, startOfWeek))
+    .filter(item => matches(item, date, startOfWeek))
     .sort((a, b) => {
       if (a.startTime === b.startTime) {
         return 0;
@@ -91,7 +91,9 @@ export default function* calendarGenerator(
       date = nextDate;
     } else {
       const day = dayjs.utc(date);
-      date = parseUTCdate(past ? day.subtract(1, 'day') : day.add(1, 'day'));
+      date = past
+        ? day.subtract(1, 'day').toDate()
+        : day.add(1, 'day').toDate();
     }
   }
 
