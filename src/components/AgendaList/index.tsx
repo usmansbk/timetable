@@ -14,6 +14,7 @@ import {
   RefreshControl,
   RefreshControlProps,
 } from 'react-native';
+import {formatCalendarDate} from '~utils/date';
 import EmptyState from '~components/EmptyState';
 import {EventInput} from '~types';
 import AgendaItem from './AgendaItem';
@@ -33,6 +34,21 @@ interface Props<T extends EventInput> {
   refreshing?: RefreshControlProps['refreshing'];
 }
 
+function DayHeader({item}: {item: string}) {
+  const {colors} = useTheme();
+
+  return (
+    <View
+      style={[styles.sectionHeader, {backgroundColor: colors.surfaceDisabled}]}>
+      <Text
+        variant="headlineMedium"
+        style={[styles.sectionHeaderText, {color: colors.onSurfaceVariant}]}>
+        {formatCalendarDate(item).toLocaleUpperCase()}
+      </Text>
+    </View>
+  );
+}
+
 function AgendaList<T extends EventInput>({
   items,
   listEmptyMessage,
@@ -45,7 +61,7 @@ function AgendaList<T extends EventInput>({
   const {t} = useTranslation();
   const [mode, setMode] = useState(modes.UPCOMING);
 
-  const [upcoming, setUpcoming] = useState<T[]>([]);
+  const [upcoming, setUpcoming] = useState<T[]>(['2022-11-04']);
   const [hasUpcoming, setHasUpcoming] = useState(false);
 
   const [past, setPast] = useState<T[]>([]);
@@ -62,23 +78,15 @@ function AgendaList<T extends EventInput>({
     [onPressItem],
   );
 
-  const renderSectionHeader = useCallback((item: string) => {
-    return (
-      <View style={styles.sectionHeader}>
-        <Text>{item}</Text>
-      </View>
-    );
-  }, []);
-
   const renderItem: ListRenderItem<T> = useCallback(
     ({item, index}) => {
       if (typeof item === 'string') {
-        return renderSectionHeader(item);
+        return <DayHeader item={item} />;
       }
 
       return <AgendaItem item={item} onPress={handlePressItem(item, index)} />;
     },
-    [handlePressItem, renderSectionHeader],
+    [handlePressItem],
   );
 
   const renderFooter = useCallback(() => <View style={styles.footer} />, []);
@@ -154,7 +162,10 @@ const styles = StyleSheet.create({
   sectionHeader: {
     height: ITEM_HEIGHT,
     justifyContent: 'center',
-    alignItems: 'center',
+    paddingHorizontal: 16,
+  },
+  sectionHeaderText: {
+    fontSize: 12,
   },
 });
 

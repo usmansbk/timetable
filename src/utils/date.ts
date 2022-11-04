@@ -3,11 +3,13 @@ import utc from 'dayjs/plugin/utc';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
+import calendar from 'dayjs/plugin/calendar';
 
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
+dayjs.extend(calendar);
 
 export const DAYS_OF_WEEK = [0, 1, 2, 3, 4, 5, 6]; // sun - sat
 
@@ -71,6 +73,17 @@ export function setUTCDateTime(utcDate: DateType, utcTime?: string | null) {
     date = date.hour(time.hour()).minute(time.minute());
   }
   return date;
+}
+
+export function formatCalendarDate(date: string) {
+  return dayjs(parseUTCtoLocalDate(date)).calendar(null, {
+    sameDay: '[Today], dddd, D MMMM',
+    nextDay: '[Tomorrow], dddd, D MMMM',
+    nextWeek: 'dddd, D MMMM',
+    lastDay: '[Yesterday], dddd, D MMMM',
+    lastWeek: 'dddd, D MMMM',
+    sameElse: 'dddd, D MMMM, YYYY',
+  });
 }
 
 export default dayjs;
