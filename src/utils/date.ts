@@ -2,10 +2,12 @@ import dayjs, {Dayjs} from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import duration from 'dayjs/plugin/duration';
 
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 dayjs.extend(relativeTime);
+dayjs.extend(duration);
 
 export const DAYS_OF_WEEK = [0, 1, 2, 3, 4, 5, 6]; // sun - sat
 
@@ -54,7 +56,7 @@ export function parseUTCtoLocalTime(time: string) {
 }
 
 export function currentUTCTime() {
-  return dayjs.utc().millisecond(0).second(0).toDate();
+  return dayjs.utc().toDate();
 }
 
 export function combineUTCDateTime(utcDate: DateType, utcTime?: string | null) {
@@ -65,10 +67,6 @@ export function combineUTCDateTime(utcDate: DateType, utcTime?: string | null) {
     date = date.hour(time.hour()).minute(time.minute());
   }
   return date;
-}
-
-export function asDayjs(date: DateType) {
-  return dayjs(date);
 }
 
 export default dayjs;

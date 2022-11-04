@@ -2,12 +2,12 @@ import {memo, useCallback} from 'react';
 import {View} from 'react-native';
 import {Button, Checkbox, Dialog, Portal} from 'react-native-paper';
 import {useTranslation} from 'react-i18next';
-import {ReminderKey} from '~types';
+import {Reminder, ReminderKey} from '~types';
 
 interface Props {
   visible: boolean;
   onDismiss: () => void;
-  values: {[key: string]: boolean};
+  values: Reminder;
   onChange: (key: ReminderKey) => void;
 }
 

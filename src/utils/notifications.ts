@@ -1,14 +1,19 @@
 import {Dictionary} from '@reduxjs/toolkit';
 import {ManipulateType} from 'dayjs';
 import capitalize from 'lodash.capitalize';
+import omit from 'lodash.omit';
+import {Platform} from 'react-native';
 import Notification, {CHANNEL_ID} from '~config/notifications';
-import {EventInput, Reminder, ReminderKey} from '~types';
+import {EventInput, Recurrence, Reminder, ReminderKey} from '~types';
 import dayjs, {
   combineUTCDateTime,
   currentUTCTime,
   parseUTCtoLocalDate,
 } from './date';
 import {createDateRule} from './event';
+
+const ONE_YEAR = dayjs.duration(1, 'year').asMilliseconds();
+const REPEAT_INTERVAL = 1;
 
 interface ScheduleNotificationOptions {
   playSound: boolean;
@@ -31,7 +36,7 @@ export function scheduleNotifications({
   Notification.cancelAllLocalNotifications();
   events.forEach(event => {
     const reminder = Object.assign({}, defaultReminder, reminders[event.id!]);
-    scheduleNotification(event, reminder, {playSound, vibrate});
+    scheduleNotification(event, omit(reminder, 'id'), {playSound, vibrate});
   });
 }
 
@@ -42,35 +47,59 @@ function scheduleNotification(
 ) {
   const {title, startDate, repeat, startTime} = event;
 
-  const eventDateTime = combineUTCDateTime(startDate, startTime);
-  const rule = createDateRule(eventDateTime, repeat);
-  const utcDate = rule?.after(currentUTCTime(), true);
+  const startAt = combineUTCDateTime(startDate, startTime);
 
-  if (utcDate) {
-    const startAt = dayjs(parseUTCtoLocalDate(utcDate));
+  Object.keys(reminder).forEach(key => {
+    const reminderKey = key as ReminderKey;
 
-    Object.keys(reminder).forEach(key => {
-      const reminderKey = key as ReminderKey;
+    if (reminder[reminderKey]) {
+      const [value, unit] = key.split('_');
 
-      if (reminder[reminderKey]) {
-        const [value, unit] = key.split('_');
-        const fireDate = dayjs(startAt).subtract(
-          Number.parseInt(value, 10),
-          unit as ManipulateType,
-        );
-        console.log(fireDate);
+      const remindAt = startAt.subtract(
+        Number.parseInt(value, 10),
+        unit as ManipulateType,
+      );
+
+      const rule = createDateRule(remindAt, repeat);
+      const fireDate = rule?.after(currentUTCTime(), true);
+
+      if (fireDate) {
+        const date = parseUTCtoLocalDate(fireDate);
+        const message = dayjs(startAt).from(remindAt);
+
+        const repeatType = repeat?.freq && (getRepeatType(repeat.freq) as any);
 
         Notification.localNotificationSchedule({
           channelId: CHANNEL_ID,
           title,
-          message: capitalize(startAt.from(fireDate)),
-          date: fireDate.toDate(),
+          message: capitalize(message),
+          date,
           allowWhileIdle: true,
           playSound,
           vibrate,
-          repeatTime: 1,
+          repeatType,
+          repeatTime: repeat?.freq === 'YEARLY' ? ONE_YEAR : REPEAT_INTERVAL,
         });
       }
-    });
-  }
+    }
+  });
 }
+
+const getRepeatType = (freq: Recurrence['freq']) => {
+  switch (freq) {
+    case 'DAILY': {
+      return 'day';
+    }
+    case 'WEEKLY': {
+      return 'week';
+    }
+    case 'MONTHLY': {
+      return 'month';
+    }
+    case 'YEARLY': {
+      return Platform.OS === 'android' ? 'time' : 'year';
+    }
+    default: {
+    }
+  }
+};

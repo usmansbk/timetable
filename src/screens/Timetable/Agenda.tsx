@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {memo, useCallback, useEffect} from 'react';
+import {InteractionManager} from 'react-native';
 import AgendaList from '~components/AgendaList';
 import {useAppSelector} from '~redux/hooks';
 import {
@@ -32,12 +33,14 @@ function Agenda() {
 
   useEffect(() => {
     if (events.length) {
-      scheduleNotifications({
-        events,
-        reminders,
-        defaultReminder,
-        playSound: playNotificationSound,
-        vibrate: enableVibration,
+      InteractionManager.runAfterInteractions(() => {
+        scheduleNotifications({
+          events,
+          reminders,
+          defaultReminder,
+          playSound: playNotificationSound,
+          vibrate: enableVibration,
+        });
       });
     }
   }, [
