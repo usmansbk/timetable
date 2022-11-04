@@ -16,11 +16,11 @@ const UTC_TIME_FORMAT = 'HH:mm';
 
 type DateType = string | Date | Dayjs;
 
-export function formatToUTCdate(date?: DateType) {
+export function formatDateToUTC(date?: DateType) {
   return dayjs(date).utc().format(UTC_DATE_FORMAT);
 }
 
-export function formatToUTCtime(date: DateType) {
+export function formatTimeToUTC(date: DateType) {
   return dayjs(date).utc().format(UTC_TIME_FORMAT);
 }
 

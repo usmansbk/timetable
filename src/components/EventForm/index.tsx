@@ -13,7 +13,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {useTranslation} from 'react-i18next';
 import * as yup from 'yup';
 import {EventInput} from '~types';
-import {formatToUTCdate} from '~utils/date';
+import {formatDateToUTC} from '~utils/date';
 import {validateRecurrence} from '~utils/validators';
 import DateTimeInput from '../DateTimeInput';
 import Confirm from '../Confirm';
@@ -99,7 +99,7 @@ function EventForm({
       Object.assign(
         {
           title: '',
-          startDate: formatToUTCdate(),
+          startDate: formatDateToUTC(new Date()),
           startTime: null,
           endTime: null,
           scheduleId: null,
