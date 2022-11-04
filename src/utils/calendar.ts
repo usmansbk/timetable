@@ -37,7 +37,15 @@ function matches(item: EventInput, utcDate: Date, startOfWeek: number) {
   return !!nextDate && dayjs.utc(utcDate).isSame(nextDate, 'date');
 }
 
-function getEventsByDate(items: EventInput[], date: Date, startOfWeek: number) {
+function getEventsByDate({
+  items,
+  date,
+  startOfWeek,
+}: {
+  items: EventInput[];
+  date: Date;
+  startOfWeek: number;
+}) {
   return items
     .filter(item => matches(item, date, startOfWeek))
     .sort((a, b) => {
@@ -81,7 +89,7 @@ export default function* calendarGenerator(
 
   while (date) {
     const title = formatUTCDate(date);
-    const events = getEventsByDate(items, date, startOfWeek);
+    const events = getEventsByDate({items, date, startOfWeek});
     const data = events.map(event => ({...event, startDate: title}));
     yield [title, ...data];
 
