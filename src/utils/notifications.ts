@@ -60,7 +60,7 @@ function scheduleNotification(
         unit as ManipulateType,
       );
 
-      const rule = createDateRule(remindAt, repeat);
+      const rule = createDateRule({startDate: remindAt, repeat});
       const fireDate = rule?.after(currentUTCTime(), true);
 
       if (fireDate) {

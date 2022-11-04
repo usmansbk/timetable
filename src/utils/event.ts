@@ -15,16 +15,22 @@ export function formatRecurrence(input: Recurrence, lng?: Language) {
   return capitalize(rule.toText(undefined, lng));
 }
 
-export function createDateRule(
-  startDate: string | Dayjs,
-  repeat?: Recurrence | null,
-) {
+export function createDateRule({
+  startDate,
+  repeat,
+  startOfWeek,
+}: {
+  startDate: string | Dayjs;
+  repeat?: Recurrence | null;
+  startOfWeek?: number;
+}) {
   const dtstart = parseUTCdate(startDate);
   if (!repeat) {
     return new RRule({
       dtstart,
       freq: Frequency.DAILY,
       until: dtstart,
+      wkst: startOfWeek,
     });
   }
 
@@ -34,12 +40,13 @@ export function createDateRule(
     dtstart,
     freq: Frequency[freq],
     until: until ? parseUTCdate(until) : null,
+    wkst: startOfWeek,
   });
 }
 
 export function getNextEventDate(event: EventInput, after?: string) {
   const {startDate, repeat} = event;
-  const rule = createDateRule(startDate, repeat);
+  const rule = createDateRule({startDate, repeat});
 
   return rule.after(after ? parseUTCdate(after) : currentUTCDate(), true);
 }
