@@ -1,4 +1,4 @@
-import {memo, useCallback, useState} from 'react';
+import {memo, useCallback, useMemo, useState} from 'react';
 import {
   Divider,
   IconButton,
@@ -17,6 +17,9 @@ import {
 import {formatCalendarDate} from '~utils/date';
 import EmptyState from '~components/EmptyState';
 import {EventInput} from '~types';
+import calendarGenerator from '~utils/calendar';
+import {useAppSelector} from '~redux/hooks';
+import {selectStartOfWeek} from '~redux/settings/slice';
 import AgendaItem from './AgendaItem';
 import {ITEM_HEIGHT} from './constants';
 
@@ -60,12 +63,24 @@ function AgendaList<T extends EventInput>({
   const {colors} = useTheme();
   const {t} = useTranslation();
   const [mode, setMode] = useState(modes.UPCOMING);
+  const startOfWeek = useAppSelector(selectStartOfWeek);
+
+  const pastCalendar = useMemo(
+    () => calendarGenerator(items, {startOfWeek, past: true}),
+    [items, startOfWeek],
+  );
+  const upcomingCalendar = useMemo(
+    () => calendarGenerator(items, {startOfWeek}),
+    [items, startOfWeek],
+  );
 
   const [upcoming, setUpcoming] = useState<T[]>([]);
   const [hasUpcoming, setHasUpcoming] = useState(false);
 
   const [past, setPast] = useState<T[]>([]);
   const [hasPast, setHasPast] = useState(false);
+
+  const [initialScrollIndex, setInitialScrollIndex] = useState(0);
 
   const toggleMode = useCallback(() => {
     setMode(currentMode =>
@@ -138,7 +153,10 @@ function AgendaList<T extends EventInput>({
           />
         ) : undefined
       }
+      initialScrollIndex={initialScrollIndex}
+      keyboardShouldPersistTaps="always"
       estimatedItemSize={ITEM_HEIGHT}
+      estimatedFirstItemOffset={ITEM_HEIGHT}
       ItemSeparatorComponent={Divider}
       showsVerticalScrollIndicator={false}
       keyExtractor={keyExtractor || _keyExtractor}
