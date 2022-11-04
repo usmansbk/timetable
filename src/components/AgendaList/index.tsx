@@ -1,43 +1,52 @@
 import {memo, useCallback} from 'react';
-import {FlatList, FlatListProps, StyleSheet} from 'react-native';
+import {Divider} from 'react-native-paper';
+import {FlashList, FlashListProps, ListRenderItem} from '@shopify/flash-list';
 import EmptyState from '~components/EmptyState';
 import {EventInput} from '~types';
 import AgendaItem from './AgendaItem';
+import {ITEM_HEIGHT} from './constants';
 
 interface Props<T extends EventInput> {
   items: T[];
   onPressItem: (item: T, index: number) => void;
-  ListEmptyComponent?: FlatListProps<T>['ListEmptyComponent'];
+  keyExtractor?: FlashListProps<T>['keyExtractor'];
+  ListEmptyComponent?: FlashListProps<T>['ListEmptyComponent'];
 }
 
 function AgendaList<T extends EventInput>({
   items,
   ListEmptyComponent,
   onPressItem,
+  keyExtractor,
 }: Props<T>) {
   const handlePress = useCallback(
     (item: T, index: number) => () => onPressItem(item, index),
     [],
   );
 
+  const renderItem: ListRenderItem<T> = useCallback(({item, index}) => {
+    return <AgendaItem item={item} onPress={handlePress(item, index)} />;
+  }, []);
+
+  const _keyExtractor: FlashListProps<T>['keyExtractor'] = useCallback(
+    (item: T, index: number) => {
+      return item.id || String(index);
+    },
+    [],
+  );
+
   return (
-    <FlatList
-      contentContainerStyle={styles.contentContainer}
+    <FlashList
       data={items}
-      renderItem={({item, index}) => (
-        <AgendaItem item={item} onPress={handlePress(item, index)} />
-      )}
+      renderItem={renderItem}
+      estimatedItemSize={ITEM_HEIGHT}
       ListEmptyComponent={
         ListEmptyComponent || <EmptyState title="No Events" />
       }
+      ItemSeparatorComponent={Divider}
+      keyExtractor={keyExtractor || _keyExtractor}
     />
   );
 }
-
-const styles = StyleSheet.create({
-  contentContainer: {
-    flexGrow: 1,
-  },
-});
 
 export default memo(AgendaList);
