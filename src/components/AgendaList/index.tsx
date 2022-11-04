@@ -203,8 +203,12 @@ function AgendaList<T extends EventInput>(
   }, [items, getPastItems, getUpcomingItems]);
 
   useImperativeHandle(forwardedRef, () => ({
-    scrollToTop,
-    scrollToDate,
+    scrollToTop() {
+      scrollToTop();
+    },
+    scrollToDate(date) {
+      scrollToDate(date);
+    },
   }));
 
   const toggleMode = useCallback(() => {
