@@ -68,10 +68,10 @@ function AgendaList<T extends EventInput>({
   const [initialScrollIndex, setInitialScrollIndex] = useState(0);
 
   const [upcoming, setUpcoming] = useState<AgendaItemT[]>([]);
-  const [hasUpcoming, setHasUpcoming] = useState(true);
+  const [hasMoreUpcoming, setHasMoreUpcoming] = useState(true);
 
   const [past, setPast] = useState<AgendaItemT[]>([]);
-  const [hasPast, setHasPast] = useState(true);
+  const [hasMorePast, setHasMorePast] = useState(true);
 
   const pastCalendar = useMemo(
     () => calendarGenerator(items, {startOfWeek, past: true}),
@@ -85,7 +85,7 @@ function AgendaList<T extends EventInput>({
   const getUpcomingItems = useCallback(
     (maxNumDays = MAX_NUM_OF_DAYS_PER_BATCH) => {
       const data: AgendaItemT[] = [];
-      let hasMore = hasUpcoming;
+      let hasMore = hasMoreUpcoming;
 
       for (let i = 0; i < maxNumDays; i += 1) {
         const section = upcomingCalendar.next();
@@ -108,7 +108,7 @@ function AgendaList<T extends EventInput>({
   const getPastItems = useCallback(
     (maxNumDays = MAX_NUM_OF_DAYS_PER_BATCH) => {
       const data: AgendaItemT[] = [];
-      let hasMore = hasPast;
+      let hasMore = hasMorePast;
 
       for (let i = 0; i < maxNumDays; i += 1) {
         const section = pastCalendar.next();
@@ -129,24 +129,24 @@ function AgendaList<T extends EventInput>({
   );
 
   const loadUpcoming = useCallback(() => {
-    if (hasUpcoming) {
+    if (hasMoreUpcoming) {
       const {data, hasMore} = getUpcomingItems();
       if (data.length) {
         setUpcoming(currentData => [...currentData, ...data]);
       }
-      setHasUpcoming(hasMore);
+      setHasMoreUpcoming(hasMore);
     }
-  }, [getUpcomingItems, hasUpcoming]);
+  }, [getUpcomingItems, hasMoreUpcoming]);
 
   const loadPast = useCallback(() => {
-    if (hasPast) {
+    if (hasMorePast) {
       const {data, hasMore} = getPastItems();
       if (data.length) {
         setPast(currentData => [...currentData, ...data]);
       }
-      setHasPast(hasMore);
+      setHasMorePast(hasMore);
     }
-  }, [getPastItems, hasPast]);
+  }, [getPastItems, hasMorePast]);
 
   const onEndReached = useCallback(() => {
     if (mode === modes.PAST) {
@@ -162,9 +162,9 @@ function AgendaList<T extends EventInput>({
       const pastResult = getPastItems();
 
       setPast(pastResult.data);
-      setHasPast(pastResult.hasMore);
+      setHasMorePast(pastResult.hasMore);
       setUpcoming(upcomingResult.data);
-      setHasUpcoming(upcomingResult.hasMore);
+      setHasMoreUpcoming(upcomingResult.hasMore);
     }
   }, [items, getPastItems, getUpcomingItems]);
 
