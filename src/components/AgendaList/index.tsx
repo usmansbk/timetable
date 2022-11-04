@@ -1,4 +1,14 @@
-import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {
+  ForwardedRef,
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Divider,
   IconButton,
@@ -24,20 +34,6 @@ import {EventInput} from '~types';
 import AgendaItem from './AgendaItem';
 import {ITEM_HEIGHT, MAX_NUM_OF_DAYS_PER_BATCH} from './constants';
 
-const modes = {
-  PAST: 'PAST',
-  UPCOMING: 'UPCOMING',
-};
-
-interface Props<T extends EventInput> {
-  items: T[];
-  onPressItem: (item: EventInput, index: number) => void;
-  keyExtractor?: FlashListProps<AgendaItemT>['keyExtractor'];
-  listEmptyMessage?: string;
-  onRefresh?: RefreshControlProps['onRefresh'];
-  refreshing?: RefreshControlProps['refreshing'];
-}
-
 function DayHeader({item}: {item: string}) {
   const {colors} = useTheme();
 
@@ -53,14 +49,36 @@ function DayHeader({item}: {item: string}) {
   );
 }
 
-function AgendaList<T extends EventInput>({
-  items,
-  listEmptyMessage,
-  onPressItem,
-  keyExtractor,
-  onRefresh,
-  refreshing = false,
-}: Props<T>) {
+const modes = {
+  PAST: 'PAST',
+  UPCOMING: 'UPCOMING',
+};
+
+interface Props<T extends EventInput> {
+  items: T[];
+  onPressItem: (item: EventInput, index: number) => void;
+  keyExtractor?: FlashListProps<AgendaItemT>['keyExtractor'];
+  listEmptyMessage?: string;
+  onRefresh?: RefreshControlProps['onRefresh'];
+  refreshing?: RefreshControlProps['refreshing'];
+}
+
+interface AgendaListHandle {
+  scrollToTop: () => void;
+  scrollToDate: (date: string) => void;
+}
+
+function AgendaList<T extends EventInput>(
+  {
+    items,
+    listEmptyMessage,
+    onPressItem,
+    keyExtractor,
+    onRefresh,
+    refreshing = false,
+  }: Props<T>,
+  forwardedRef: ForwardedRef<AgendaListHandle>,
+) {
   const listRef = useRef<FlashList<AgendaItemT>>(null);
   const {colors} = useTheme();
   const {t} = useTranslation();
@@ -184,6 +202,11 @@ function AgendaList<T extends EventInput>({
     });
   }, [items, getPastItems, getUpcomingItems]);
 
+  useImperativeHandle(forwardedRef, () => ({
+    scrollToTop,
+    scrollToDate,
+  }));
+
   const toggleMode = useCallback(() => {
     setMode(currentMode =>
       currentMode === modes.PAST ? modes.UPCOMING : modes.PAST,
@@ -290,4 +313,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(AgendaList);
+export default memo(forwardRef(AgendaList));
