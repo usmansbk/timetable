@@ -131,7 +131,7 @@ function AgendaList<T extends EventInput>(
         hasMore,
       };
     },
-    [upcomingCalendar],
+    [upcomingCalendar, hasMoreUpcoming],
   );
 
   const getPastItems = useCallback(
@@ -154,7 +154,7 @@ function AgendaList<T extends EventInput>(
         hasMore,
       };
     },
-    [pastCalendar],
+    [pastCalendar, hasMorePast],
   );
 
   const loadUpcoming = useCallback(() => {
