@@ -42,7 +42,7 @@ function ThemePicker({visible, onDismiss}: Props) {
         <Dialog.Actions>
           <View>
             <Button uppercase onPress={onDismiss}>
-              {t('Cancel')}
+              {t('Done')}
             </Button>
           </View>
         </Dialog.Actions>
