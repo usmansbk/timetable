@@ -1,7 +1,11 @@
 import {Dictionary} from '@reduxjs/toolkit';
 import Notification from '~config/notifications';
 import {EventInput, Reminder} from '~types';
-import {combineUTCDateTimeToLocal, parseUTCdate} from './date';
+import dayjs, {
+  combineUTCDateTime,
+  currentUTCTime,
+  parseUTCtoLocalDate,
+} from './date';
 import {createDateRule} from './event';
 
 interface ScheduleNotificationOptions {
@@ -36,17 +40,18 @@ function scheduleNotification(
 ) {
   const {title, startDate, repeat, startTime} = event;
 
-  const rule = createDateRule(startDate, repeat);
-  const utcDate = rule?.after(parseUTCdate(startDate), true);
+  const startAt = combineUTCDateTime(startDate, startTime);
+  const rule = createDateRule(startAt, repeat);
+  const utcDate = rule?.after(currentUTCTime(), true);
 
   if (utcDate) {
-    const startAt = combineUTCDateTimeToLocal(utcDate, startTime);
-
+    const date = parseUTCtoLocalDate(utcDate);
+    const day = dayjs(date);
     Object.keys(reminder).forEach(key => {
       Notification.localNotificationSchedule({
         title,
         message: '',
-        date: startAt.toDate(),
+        date,
         allowWhileIdle: true,
         playSound,
         vibrate,

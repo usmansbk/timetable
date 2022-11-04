@@ -1,6 +1,7 @@
 import {Frequency, RRule} from 'rrule';
 import capitalize from 'lodash.capitalize';
 import {Language} from 'rrule/dist/esm/nlp/i18n';
+import {Dayjs} from 'dayjs';
 import {Recurrence} from '~types';
 import {parseUTCdate} from '~utils/date';
 
@@ -14,7 +15,10 @@ export function formatRecurrence(input: Recurrence, lng?: Language) {
   return capitalize(rule.toText(undefined, lng));
 }
 
-export function createDateRule(startDate: string, repeat?: Recurrence | null) {
+export function createDateRule(
+  startDate: string | Dayjs,
+  repeat?: Recurrence | null,
+) {
   const dtstart = parseUTCdate(startDate);
   if (!repeat) {
     return new RRule({
