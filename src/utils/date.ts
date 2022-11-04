@@ -59,6 +59,10 @@ export function currentUTCTime() {
   return dayjs.utc().toDate();
 }
 
+export function currentUTCDate() {
+  return dayjs.utc().startOf('day').toDate();
+}
+
 export function setUTCDateTime(utcDate: DateType, utcTime?: string | null) {
   let date = dayjs.utc(utcDate);
 

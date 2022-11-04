@@ -6,10 +6,11 @@ import {useAppSelector} from '~redux/hooks';
 import {selectScheduleById} from '~redux/timetable/slice';
 import {EventInput} from '~types';
 import {formatUTCtoLocalDate, formatUTCtoLocalTime} from '~utils/date';
-import {formatRecurrence} from '~utils/event';
+import {formatRecurrence, getNextEventDate} from '~utils/event';
 
 interface Props {
   event: EventInput;
+  date?: string;
 }
 
 function ScheduleField({id, label}: {id: string; label: string}) {
@@ -30,17 +31,11 @@ function ScheduleField({id, label}: {id: string; label: string}) {
   );
 }
 
-function EventDetails({event}: Props) {
+function EventDetails({event, date}: Props) {
   const {t} = useTranslation();
-  const {
-    title,
-    startDate,
-    startTime,
-    endTime,
-    description,
-    repeat,
-    scheduleId,
-  } = event;
+  const {title, startTime, endTime, description, repeat, scheduleId} = event;
+
+  const startDate = getNextEventDate(event, date);
 
   return (
     <ScrollView style={styles.container}>

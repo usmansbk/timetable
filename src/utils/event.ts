@@ -2,8 +2,8 @@ import {Frequency, RRule} from 'rrule';
 import capitalize from 'lodash.capitalize';
 import {Language} from 'rrule/dist/esm/nlp/i18n';
 import {Dayjs} from 'dayjs';
-import {Recurrence} from '~types';
-import {parseUTCdate} from '~utils/date';
+import {EventInput, Recurrence} from '~types';
+import {currentUTCDate, parseUTCdate} from '~utils/date';
 
 export function formatRecurrence(input: Recurrence, lng?: Language) {
   const {freq, until} = input;
@@ -35,4 +35,11 @@ export function createDateRule(
     freq: Frequency[freq],
     until: until ? parseUTCdate(until) : null,
   });
+}
+
+export function getNextEventDate(event: EventInput, after?: string) {
+  const {startDate, repeat} = event;
+  const rule = createDateRule(startDate, repeat);
+
+  return rule.after(after ? parseUTCdate(after) : currentUTCDate(), true);
 }

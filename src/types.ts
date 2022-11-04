@@ -44,6 +44,7 @@ export type RootStackParamList = {
   };
   Event: {
     id: string;
+    date?: string;
   };
 };
 
