@@ -1,4 +1,3 @@
-import {TextInput, TouchableRipple} from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {memo, useState} from 'react';
 import {
@@ -9,6 +8,7 @@ import {
   parseUTCtoLocalDate,
   parseUTCtoLocalTime,
 } from '~utils/date';
+import PickerInput from './PickerInput';
 
 interface Props {
   optional?: boolean;
@@ -48,28 +48,15 @@ function DateTimeInput({
 
   return (
     <>
-      <TouchableRipple onPress={() => setOpen(true)}>
-        <TextInput
-          theme={{
-            roundness: 0,
-          }}
-          value={formattedValue}
-          editable={false}
-          label={label}
-          left={
-            <TextInput.Icon
-              icon={mode === 'date' ? 'calendar-outline' : 'clock-outline'}
-              disabled
-            />
-          }
-          right={
-            optional && value ? (
-              <TextInput.Icon icon="close" onPress={() => onChange(null)} />
-            ) : null
-          }
-          error={error}
-        />
-      </TouchableRipple>
+      <PickerInput
+        onPress={() => setOpen(true)}
+        value={formattedValue}
+        label={label}
+        error={error}
+        optional={optional}
+        icon={mode === 'date' ? 'calendar-outline' : 'clock-outline'}
+        onClear={() => onChange(null)}
+      />
       {open && (
         <DateTimePicker
           is24Hour={is24Hour}
