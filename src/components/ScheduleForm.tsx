@@ -49,7 +49,6 @@ export default function ScheduleForm({
           title: yup
             .string()
             .trim()
-            .min(3, () => t('Title too short'))
             .max(80, () => t('Title too long'))
             .required(() => t('Add a Title')),
           events: yup
