@@ -71,7 +71,7 @@ function Event({route, navigation}: RootStackScreenProps<'Event'>) {
   }, [event, navigation]);
 
   if (!event) {
-    return <EmptyState title={t('Event does not exists')} />;
+    return <EmptyState title={t('Event does not exist')} />;
   }
 
   return (
