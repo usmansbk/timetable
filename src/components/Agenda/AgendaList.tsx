@@ -51,7 +51,7 @@ interface Props<T extends EventInput> {
   selectedDate?: string;
 }
 
-interface AgendaListHandle {
+export interface AgendaListHandle {
   scrollToTop: () => void;
   scrollToDate: (date: string) => void;
   prepareForLayoutAnimationRender: () => void;
