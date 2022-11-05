@@ -2,8 +2,8 @@ import React, {memo, useCallback, useRef, useState} from 'react';
 import {InteractionManager, StyleSheet, View} from 'react-native';
 import {Appbar} from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {EventInput} from '~types';
 import {formatDateToUTC, parseUTCtoLocalDate} from '~utils/date';
+import {EventInput} from '~types';
 import AgendaList, {AgendaListHandle} from './AgendaList';
 
 interface Props<T extends EventInput> {
