@@ -4,15 +4,15 @@ Timetable app for Students
 
 ## Features
 
-- [x] Offline support
+- Offline support
 
-- [x] Repeating events
+- Repeating events
 
-- [x] Infinite scroll agenda
+- Infinite scroll agenda
 
-- [x] Event reminder notification
+- Event reminder notification
 
-- [x] Dark theme
+- Dark theme
 
 ## Todo
 
