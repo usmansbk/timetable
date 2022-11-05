@@ -2,8 +2,10 @@
 
 Free Timetable app for Students
 
+<p float="left">
 <img src="https://user-images.githubusercontent.com/10219539/200135313-7f91ec04-9624-401f-b86d-624294e0bd3e.png" width="400">
 <img src="https://user-images.githubusercontent.com/10219539/200135318-f865b045-2974-4267-ae5c-cec33b4ce0bb.png" width="400">
+</p>
 
 ## Features
 
