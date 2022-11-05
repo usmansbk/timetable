@@ -6,8 +6,12 @@ import {useAppSelector} from '~redux/hooks';
 import {selectIs24HourTimeFormat} from '~redux/settings/slice';
 import {selectScheduleById} from '~redux/timetable/slice';
 import {EventInput} from '~types';
-import {formatUTCtoLocalDate, formatUTCtoLocalTime} from '~utils/date';
-import {formatRecurrence, getNextEventDate} from '~utils/event';
+import {formatUTCtoLocalDate} from '~utils/date';
+import {
+  formatEventTime,
+  formatRecurrence,
+  getNextEventDate,
+} from '~utils/event';
 
 interface Props {
   event: EventInput;
@@ -44,21 +48,12 @@ function EventDetails({event, date}: Props) {
   const {colors} = useTheme();
   const {t} = useTranslation();
   const is24Hour = useAppSelector(selectIs24HourTimeFormat);
-  const {title, startTime, endTime, description, repeat, scheduleId} = event;
+  const {title, description, repeat, scheduleId} = event;
 
   const startDate = getNextEventDate(event, date) || event.startDate;
 
-  let time;
-  const from = startTime && formatUTCtoLocalTime(startTime, is24Hour);
-  const to = endTime && formatUTCtoLocalTime(endTime, is24Hour);
-
-  if (from && to) {
-    time = `${from}-${to}`;
-  } else if (from) {
-    time = from;
-  } else if (to) {
-    time = t('event_ends_at', {time: to});
-  }
+  const timeFormat = formatEventTime(event, is24Hour);
+  const time = timeFormat && t(timeFormat.key, {...timeFormat.options});
 
   return (
     <ScrollView style={styles.container}>
