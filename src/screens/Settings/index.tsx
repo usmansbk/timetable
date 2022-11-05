@@ -1,15 +1,17 @@
 import {useCallback, useState} from 'react';
 import {StyleSheet, ScrollView, Platform, Linking, View} from 'react-native';
-import {Divider, List, Text} from 'react-native-paper';
+import {Divider, List, Text, Switch} from 'react-native-paper';
 import RNOpenNotificaition from 'react-native-open-notification';
 import {useTranslation} from 'react-i18next';
 import {formatDay} from '~utils/date';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
 import {
   selectAppTheme,
+  selectIs24HourTimeFormat,
   selectNotificationSound,
   selectNotificationVibration,
   selectStartOfWeek,
+  toggle24HourTimeFormat,
   toggleNotificationSound,
   toggleNotificationVibration,
 } from '~redux/settings/slice';
@@ -18,7 +20,6 @@ import {APP_VERSION, SUPPORT_EMAIL} from '~constants';
 import ThemePicker from './ThemePicker';
 import DayPicker from './DayPicker';
 import DefaultReminders from './DefaultReminders';
-import {Switch} from 'react-native-gesture-handler';
 
 export default function Settings({}: RootStackScreenProps<'Settings'>) {
   const {t} = useTranslation();
@@ -27,6 +28,7 @@ export default function Settings({}: RootStackScreenProps<'Settings'>) {
   const startOfWeek = useAppSelector(selectStartOfWeek);
   const playSound = useAppSelector(selectNotificationSound);
   const vibrate = useAppSelector(selectNotificationVibration);
+  const is24Hour = useAppSelector(selectIs24HourTimeFormat);
 
   const [themePickerVisible, setThemePickerVisible] = useState(false);
   const [dayPickerVisible, setDayPickerVisible] = useState(false);
@@ -55,6 +57,10 @@ export default function Settings({}: RootStackScreenProps<'Settings'>) {
     dispatch(toggleNotificationSound());
   }, []);
 
+  const onToggleTimeFormat = useCallback(() => {
+    dispatch(toggle24HourTimeFormat());
+  }, []);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <List.Section title={t('Preferences')}>
@@ -67,6 +73,13 @@ export default function Settings({}: RootStackScreenProps<'Settings'>) {
           title={t('Start of the week')}
           description={formatDay(startOfWeek)}
           onPress={openDayPicker}
+        />
+        <List.Item
+          title={t('24-hour time')}
+          onPress={onToggleTimeFormat}
+          right={() => (
+            <Switch value={is24Hour} onChange={onToggleTimeFormat} />
+          )}
         />
       </List.Section>
       <Divider />

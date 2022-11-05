@@ -1,12 +1,7 @@
 import {useCallback, useState} from 'react';
-import {
-  Dialog,
-  Portal,
-  TextInput,
-  TouchableRipple,
-  RadioButton,
-} from 'react-native-paper';
+import {Dialog, Portal, RadioButton} from 'react-native-paper';
 import {IconName} from '~types';
+import PickerInput from './PickerInput';
 
 export interface SelectOption {
   label: string;
@@ -44,24 +39,15 @@ export default function Select({
 
   return (
     <>
-      <TouchableRipple onPress={() => setOpen(true)}>
-        <TextInput
-          theme={{
-            roundness: 0,
-          }}
-          left={icon ? <TextInput.Icon disabled icon={icon} /> : null}
-          right={
-            optional && value ? (
-              <TextInput.Icon icon="close" onPress={() => onChange(null)} />
-            ) : null
-          }
-          editable={false}
-          label={label}
-          placeholder={placeholder}
-          value={selected?.label || ''}
-          error={error}
-        />
-      </TouchableRipple>
+      <PickerInput
+        icon={icon}
+        label={label}
+        placeholder={placeholder}
+        value={selected?.label || ''}
+        error={error}
+        optional={optional}
+        onPress={() => setOpen(true)}
+      />
       <Portal>
         <Dialog visible={open} onDismiss={() => setOpen(false)}>
           <Dialog.Title>{label}</Dialog.Title>

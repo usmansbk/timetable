@@ -8,6 +8,7 @@ interface State {
   theme: AppSchemeName;
   startOfWeek: number;
   playSound: boolean;
+  is24Hour: boolean;
   vibrate: boolean;
   defaultReminders: Reminder;
 }
@@ -18,6 +19,7 @@ const initialState: State = {
   playSound: true,
   vibrate: true,
   defaultReminders: DEFAULT_REMINDERS,
+  is24Hour: true,
 };
 
 const settingsSlice = createSlice({
@@ -40,6 +42,9 @@ const settingsSlice = createSlice({
     toggleNotificationVibration(state) {
       state.vibrate = !state.vibrate;
     },
+    toggle24HourTimeFormat(state) {
+      state.is24Hour = !state.is24Hour;
+    },
   },
 });
 
@@ -51,6 +56,7 @@ export const {
   toggleDefaultReminder,
   toggleNotificationSound,
   toggleNotificationVibration,
+  toggle24HourTimeFormat,
 } = actions;
 
 export const selectAppTheme = (state: RootState) => state.settings.theme;
@@ -62,5 +68,7 @@ export const selectNotificationSound = (state: RootState) =>
   state.settings.playSound;
 export const selectNotificationVibration = (state: RootState) =>
   state.settings.vibrate;
+export const selectIs24HourTimeFormat = (state: RootState) =>
+  state.settings.is24Hour;
 
 export default reducer;

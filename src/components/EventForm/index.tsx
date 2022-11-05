@@ -15,6 +15,8 @@ import * as yup from 'yup';
 import {EventInput} from '~types';
 import {formatDateToUTC} from '~utils/date';
 import {validateRecurrence} from '~utils/validators';
+import {useAppSelector} from '~redux/hooks';
+import {selectIs24HourTimeFormat} from '~redux/settings/slice';
 import DateTimeInput from '../DateTimeInput';
 import Confirm from '../Confirm';
 import Select, {SelectOption} from '../Select';
@@ -51,6 +53,8 @@ function EventForm({
 
   const openConfirm = useCallback(() => setConfirmVisible(true), []);
   const closeConfirm = useCallback(() => setConfirmVisible(false), []);
+
+  const is24Hour = useAppSelector(selectIs24HourTimeFormat);
 
   const schema = useMemo(
     () =>
@@ -179,6 +183,7 @@ function EventForm({
                 value={value}
                 mode="date"
                 error={!!errors.startDate}
+                is24Hour={is24Hour}
               />
             )}
           />
@@ -195,6 +200,7 @@ function EventForm({
                     value={value}
                     mode="time"
                     error={!!errors.startTime}
+                    is24Hour={is24Hour}
                   />
                 )}
               />

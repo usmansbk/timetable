@@ -8,15 +8,16 @@ import {ITEM_HEIGHT} from './constants';
 interface Props {
   item: EventInput;
   onPress: (item: EventInput) => void;
+  is24Hour?: boolean;
 }
 
-function AgendaItem({item, onPress}: Props) {
+function AgendaItem({item, onPress, is24Hour}: Props) {
   const {t} = useTranslation();
   const {title, startTime, endTime} = item;
 
   let time;
-  const from = startTime && formatUTCtoLocalTime(startTime);
-  const to = endTime && formatUTCtoLocalTime(endTime);
+  const from = startTime && formatUTCtoLocalTime(startTime, is24Hour);
+  const to = endTime && formatUTCtoLocalTime(endTime, is24Hour);
 
   if (from && to) {
     time = `${from}-${to}`;

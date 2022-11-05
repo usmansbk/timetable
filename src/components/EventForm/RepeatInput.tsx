@@ -2,19 +2,14 @@ import {memo, useCallback, useMemo, useState} from 'react';
 import {useForm, Controller} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
-import {
-  Button,
-  Dialog,
-  Portal,
-  TextInput,
-  TouchableRipple,
-} from 'react-native-paper';
+import {Button, Dialog, Portal} from 'react-native-paper';
 import * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup';
 import DateTimeInput from '~components/DateTimeInput';
 import Select from '~components/Select';
 import {Recurrence} from '~types';
 import {formatRecurrence} from '~utils/event';
+import PickerInput from '~components/PickerInput';
 
 interface Props {
   value?: Recurrence | null;
@@ -73,21 +68,15 @@ function RepeatInput({onChange, value, error}: Props) {
 
   return (
     <View>
-      <TouchableRipple onPress={openForm}>
-        <TextInput
-          multiline
-          value={value ? formatRecurrence(value) : ''}
-          label={t('Repeat') as string}
-          editable={false}
-          left={<TextInput.Icon disabled icon="repeat" />}
-          right={
-            value ? (
-              <TextInput.Icon icon="close" onPress={() => onChange(null)} />
-            ) : null
-          }
-          error={error}
-        />
-      </TouchableRipple>
+      <PickerInput
+        multiline
+        value={value ? formatRecurrence(value) : ''}
+        label={t('Repeat') as string}
+        icon="repeat"
+        onClear={() => onChange(null)}
+        error={error}
+        onPress={openForm}
+      />
       <Portal>
         <Dialog visible={open} onDismiss={closeForm}>
           <Dialog.Title>{t('Recurrence')}</Dialog.Title>

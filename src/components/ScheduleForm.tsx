@@ -204,7 +204,7 @@ export default function ScheduleForm({
         onPressDayHeader={onPressDate}
       />
       <FAB
-        icon="calendar-edit"
+        icon="calendar"
         style={styles.fab}
         onPress={() => setAddEventVisible(true)}
       />
