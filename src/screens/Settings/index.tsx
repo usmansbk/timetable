@@ -1,6 +1,6 @@
 import {useCallback, useState} from 'react';
 import {StyleSheet, ScrollView, Platform, Linking, View} from 'react-native';
-import {Divider, List, Text} from 'react-native-paper';
+import {Divider, List, Text, Switch} from 'react-native-paper';
 import RNOpenNotificaition from 'react-native-open-notification';
 import {useTranslation} from 'react-i18next';
 import {formatDay} from '~utils/date';
@@ -20,7 +20,6 @@ import {APP_VERSION, SUPPORT_EMAIL} from '~constants';
 import ThemePicker from './ThemePicker';
 import DayPicker from './DayPicker';
 import DefaultReminders from './DefaultReminders';
-import {Switch} from 'react-native-gesture-handler';
 
 export default function Settings({}: RootStackScreenProps<'Settings'>) {
   const {t} = useTranslation();
