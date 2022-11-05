@@ -35,12 +35,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "com.timetable",
+    package = "com.babakolo.timetable",
 )
 
 android_resource(
     name = "res",
-    package = "com.timetable",
+    package = "com.babakolo.timetable",
     res = "src/main/res",
 )
 

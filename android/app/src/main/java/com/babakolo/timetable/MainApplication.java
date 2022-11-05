@@ -1,4 +1,4 @@
-package com.timetable;
+package com.babakolo.timetable;
 
 import android.app.Application;
 import android.content.Context;
@@ -9,7 +9,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.config.ReactFeatureFlags;
 import com.facebook.soloader.SoLoader;
-import com.timetable.newarchitecture.MainApplicationReactNativeHost;
+import com.babakolo.timetable.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
@@ -73,7 +73,7 @@ public class MainApplication extends Application implements ReactApplication {
          We use reflection here to pick up the class that initializes Flipper,
         since Flipper library is not available in release mode
         */
-        Class<?> aClass = Class.forName("com.timetable.ReactNativeFlipper");
+        Class<?> aClass = Class.forName("com.babakolo.timetable.ReactNativeFlipper");
         aClass
             .getMethod("initializeFlipper", Context.class, ReactInstanceManager.class)
             .invoke(null, context, reactInstanceManager);
