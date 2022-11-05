@@ -1,8 +1,16 @@
 import {useNavigation} from '@react-navigation/native';
-import {memo, useCallback, useEffect, useState} from 'react';
+import {
+  ForwardedRef,
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Appbar, Menu} from 'react-native-paper';
-import AgendaList from '~components/Agenda/AgendaList';
+import AgendaList, {AgendaListHandle} from '~components/Agenda/AgendaList';
 import Confirm from '~components/Confirm';
 import EmptyState from '~components/EmptyState';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
@@ -13,34 +21,46 @@ import {
 } from '~redux/timetable/slice';
 import {EventInput, RootStackScreenProps} from '~types';
 
-const Items = memo(({scheduleId}: {scheduleId: string}) => {
-  const events = useAppSelector(state =>
-    selectScheduleEventsById(state, scheduleId),
-  );
+const Items = memo(
+  forwardRef(
+    (
+      {scheduleId}: {scheduleId: string},
+      ref: ForwardedRef<AgendaListHandle>,
+    ) => {
+      const events = useAppSelector(state =>
+        selectScheduleEventsById(state, scheduleId),
+      );
 
-  const navigation = useNavigation();
+      const navigation = useNavigation();
 
-  const onPressItem = useCallback(
-    (item: EventInput) => {
-      if (item.id) {
-        navigation.navigate('Event', {
-          id: item.id,
-          date: item.startDate,
-        });
-      }
+      const onPressItem = useCallback(
+        (item: EventInput) => {
+          if (item.id) {
+            navigation.navigate('Event', {
+              id: item.id,
+              date: item.startDate,
+            });
+          }
+        },
+        [navigation],
+      );
+
+      return (
+        <AgendaList
+          ref={ref}
+          items={events as EventInput[]}
+          onPressItem={onPressItem}
+        />
+      );
     },
-    [navigation],
-  );
-
-  return (
-    <AgendaList items={events as EventInput[]} onPressItem={onPressItem} />
-  );
-});
+  ),
+);
 
 export default function Schedule({
   navigation,
   route,
 }: RootStackScreenProps<'Schedule'>) {
+  const ref = useRef<AgendaListHandle>(null);
   const {t} = useTranslation();
   const {id} = route.params;
   const dispatch = useAppDispatch();
@@ -78,6 +98,10 @@ export default function Schedule({
     dispatch(removeSchedule(id));
   }, [id, navigation]);
 
+  const scrollToTop = useCallback(() => {
+    ref.current?.scrollToTop();
+  }, []);
+
   useEffect(() => {
     if (schedule) {
       navigation.setOptions({
@@ -92,9 +116,10 @@ export default function Schedule({
 
   return (
     <>
-      <Appbar.Header elevated mode="center-aligned">
+      <Appbar.Header elevated>
         <Appbar.BackAction onPress={navigation.goBack} />
         <Appbar.Content title={schedule?.title} />
+        <Appbar.Action icon="calendar-today" onPress={scrollToTop} />
         <Menu
           visible={menuVisible}
           onDismiss={closeMenu}
@@ -107,7 +132,7 @@ export default function Schedule({
           <Menu.Item onPress={handleMenuPress('delete')} title={t('Delete')} />
         </Menu>
       </Appbar.Header>
-      <Items scheduleId={schedule.id} />
+      <Items ref={ref} scheduleId={schedule.id} />
       <Confirm
         visible={confirmVisible}
         onDismiss={closeConfirm}
