@@ -183,7 +183,6 @@ function EventForm({
                 value={value}
                 mode="date"
                 error={!!errors.startDate}
-                is24Hour={is24Hour}
               />
             )}
           />
@@ -217,6 +216,7 @@ function EventForm({
                     value={value}
                     mode="time"
                     error={!!errors.endTime}
+                    is24Hour={is24Hour}
                   />
                 )}
               />
