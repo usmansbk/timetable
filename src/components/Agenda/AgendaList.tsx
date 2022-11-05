@@ -9,12 +9,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import {
-  Divider,
-  IconButton,
-  TouchableRipple,
-  useTheme,
-} from 'react-native-paper';
+import {Divider, Text, TouchableRipple, useTheme} from 'react-native-paper';
 import {FlashList, FlashListProps, ListRenderItem} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 import {
@@ -212,16 +207,25 @@ function AgendaList<T extends EventInput>(
       }
       ItemSeparatorComponent={Divider}
       ListHeaderComponent={
-        <TouchableRipple style={styles.header} onPress={toggleMode}>
-          <IconButton
-            icon={mode === modes.PAST ? 'chevron-down' : 'chevron-up'}
-          />
-        </TouchableRipple>
+        <Header
+          text={t(isPast ? 'View upcoming' : 'View past')}
+          onPress={toggleMode}
+        />
       }
       ListFooterComponent={<View style={styles.footer} />}
     />
   );
 }
+
+const Header = ({text, onPress}: {text: string; onPress: () => void}) => {
+  return (
+    <TouchableRipple style={styles.header} onPress={onPress}>
+      <Text variant="labelMedium" style={styles.headerText}>
+        {text.toUpperCase()}
+      </Text>
+    </TouchableRipple>
+  );
+};
 
 const styles = StyleSheet.create({
   footer: {
@@ -231,6 +235,9 @@ const styles = StyleSheet.create({
     height: ITEM_HEIGHT,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  headerText: {
+    fontSize: 10,
   },
 });
 
