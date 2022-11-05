@@ -76,7 +76,7 @@ export default function Settings({}: RootStackScreenProps<'Settings'>) {
           onPress={openDayPicker}
         />
         <List.Item
-          title={t('24 hours Time format')}
+          title={t('24-hour time')}
           onPress={onToggleTimeFormat}
           right={() => (
             <Switch value={is24Hour} onChange={onToggleTimeFormat} />
