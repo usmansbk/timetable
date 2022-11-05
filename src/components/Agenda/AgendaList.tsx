@@ -121,20 +121,6 @@ function AgendaList<T extends EventInput>(
     [pastCalendar],
   );
 
-  const loadUpcoming = useCallback(() => {
-    const data = getUpcomingItems();
-    if (data.length) {
-      setUpcoming(currentData => [...currentData, ...data]);
-    }
-  }, [getUpcomingItems]);
-
-  const loadPast = useCallback(() => {
-    const data = getPastItems();
-    if (data.length) {
-      setPast(currentData => [...currentData, ...data]);
-    }
-  }, [getPastItems]);
-
   const scrollToDate = useCallback((item: string) => {
     listRef.current?.scrollToItem({
       item,
@@ -183,33 +169,17 @@ function AgendaList<T extends EventInput>(
     [mode],
   );
 
-  const keyExtractor = useCallback(
-    (item: AgendaItemT, index: number) => {
-      if (typeof item === 'string') {
-        return mode + item + index;
-      }
-
-      return mode + item.id + index;
-    },
-    [mode],
-  );
-
   const getItemType = useCallback(
     (item: AgendaItemT) => (typeof item === 'string' ? 'sectionHeader' : 'row'),
     [],
   );
-
-  const onEndReached = useCallback(() => {
-    InteractionManager.runAfterInteractions(
-      mode === modes.PAST ? loadPast : loadUpcoming,
-    );
-  }, [mode]);
 
   if (!items.length) {
     return <EmptyState title={listEmptyMessage || t('No Events')} />;
   }
 
   const isPast = mode === modes.PAST;
+  const data = isPast ? past : upcoming;
 
   return (
     <FlashList
@@ -218,14 +188,24 @@ function AgendaList<T extends EventInput>(
       keyboardShouldPersistTaps="always"
       ref={listRef}
       inverted={isPast}
-      data={isPast ? past : upcoming}
+      data={data}
       estimatedItemSize={ITEM_HEIGHT}
       estimatedFirstItemOffset={ITEM_HEIGHT}
       onScroll={onScroll}
       onEndReachedThreshold={1}
-      onEndReached={onEndReached}
       getItemType={getItemType}
       renderItem={renderItem}
+      onEndReached={() => {
+        InteractionManager.runAfterInteractions(() => {
+          if (isPast) {
+            const data = getPastItems();
+            setPast([...past, ...data]);
+          } else {
+            const data = getUpcomingItems();
+            setUpcoming([...upcoming, ...data]);
+          }
+        });
+      }}
       refreshControl={
         onRefresh ? (
           <RefreshControl
@@ -235,7 +215,6 @@ function AgendaList<T extends EventInput>(
           />
         ) : undefined
       }
-      keyExtractor={keyExtractor}
       ItemSeparatorComponent={Divider}
       ListHeaderComponent={
         <TouchableRipple style={styles.header} onPress={toggleMode}>
