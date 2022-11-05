@@ -1,4 +1,5 @@
 import {memo, useCallback, useEffect} from 'react';
+import {useTranslation} from 'react-i18next';
 import {InteractionManager} from 'react-native';
 import {Appbar} from 'react-native-paper';
 import Agenda from '~components/Agenda';
@@ -18,6 +19,7 @@ interface Props {
 }
 
 function AllEvents({openDrawer, onPressItem}: Props) {
+  const {t} = useTranslation();
   const events = useAppSelector(selectAllEvents);
   const reminders = useAppSelector(selectReminderEntities);
   const defaultReminder = useAppSelector(selectDefaultReminders);
@@ -51,6 +53,7 @@ function AllEvents({openDrawer, onPressItem}: Props) {
 
   return (
     <Agenda
+      title={t('Timetable')}
       items={events}
       onPressItem={onPressItem}
       renderRight={renderRight}

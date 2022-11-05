@@ -7,12 +7,14 @@ import {formatDateToUTC, parseUTCtoLocalDate} from '~utils/date';
 import AgendaList, {AgendaListHandle} from './AgendaList';
 
 interface Props<T extends EventInput> {
+  title?: string;
   items: T[];
   onPressItem: (item: EventInput) => void;
   renderRight?: () => React.ReactNode;
 }
 
 function Agenda<T extends EventInput>({
+  title,
   items,
   onPressItem,
   renderRight,
@@ -20,6 +22,8 @@ function Agenda<T extends EventInput>({
   const ref = useRef<AgendaListHandle>(null);
   const [selectedDate, setSelectedDate] = useState(formatDateToUTC());
   const [openDatePicker, setOpenDatePicker] = useState(false);
+
+  const openCalendar = useCallback(() => setOpenDatePicker(true), []);
 
   const scrollToTop = useCallback(() => {
     ref.current?.resetMode();
@@ -31,11 +35,8 @@ function Agenda<T extends EventInput>({
     <View style={styles.container}>
       <Appbar.Header elevated>
         {renderRight?.()}
-        <Appbar.Content title="" />
-        <Appbar.Action
-          icon="calendar"
-          onPress={() => setOpenDatePicker(true)}
-        />
+        <Appbar.Content title={title} />
+        <Appbar.Action icon="calendar-month" onPress={openCalendar} />
         <Appbar.Action icon="calendar-today" onPress={scrollToTop} />
       </Appbar.Header>
       <AgendaList
