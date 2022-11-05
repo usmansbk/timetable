@@ -49,6 +49,7 @@ interface Props<T extends EventInput> {
 export interface AgendaListHandle {
   scrollToTop: () => void;
   scrollToDate: (date: string) => void;
+  resetMode: () => void;
   prepareForLayoutAnimationRender: () => void;
 }
 
@@ -141,6 +142,9 @@ function AgendaList<T extends EventInput>(
   useImperativeHandle(forwardedRef, () => ({
     scrollToTop,
     scrollToDate,
+    resetMode() {
+      setMode(modes.UPCOMING);
+    },
     prepareForLayoutAnimationRender() {
       listRef.current?.prepareForLayoutAnimationRender();
     },

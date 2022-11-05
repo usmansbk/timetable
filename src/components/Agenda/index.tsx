@@ -1,8 +1,9 @@
-import React, {memo, useRef, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {memo, useCallback, useRef, useState} from 'react';
+import {InteractionManager, StyleSheet, View} from 'react-native';
 import {Appbar} from 'react-native-paper';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import {EventInput} from '~types';
-import {formatDateToUTC} from '~utils/date';
+import {formatDateToUTC, parseUTCtoLocalDate} from '~utils/date';
 import AgendaList, {AgendaListHandle} from './AgendaList';
 
 interface Props<T extends EventInput> {
@@ -18,6 +19,13 @@ function Agenda<T extends EventInput>({
 }: Props<T>) {
   const ref = useRef<AgendaListHandle>(null);
   const [selectedDate, setSelectedDate] = useState(formatDateToUTC());
+  const [openDatePicker, setOpenDatePicker] = useState(false);
+
+  const scrollToTop = useCallback(() => {
+    ref.current?.resetMode();
+    setSelectedDate(formatDateToUTC());
+    InteractionManager.runAfterInteractions(ref.current?.scrollToTop);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -25,9 +33,10 @@ function Agenda<T extends EventInput>({
         {renderRight?.()}
         <Appbar.Content title="" />
         <Appbar.Action
-          icon="calendar-today"
-          onPress={() => ref.current?.scrollToTop()}
+          icon="calendar"
+          onPress={() => setOpenDatePicker(true)}
         />
+        <Appbar.Action icon="calendar-today" onPress={scrollToTop} />
       </Appbar.Header>
       <AgendaList
         ref={ref}
@@ -35,6 +44,17 @@ function Agenda<T extends EventInput>({
         selectedDate={selectedDate}
         onPressItem={onPressItem}
       />
+      {openDatePicker && (
+        <DateTimePicker
+          value={parseUTCtoLocalDate(selectedDate)}
+          onChange={(e, date) => {
+            setOpenDatePicker(false);
+            if (e.type === 'set' && date) {
+              setSelectedDate(formatDateToUTC(date));
+            }
+          }}
+        />
+      )}
     </View>
   );
 }

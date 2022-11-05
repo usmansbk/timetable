@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native';
 import {
   ForwardedRef,
   forwardRef,
@@ -9,6 +8,7 @@ import {
   useState,
 } from 'react';
 import {useTranslation} from 'react-i18next';
+import {InteractionManager} from 'react-native';
 import {Appbar, Menu} from 'react-native-paper';
 import AgendaList, {AgendaListHandle} from '~components/Agenda/AgendaList';
 import Confirm from '~components/Confirm';
@@ -21,28 +21,19 @@ import {
 } from '~redux/timetable/slice';
 import {EventInput, RootStackScreenProps} from '~types';
 
+interface ItemsProp {
+  scheduleId: string;
+  onPressItem: (item: EventInput) => void;
+}
+
 const Items = memo(
   forwardRef(
     (
-      {scheduleId}: {scheduleId: string},
+      {scheduleId, onPressItem}: ItemsProp,
       ref: ForwardedRef<AgendaListHandle>,
     ) => {
       const events = useAppSelector(state =>
         selectScheduleEventsById(state, scheduleId),
-      );
-
-      const navigation = useNavigation();
-
-      const onPressItem = useCallback(
-        (item: EventInput) => {
-          if (item.id) {
-            navigation.navigate('Event', {
-              id: item.id,
-              date: item.startDate,
-            });
-          }
-        },
-        [navigation],
       );
 
       return (
@@ -99,8 +90,21 @@ export default function Schedule({
   }, [id, navigation]);
 
   const scrollToTop = useCallback(() => {
-    ref.current?.scrollToTop();
+    ref.current?.resetMode();
+    InteractionManager.runAfterInteractions(ref.current?.scrollToTop);
   }, []);
+
+  const onPressItem = useCallback(
+    (item: EventInput) => {
+      if (item.id) {
+        navigation.navigate('Event', {
+          id: item.id,
+          date: item.startDate,
+        });
+      }
+    },
+    [navigation],
+  );
 
   useEffect(() => {
     if (schedule) {
@@ -132,7 +136,7 @@ export default function Schedule({
           <Menu.Item onPress={handleMenuPress('delete')} title={t('Delete')} />
         </Menu>
       </Appbar.Header>
-      <Items ref={ref} scheduleId={schedule.id} />
+      <Items ref={ref} scheduleId={schedule.id} onPressItem={onPressItem} />
       <Confirm
         visible={confirmVisible}
         onDismiss={closeConfirm}
