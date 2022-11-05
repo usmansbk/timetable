@@ -1,7 +1,8 @@
-import React, {memo, useRef} from 'react';
+import React, {memo, useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Appbar} from 'react-native-paper';
 import {EventInput} from '~types';
+import {formatDateToUTC} from '~utils/date';
 import AgendaList, {AgendaListHandle} from './AgendaList';
 
 interface Props<T extends EventInput> {
@@ -16,10 +17,11 @@ function Agenda<T extends EventInput>({
   renderRight,
 }: Props<T>) {
   const ref = useRef<AgendaListHandle>(null);
+  const [selectedDate, setSelectedDate] = useState(formatDateToUTC());
 
   return (
     <View style={styles.container}>
-      <Appbar.Header>
+      <Appbar.Header elevated>
         {renderRight?.()}
         <Appbar.Content title="" />
         <Appbar.Action
@@ -27,7 +29,12 @@ function Agenda<T extends EventInput>({
           onPress={() => ref.current?.scrollToTop()}
         />
       </Appbar.Header>
-      <AgendaList items={items} onPressItem={onPressItem} ref={ref} />
+      <AgendaList
+        ref={ref}
+        items={items}
+        selectedDate={selectedDate}
+        onPressItem={onPressItem}
+      />
     </View>
   );
 }
