@@ -31,9 +31,13 @@ export default function ScheduleForm({
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [addEventVisible, setAddEventVisible] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   const closeConfirmDialog = useCallback(() => setConfirmVisible(false), []);
-  const closeAddEventForm = useCallback(() => setAddEventVisible(false), []);
+  const closeAddEventForm = useCallback(() => {
+    setAddEventVisible(false);
+    setSelectedDate(null);
+  }, []);
   const closeEditEventForm = useCallback(() => setEditIndex(null), []);
 
   const onPressDuplicate = useCallback(() => setAddEventVisible(true), []);
@@ -85,6 +89,10 @@ export default function ScheduleForm({
     },
     [fields],
   );
+
+  const onPressDate = useCallback((date: string) => {
+    setSelectedDate(date);
+  }, []);
 
   const onAddItem = useCallback(
     (input: EventInput) => {
@@ -156,7 +164,12 @@ export default function ScheduleForm({
     });
   }, [fieldErrors]);
 
-  const editItem = editIndex !== null ? fields[editIndex] : undefined;
+  const editItem =
+    editIndex !== null
+      ? fields[editIndex]
+      : selectedDate
+      ? {startDate: selectedDate}
+      : undefined;
 
   return (
     <View style={styles.container}>
@@ -188,6 +201,7 @@ export default function ScheduleForm({
         items={fields}
         listEmptyMessage={t('Add Events')}
         onPressItem={onPressItem}
+        onPressDayHeader={onPressDate}
       />
       <FAB
         icon="calendar-edit"
@@ -207,7 +221,7 @@ export default function ScheduleForm({
         autoFocus
         title={editItem ? t('Copy') : undefined}
         resetOnSubmit={!editItem}
-        visible={addEventVisible}
+        visible={addEventVisible || selectedDate !== null}
         onDismiss={closeAddEventForm}
         onSubmit={onAddItem}
         defaultValues={editItem}
