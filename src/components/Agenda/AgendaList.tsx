@@ -169,11 +169,6 @@ function AgendaList<T extends EventInput>(
     [mode],
   );
 
-  const getItemType = useCallback(
-    (item: AgendaItemT) => (typeof item === 'string' ? 'sectionHeader' : 'row'),
-    [],
-  );
-
   if (!items.length) {
     return <EmptyState title={listEmptyMessage || t('No Events')} />;
   }
@@ -193,8 +188,8 @@ function AgendaList<T extends EventInput>(
       estimatedFirstItemOffset={ITEM_HEIGHT}
       onScroll={onScroll}
       onEndReachedThreshold={1}
-      getItemType={getItemType}
       renderItem={renderItem}
+      getItemType={item => (typeof item === 'string' ? 'sectionHeader' : 'row')}
       onEndReached={() => {
         InteractionManager.runAfterInteractions(() => {
           if (isPast) {
