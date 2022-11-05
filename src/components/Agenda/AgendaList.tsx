@@ -12,7 +12,6 @@ import {
 import {
   Divider,
   IconButton,
-  Text,
   TouchableRipple,
   useTheme,
 } from 'react-native-paper';
@@ -26,28 +25,14 @@ import {
   InteractionManager,
 } from 'react-native';
 import EmptyState from '~components/EmptyState';
-import {formatCalendarDate, formatDateToUTC} from '~utils/date';
+import {formatDateToUTC} from '~utils/date';
 import calendarGenerator, {AgendaItemT} from '~utils/calendar';
 import {useAppSelector} from '~redux/hooks';
 import {selectStartOfWeek} from '~redux/settings/slice';
 import {EventInput} from '~types';
 import AgendaItem from './AgendaItem';
 import {ITEM_HEIGHT, NUM_OF_DAYS_PER_BATCH} from './constants';
-
-function DayHeader({title}: {title: string}) {
-  const {colors} = useTheme();
-
-  return (
-    <View
-      style={[styles.sectionHeader, {backgroundColor: colors.surfaceDisabled}]}>
-      <Text
-        variant="headlineMedium"
-        style={[styles.sectionHeaderText, {color: colors.onSurfaceVariant}]}>
-        {title}
-      </Text>
-    </View>
-  );
-}
+import AgendaDayHeader from './AgendaDayHeader';
 
 const modes = {
   PAST: 'PAST',
@@ -57,6 +42,7 @@ const modes = {
 interface Props<T extends EventInput> {
   items: T[];
   onPressItem: (item: EventInput) => void;
+  onPressDayHeader?: (date: string) => void;
   keyExtractor?: FlashListProps<AgendaItemT>['keyExtractor'];
   onScroll?: FlashListProps<AgendaItemT>['onScroll'];
   listEmptyMessage?: string;
@@ -76,6 +62,7 @@ function AgendaList<T extends EventInput>(
     items,
     listEmptyMessage,
     onPressItem,
+    onPressDayHeader,
     onRefresh,
     onScroll,
     refreshing = false,
@@ -187,22 +174,15 @@ function AgendaList<T extends EventInput>(
     InteractionManager.runAfterInteractions(scrollToTop);
   }, [scrollToTop]);
 
-  const handlePressItem = useCallback(
-    (item: EventInput) => () => onPressItem(item),
-    [onPressItem],
-  );
-
   const renderItem: ListRenderItem<AgendaItemT> = useCallback(
     ({item}) => {
       if (typeof item === 'string') {
-        return (
-          <DayHeader title={formatCalendarDate(item).toLocaleUpperCase()} />
-        );
+        return <AgendaDayHeader item={item} onPress={onPressDayHeader} />;
       }
 
-      return <AgendaItem item={item} onPress={handlePressItem(item)} />;
+      return <AgendaItem item={item} onPress={onPressItem} />;
     },
-    [handlePressItem, mode],
+    [mode],
   );
 
   const keyExtractor = useCallback(
@@ -279,14 +259,6 @@ const styles = StyleSheet.create({
     height: ITEM_HEIGHT,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  sectionHeader: {
-    height: ITEM_HEIGHT,
-    justifyContent: 'center',
-    paddingHorizontal: 16,
-  },
-  sectionHeaderText: {
-    fontSize: 12,
   },
 });
 
