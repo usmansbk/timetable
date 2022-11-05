@@ -16,7 +16,7 @@ import {
   TouchableRipple,
   useTheme,
 } from 'react-native-paper';
-import {FlashList, FlashListProps} from '@shopify/flash-list';
+import {FlashList, FlashListProps, ListRenderItem} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 import {
   StyleSheet,
@@ -39,7 +39,7 @@ import {EventInput} from '~types';
 import AgendaItem from './AgendaItem';
 import {ITEM_HEIGHT, MAX_NUM_OF_DAYS_PER_BATCH} from './constants';
 
-function DayHeader({item}: {item: string}) {
+function DayHeader({title}: {title: string}) {
   const {colors} = useTheme();
 
   return (
@@ -48,7 +48,7 @@ function DayHeader({item}: {item: string}) {
       <Text
         variant="headlineMedium"
         style={[styles.sectionHeaderText, {color: colors.onSurfaceVariant}]}>
-        {formatCalendarDate(item).toLocaleUpperCase()}
+        {title}
       </Text>
     </View>
   );
@@ -197,6 +197,41 @@ function AgendaList<T extends EventInput>(
     [onPressItem],
   );
 
+  const renderItem: ListRenderItem<AgendaItemT> = useCallback(
+    ({item}) => {
+      if (typeof item === 'string') {
+        return (
+          <DayHeader title={formatCalendarDate(item).toLocaleUpperCase()} />
+        );
+      }
+
+      return <AgendaItem item={item} onPress={handlePressItem(item)} />;
+    },
+    [handlePressItem, mode],
+  );
+
+  const keyExtractor = useCallback(
+    (item: AgendaItemT, index: number) => {
+      if (typeof item === 'string') {
+        return mode + item + index;
+      }
+
+      return mode + item.id + index;
+    },
+    [mode],
+  );
+
+  const getItemType = useCallback(
+    (item: AgendaItemT) => (typeof item === 'string' ? 'sectionHeader' : 'row'),
+    [],
+  );
+
+  const onEndReached = useCallback(() => {
+    InteractionManager.runAfterInteractions(
+      mode === modes.PAST ? loadPast : loadUpcoming,
+    );
+  }, [mode]);
+
   if (!items.length) {
     return <EmptyState title={listEmptyMessage || t('No Events')} />;
   }
@@ -214,19 +249,10 @@ function AgendaList<T extends EventInput>(
       estimatedItemSize={ITEM_HEIGHT}
       estimatedFirstItemOffset={ITEM_HEIGHT}
       onScroll={onScroll}
-      onEndReached={() => {
-        InteractionManager.runAfterInteractions(
-          mode === modes.PAST ? loadPast : loadUpcoming,
-        );
-      }}
-      getItemType={item => (typeof item === 'string' ? 'sectionHeader' : 'row')}
-      renderItem={({item}) => {
-        if (typeof item === 'string') {
-          return <DayHeader item={item} />;
-        }
-
-        return <AgendaItem item={item} onPress={handlePressItem(item)} />;
-      }}
+      onEndReachedThreshold={1}
+      onEndReached={onEndReached}
+      getItemType={getItemType}
+      renderItem={renderItem}
       refreshControl={
         onRefresh ? (
           <RefreshControl
@@ -236,22 +262,16 @@ function AgendaList<T extends EventInput>(
           />
         ) : undefined
       }
-      keyExtractor={(item, index) => {
-        if (typeof item === 'string') {
-          return mode + item + index;
-        }
-
-        return mode + item.id + index;
-      }}
+      keyExtractor={keyExtractor}
       ItemSeparatorComponent={Divider}
-      ListHeaderComponent={() => (
+      ListHeaderComponent={
         <TouchableRipple style={styles.header} onPress={toggleMode}>
           <IconButton
             icon={mode === modes.PAST ? 'chevron-down' : 'chevron-up'}
           />
         </TouchableRipple>
-      )}
-      ListFooterComponent={() => <View style={styles.footer} />}
+      }
+      ListFooterComponent={<View style={styles.footer} />}
     />
   );
 }
