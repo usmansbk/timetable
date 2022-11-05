@@ -17,9 +17,18 @@ interface Props {
   mode: 'date' | 'time';
   onChange: (value: string | null) => void;
   error?: boolean;
+  is24Hour?: boolean;
 }
 
-function DateTimeInput({label, mode, optional, onChange, value, error}: Props) {
+function DateTimeInput({
+  label,
+  mode,
+  optional,
+  onChange,
+  value,
+  error,
+  is24Hour,
+}: Props) {
   const [open, setOpen] = useState(false);
 
   let formattedValue;
@@ -29,7 +38,7 @@ function DateTimeInput({label, mode, optional, onChange, value, error}: Props) {
     formattedValue =
       mode === 'date'
         ? formatUTCtoLocalDate(value)
-        : formatUTCtoLocalTime(value);
+        : formatUTCtoLocalTime(value, is24Hour);
     parsedValue =
       mode === 'date' ? parseUTCtoLocalDate(value) : parseUTCtoLocalTime(value);
   } else {
@@ -63,6 +72,7 @@ function DateTimeInput({label, mode, optional, onChange, value, error}: Props) {
       </TouchableRipple>
       {open && (
         <DateTimePicker
+          is24Hour={is24Hour}
           mode={mode}
           value={parsedValue}
           onChange={(e, date) => {

@@ -23,7 +23,10 @@ import EmptyState from '~components/EmptyState';
 import {formatDateToUTC} from '~utils/date';
 import calendarGenerator, {AgendaItemT} from '~utils/calendar';
 import {useAppSelector} from '~redux/hooks';
-import {selectStartOfWeek} from '~redux/settings/slice';
+import {
+  selectIs24HourTimeFormat,
+  selectStartOfWeek,
+} from '~redux/settings/slice';
 import {EventInput} from '~types';
 import AgendaItem from './AgendaItem';
 import {ITEM_HEIGHT, NUM_OF_DAYS_PER_BATCH} from './constants';
@@ -70,6 +73,7 @@ function AgendaList<T extends EventInput>(
   const {colors} = useTheme();
   const {t} = useTranslation();
   const startOfWeek = useAppSelector(selectStartOfWeek);
+  const is24Hour = useAppSelector(selectIs24HourTimeFormat);
 
   const [mode, setMode] = useState(modes.UPCOMING);
 
@@ -163,9 +167,11 @@ function AgendaList<T extends EventInput>(
         return <AgendaDayHeader item={item} onPress={onPressDayHeader} />;
       }
 
-      return <AgendaItem item={item} onPress={onPressItem} />;
+      return (
+        <AgendaItem item={item} onPress={onPressItem} is24Hour={is24Hour} />
+      );
     },
-    [mode, onPressDayHeader, onPressItem],
+    [mode, onPressDayHeader, onPressItem, is24Hour],
   );
 
   if (!items.length) {
@@ -188,6 +194,7 @@ function AgendaList<T extends EventInput>(
       onScroll={onScroll}
       onEndReachedThreshold={1}
       renderItem={renderItem}
+      extraData={is24Hour}
       getItemType={item => (typeof item === 'string' ? 'sectionHeader' : 'row')}
       onEndReached={() => {
         InteractionManager.runAfterInteractions(() => {

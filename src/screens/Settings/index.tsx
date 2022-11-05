@@ -7,9 +7,11 @@ import {formatDay} from '~utils/date';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
 import {
   selectAppTheme,
+  selectIs24HourTimeFormat,
   selectNotificationSound,
   selectNotificationVibration,
   selectStartOfWeek,
+  toggle24HourTimeFormat,
   toggleNotificationSound,
   toggleNotificationVibration,
 } from '~redux/settings/slice';
@@ -27,6 +29,7 @@ export default function Settings({}: RootStackScreenProps<'Settings'>) {
   const startOfWeek = useAppSelector(selectStartOfWeek);
   const playSound = useAppSelector(selectNotificationSound);
   const vibrate = useAppSelector(selectNotificationVibration);
+  const is24Hour = useAppSelector(selectIs24HourTimeFormat);
 
   const [themePickerVisible, setThemePickerVisible] = useState(false);
   const [dayPickerVisible, setDayPickerVisible] = useState(false);
@@ -55,6 +58,10 @@ export default function Settings({}: RootStackScreenProps<'Settings'>) {
     dispatch(toggleNotificationSound());
   }, []);
 
+  const onToggleTimeFormat = useCallback(() => {
+    dispatch(toggle24HourTimeFormat());
+  }, []);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <List.Section title={t('Preferences')}>
@@ -67,6 +74,13 @@ export default function Settings({}: RootStackScreenProps<'Settings'>) {
           title={t('Start of the week')}
           description={formatDay(startOfWeek)}
           onPress={openDayPicker}
+        />
+        <List.Item
+          title={t('24 hours Time format')}
+          onPress={onToggleTimeFormat}
+          right={() => (
+            <Switch value={is24Hour} onChange={onToggleTimeFormat} />
+          )}
         />
       </List.Section>
       <Divider />

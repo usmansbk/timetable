@@ -37,8 +37,11 @@ export function formatUTCtoLocalDate(
   return dayjs.utc(date).local().format(format);
 }
 
-export function formatUTCtoLocalTime(date: string, format = 'HH:mm') {
-  return dayjs.utc(date, UTC_TIME_FORMAT).local().format(format);
+export function formatUTCtoLocalTime(date: string, is24Hour?: boolean) {
+  return dayjs
+    .utc(date, UTC_TIME_FORMAT)
+    .local()
+    .format(is24Hour ? 'HH:mm' : 'hh:mm A');
 }
 
 export function formatDay(day: number, format = 'dddd') {
