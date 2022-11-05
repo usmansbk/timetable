@@ -36,11 +36,11 @@ function Agenda<T extends EventInput>({
   return (
     <View style={styles.container}>
       <Appbar.Header elevated>
-        {renderRight?.()}
+        {renderLeft?.()}
         <Appbar.Content title={title} />
         <Appbar.Action icon="calendar-month" onPress={openCalendar} />
         <Appbar.Action icon="calendar-today" onPress={scrollToTop} />
-        {renderLeft?.()}
+        {renderRight?.()}
       </Appbar.Header>
       <AgendaList
         ref={ref}
