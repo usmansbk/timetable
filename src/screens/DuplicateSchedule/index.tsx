@@ -1,4 +1,5 @@
 import {memo, useCallback, useMemo} from 'react';
+import {InteractionManager} from 'react-native';
 import ScheduleForm from '~components/ScheduleForm';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
 import {
@@ -18,8 +19,10 @@ function DuplicateSchedule({
   const dispatch = useAppDispatch();
 
   const onSubmit = useCallback((input: ScheduleInput) => {
-    dispatch(addSchedule(input));
     navigation.pop();
+    InteractionManager.runAfterInteractions(() => {
+      dispatch(addSchedule(input));
+    });
   }, []);
 
   const defaultValues = useMemo(

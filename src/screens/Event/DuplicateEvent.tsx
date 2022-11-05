@@ -1,5 +1,6 @@
 import {memo, useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
+import {InteractionManager} from 'react-native';
 import EventForm from '~components/EventForm';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
 import {addEvent, selectAllSchedules} from '~redux/timetable/slice';
@@ -19,9 +20,11 @@ function DuplicateEvent({event, visible, onDismiss, onSuccess}: Props) {
 
   const onSubmit = useCallback(
     (values: EventInput) => {
-      dispatch(addEvent(values));
       onDismiss();
-      onSuccess();
+      InteractionManager.runAfterInteractions(() => {
+        dispatch(addEvent(values));
+        onSuccess();
+      });
     },
     [onSuccess, onDismiss],
   );
