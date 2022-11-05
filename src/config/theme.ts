@@ -62,10 +62,10 @@ const CommonTheme: Partial<MD3Theme> = {
       fontFamily: 'Inter-Light',
     },
     labelLarge: {
-      fontFamily: 'Inter-Medium',
+      fontFamily: 'Inter-Regular',
     },
     labelMedium: {
-      fontFamily: 'Inter-Regular',
+      fontFamily: 'Inter-Light',
     },
     labelSmall: {
       fontFamily: 'Inter-ExtraLight',
