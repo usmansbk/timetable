@@ -11,6 +11,7 @@ interface Props<T extends EventInput> {
   items: T[];
   onPressItem: (item: EventInput) => void;
   renderRight?: () => React.ReactNode;
+  renderLeft?: () => React.ReactNode;
 }
 
 function Agenda<T extends EventInput>({
@@ -18,6 +19,7 @@ function Agenda<T extends EventInput>({
   items,
   onPressItem,
   renderRight,
+  renderLeft,
 }: Props<T>) {
   const ref = useRef<AgendaListHandle>(null);
   const [selectedDate, setSelectedDate] = useState(formatDateToUTC());
@@ -38,6 +40,7 @@ function Agenda<T extends EventInput>({
         <Appbar.Content title={title} />
         <Appbar.Action icon="calendar-month" onPress={openCalendar} />
         <Appbar.Action icon="calendar-today" onPress={scrollToTop} />
+        {renderLeft?.()}
       </Appbar.Header>
       <AgendaList
         ref={ref}
