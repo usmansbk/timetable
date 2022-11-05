@@ -1,4 +1,4 @@
-import {memo, useCallback, useMemo} from 'react';
+import {useCallback, useMemo} from 'react';
 import {InteractionManager} from 'react-native';
 import ScheduleForm from '~components/ScheduleForm';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
@@ -42,4 +42,4 @@ function EditSchedule({
   );
 }
 
-export default memo(EditSchedule);
+export default EditSchedule;

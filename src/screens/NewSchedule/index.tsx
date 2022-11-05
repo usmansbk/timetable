@@ -1,4 +1,4 @@
-import {memo, useCallback} from 'react';
+import {useCallback} from 'react';
 import {InteractionManager} from 'react-native';
 import ScheduleForm from '~components/ScheduleForm';
 import {useAppDispatch} from '~redux/hooks';
@@ -20,4 +20,4 @@ function NewSchedule({navigation}: RootStackScreenProps<'NewSchedule'>) {
   );
 }
 
-export default memo(NewSchedule);
+export default NewSchedule;
