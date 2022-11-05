@@ -2,6 +2,7 @@ import {memo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {StyleSheet, ScrollView, View} from 'react-native';
 import {Divider, Text, useTheme} from 'react-native-paper';
+import HyperlinkedText from '~components/HyperlinkedText';
 import {useAppSelector} from '~redux/hooks';
 import {selectIs24HourTimeFormat} from '~redux/settings/slice';
 import {selectScheduleById} from '~redux/timetable/slice';
@@ -18,18 +19,30 @@ interface Props {
   date?: string;
 }
 
-function Field({label, value}: {value: string; label: string}) {
+function Field({
+  label,
+  value,
+  hypertext,
+}: {
+  value: string;
+  label: string;
+  hypertext?: boolean;
+}) {
   const {colors} = useTheme();
   return (
     <View style={styles.fieldContainer}>
       <Text variant="labelLarge" style={styles.label}>
         {label.toLocaleUpperCase()}
       </Text>
-      <Text
-        variant="headlineMedium"
-        style={[styles.text1, {color: colors.onSurfaceVariant}]}>
-        {value}
-      </Text>
+      {hypertext ? (
+        <HyperlinkedText text={value} />
+      ) : (
+        <Text
+          variant="headlineMedium"
+          style={[styles.text1, {color: colors.onSurfaceVariant}]}>
+          {value}
+        </Text>
+      )}
     </View>
   );
 }
@@ -76,7 +89,11 @@ function EventDetails({event, date}: Props) {
       )}
       {!!scheduleId && <ScheduleField id={scheduleId} label={t('Schedule')} />}
       {!!description && (
-        <Field label={t('Description') as string} value={description} />
+        <Field
+          label={t('Description') as string}
+          value={description}
+          hypertext
+        />
       )}
     </ScrollView>
   );
