@@ -3,6 +3,7 @@ import {useTranslation} from 'react-i18next';
 import {StyleSheet, ScrollView, View} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {useAppSelector} from '~redux/hooks';
+import {selectIs24HourTimeFormat} from '~redux/settings/slice';
 import {selectScheduleById} from '~redux/timetable/slice';
 import {EventInput} from '~types';
 import {formatUTCtoLocalDate, formatUTCtoLocalTime} from '~utils/date';
@@ -33,6 +34,7 @@ function ScheduleField({id, label}: {id: string; label: string}) {
 
 function EventDetails({event, date}: Props) {
   const {t} = useTranslation();
+  const is24Hour = useAppSelector(selectIs24HourTimeFormat);
   const {title, startTime, endTime, description, repeat, scheduleId} = event;
 
   const startDate = getNextEventDate(event, date) || event.startDate;
@@ -58,7 +60,7 @@ function EventDetails({event, date}: Props) {
             <TextInput
               label={t('From') as string}
               editable={false}
-              value={formatUTCtoLocalTime(startTime)}
+              value={formatUTCtoLocalTime(startTime, is24Hour)}
               left={<TextInput.Icon disabled icon="clock-time-eight-outline" />}
             />
           </View>
