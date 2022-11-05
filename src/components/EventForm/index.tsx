@@ -28,7 +28,7 @@ interface Props {
   onDiscard?: () => void;
   onPressDuplicate?: () => void;
   title?: string;
-  defaultValues?: EventInput;
+  defaultValues?: Partial<EventInput>;
   resetOnSubmit?: boolean;
   schedules?: SelectOption[];
 }
