@@ -26,18 +26,13 @@ import {
   InteractionManager,
 } from 'react-native';
 import EmptyState from '~components/EmptyState';
-import {
-  currentUTCDate,
-  formatCalendarDate,
-  formatDateToUTC,
-  formatUTCDate,
-} from '~utils/date';
+import {formatCalendarDate, formatDateToUTC} from '~utils/date';
 import calendarGenerator, {AgendaItemT} from '~utils/calendar';
 import {useAppSelector} from '~redux/hooks';
 import {selectStartOfWeek} from '~redux/settings/slice';
 import {EventInput} from '~types';
 import AgendaItem from './AgendaItem';
-import {ITEM_HEIGHT, MAX_NUM_OF_DAYS_PER_BATCH} from './constants';
+import {ITEM_HEIGHT, NUM_OF_DAYS_PER_BATCH} from './constants';
 
 function DayHeader({title}: {title: string}) {
   const {colors} = useTheme();
@@ -108,7 +103,7 @@ function AgendaList<T extends EventInput>(
   );
 
   const getUpcomingItems = useCallback(
-    (numOfDays = MAX_NUM_OF_DAYS_PER_BATCH) => {
+    (numOfDays = NUM_OF_DAYS_PER_BATCH) => {
       const data: AgendaItemT[] = [];
 
       for (let i = 0; i < numOfDays; i += 1) {
@@ -124,7 +119,7 @@ function AgendaList<T extends EventInput>(
   );
 
   const getPastItems = useCallback(
-    (numOfDays = MAX_NUM_OF_DAYS_PER_BATCH) => {
+    (numOfDays = NUM_OF_DAYS_PER_BATCH) => {
       const data: AgendaItemT[] = [];
 
       for (let i = 0; i < numOfDays; i += 1) {
@@ -162,8 +157,8 @@ function AgendaList<T extends EventInput>(
   }, []);
 
   const scrollToTop = useCallback(() => {
-    scrollToDate(formatUTCDate(currentUTCDate()));
-  }, [scrollToDate]);
+    scrollToDate(selectedDate);
+  }, [scrollToDate, selectedDate]);
 
   useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
