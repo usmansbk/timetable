@@ -26,7 +26,12 @@ import {
   InteractionManager,
 } from 'react-native';
 import EmptyState from '~components/EmptyState';
-import {currentUTCDate, formatCalendarDate, formatUTCDate} from '~utils/date';
+import {
+  currentUTCDate,
+  formatCalendarDate,
+  formatDateToUTC,
+  formatUTCDate,
+} from '~utils/date';
 import calendarGenerator, {AgendaItemT} from '~utils/calendar';
 import {useAppSelector} from '~redux/hooks';
 import {selectStartOfWeek} from '~redux/settings/slice';
@@ -34,7 +39,7 @@ import {EventInput} from '~types';
 import AgendaItem from './AgendaItem';
 import {ITEM_HEIGHT, MAX_NUM_OF_DAYS_PER_BATCH} from './constants';
 
-function DayHeader({item}: {item: string}) {
+function DayHeader({title}: {title: string}) {
   const {colors} = useTheme();
 
   return (
@@ -43,7 +48,7 @@ function DayHeader({item}: {item: string}) {
       <Text
         variant="headlineMedium"
         style={[styles.sectionHeaderText, {color: colors.onSurfaceVariant}]}>
-        {formatCalendarDate(item).toLocaleUpperCase()}
+        {title}
       </Text>
     </View>
   );
@@ -56,12 +61,13 @@ const modes = {
 
 interface Props<T extends EventInput> {
   items: T[];
-  onPressItem: (item: EventInput, index: number) => void;
+  onPressItem: (item: EventInput) => void;
   keyExtractor?: FlashListProps<AgendaItemT>['keyExtractor'];
   onScroll?: FlashListProps<AgendaItemT>['onScroll'];
   listEmptyMessage?: string;
   onRefresh?: RefreshControlProps['onRefresh'];
   refreshing?: RefreshControlProps['refreshing'];
+  selectedDate?: string;
 }
 
 interface AgendaListHandle {
@@ -75,10 +81,10 @@ function AgendaList<T extends EventInput>(
     items,
     listEmptyMessage,
     onPressItem,
-    keyExtractor,
     onRefresh,
-    refreshing = false,
     onScroll,
+    refreshing = false,
+    selectedDate = formatDateToUTC(),
   }: Props<T>,
   forwardedRef: ForwardedRef<AgendaListHandle>,
 ) {
@@ -90,102 +96,70 @@ function AgendaList<T extends EventInput>(
   const [mode, setMode] = useState(modes.UPCOMING);
 
   const [upcoming, setUpcoming] = useState<AgendaItemT[]>([]);
-  const [hasMoreUpcoming, setHasMoreUpcoming] = useState(true);
-
   const [past, setPast] = useState<AgendaItemT[]>([]);
-  const [hasMorePast, setHasMorePast] = useState(true);
 
   const pastCalendar = useMemo(
-    () => calendarGenerator(items, {startOfWeek, past: true}),
-    [items, startOfWeek],
+    () => calendarGenerator(items, {startOfWeek, past: true, selectedDate}),
+    [items, startOfWeek, selectedDate],
   );
   const upcomingCalendar = useMemo(
-    () => calendarGenerator(items, {startOfWeek}),
-    [items, startOfWeek],
+    () => calendarGenerator(items, {startOfWeek, selectedDate}),
+    [items, startOfWeek, selectedDate],
   );
 
   const getUpcomingItems = useCallback(
-    (maxNumDays = MAX_NUM_OF_DAYS_PER_BATCH) => {
+    (numOfDays = MAX_NUM_OF_DAYS_PER_BATCH) => {
       const data: AgendaItemT[] = [];
-      let hasMore = hasMoreUpcoming;
 
-      for (let i = 0; i < maxNumDays; i += 1) {
+      for (let i = 0; i < numOfDays; i += 1) {
         const section = upcomingCalendar.next();
         if (!section.done) {
           data.push(...section.value);
-        } else {
-          hasMore = !section.done;
-          break;
         }
       }
 
-      return {
-        data,
-        hasMore,
-      };
+      return data;
     },
     [upcomingCalendar],
   );
 
   const getPastItems = useCallback(
-    (maxNumDays = MAX_NUM_OF_DAYS_PER_BATCH) => {
+    (numOfDays = MAX_NUM_OF_DAYS_PER_BATCH) => {
       const data: AgendaItemT[] = [];
-      let hasMore = hasMorePast;
 
-      for (let i = 0; i < maxNumDays; i += 1) {
+      for (let i = 0; i < numOfDays; i += 1) {
         const section = pastCalendar.next();
         if (!section.done) {
           data.push(...section.value);
-        } else {
-          hasMore = !section.done;
-          break;
         }
       }
 
-      return {
-        data,
-        hasMore,
-      };
+      return data;
     },
     [pastCalendar],
   );
 
   const loadUpcoming = useCallback(() => {
-    if (hasMoreUpcoming) {
-      const {data, hasMore} = getUpcomingItems();
-      if (data.length) {
-        setUpcoming(currentData => [...currentData, ...data]);
-      }
-      setHasMoreUpcoming(hasMore);
+    const data = getUpcomingItems();
+    if (data.length) {
+      setUpcoming(currentData => [...currentData, ...data]);
     }
-  }, [getUpcomingItems, hasMoreUpcoming]);
+  }, [getUpcomingItems]);
 
   const loadPast = useCallback(() => {
-    if (hasMorePast) {
-      const {data, hasMore} = getPastItems();
-      if (data.length) {
-        setPast(currentData => [...currentData, ...data]);
-      }
-      setHasMorePast(hasMore);
+    const data = getPastItems();
+    if (data.length) {
+      setPast(currentData => [...currentData, ...data]);
     }
-  }, [getPastItems, hasMorePast]);
+  }, [getPastItems]);
 
-  const onEndReached = useCallback(() => {
-    InteractionManager.runAfterInteractions(
-      mode === modes.PAST ? loadPast : loadUpcoming,
-    );
-  }, [loadPast, loadUpcoming, mode]);
-
-  const scrollToDate = useCallback(
-    (item: string) => {
-      listRef.current?.scrollToItem({
-        item,
-        viewPosition: 0,
-        animated: true,
-      });
-    },
-    [listRef.current],
-  );
+  const scrollToDate = useCallback((item: string) => {
+    listRef.current?.scrollToItem({
+      item,
+      viewPosition: 0,
+      animated: true,
+    });
+  }, []);
 
   const scrollToTop = useCallback(() => {
     scrollToDate(formatUTCDate(currentUTCDate()));
@@ -194,16 +168,14 @@ function AgendaList<T extends EventInput>(
   useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
       if (items.length) {
-        const upcomingResult = getUpcomingItems();
-        const pastResult = getPastItems();
+        const upcomingItems = getUpcomingItems();
+        const pastItems = getPastItems();
 
-        setPast(pastResult.data);
-        setHasMorePast(pastResult.hasMore);
-        setUpcoming(upcomingResult.data);
-        setHasMoreUpcoming(upcomingResult.hasMore);
+        setPast(pastItems);
+        setUpcoming(upcomingItems);
       }
     });
-  }, [items, getPastItems, getUpcomingItems]);
+  }, [items]);
 
   useImperativeHandle(forwardedRef, () => ({
     scrollToTop,
@@ -221,35 +193,24 @@ function AgendaList<T extends EventInput>(
   }, [scrollToTop]);
 
   const handlePressItem = useCallback(
-    (item: EventInput, index: number) => () => onPressItem(item, index),
+    (item: EventInput) => () => onPressItem(item),
     [onPressItem],
   );
 
   const renderItem: ListRenderItem<AgendaItemT> = useCallback(
-    ({item, index}) => {
+    ({item}) => {
       if (typeof item === 'string') {
-        return <DayHeader item={item} />;
+        return (
+          <DayHeader title={formatCalendarDate(item).toLocaleUpperCase()} />
+        );
       }
 
-      return <AgendaItem item={item} onPress={handlePressItem(item, index)} />;
+      return <AgendaItem item={item} onPress={handlePressItem(item)} />;
     },
-    [handlePressItem],
+    [handlePressItem, mode],
   );
 
-  const renderFooter = useCallback(() => <View style={styles.footer} />, []);
-
-  const renderHeader = useCallback(
-    () => (
-      <TouchableRipple style={styles.header} onPress={toggleMode}>
-        <IconButton
-          icon={mode === modes.PAST ? 'chevron-down' : 'chevron-up'}
-        />
-      </TouchableRipple>
-    ),
-    [toggleMode, mode],
-  );
-
-  const _keyExtractor = useCallback(
+  const keyExtractor = useCallback(
     (item: AgendaItemT, index: number) => {
       if (typeof item === 'string') {
         return mode + item + index;
@@ -260,9 +221,16 @@ function AgendaList<T extends EventInput>(
     [mode],
   );
 
-  const getItemType = useCallback((item: AgendaItemT) => {
-    return typeof item === 'string' ? 'sectionHeader' : 'row';
-  }, []);
+  const getItemType = useCallback(
+    (item: AgendaItemT) => (typeof item === 'string' ? 'sectionHeader' : 'row'),
+    [],
+  );
+
+  const onEndReached = useCallback(() => {
+    InteractionManager.runAfterInteractions(
+      mode === modes.PAST ? loadPast : loadUpcoming,
+    );
+  }, [mode]);
 
   if (!items.length) {
     return <EmptyState title={listEmptyMessage || t('No Events')} />;
@@ -272,10 +240,18 @@ function AgendaList<T extends EventInput>(
 
   return (
     <FlashList
+      initialScrollIndex={0}
+      showsVerticalScrollIndicator={false}
+      keyboardShouldPersistTaps="always"
       ref={listRef}
       inverted={isPast}
-      getItemType={getItemType}
       data={isPast ? past : upcoming}
+      estimatedItemSize={ITEM_HEIGHT}
+      estimatedFirstItemOffset={ITEM_HEIGHT}
+      onScroll={onScroll}
+      onEndReachedThreshold={1}
+      onEndReached={onEndReached}
+      getItemType={getItemType}
       renderItem={renderItem}
       refreshControl={
         onRefresh ? (
@@ -286,17 +262,16 @@ function AgendaList<T extends EventInput>(
           />
         ) : undefined
       }
-      initialScrollIndex={0}
-      keyboardShouldPersistTaps="always"
-      estimatedItemSize={ITEM_HEIGHT}
-      estimatedFirstItemOffset={ITEM_HEIGHT}
-      onEndReached={onEndReached}
-      onScroll={onScroll}
+      keyExtractor={keyExtractor}
       ItemSeparatorComponent={Divider}
-      showsVerticalScrollIndicator={false}
-      keyExtractor={keyExtractor || _keyExtractor}
-      ListHeaderComponent={renderHeader}
-      ListFooterComponent={renderFooter}
+      ListHeaderComponent={
+        <TouchableRipple style={styles.header} onPress={toggleMode}>
+          <IconButton
+            icon={mode === modes.PAST ? 'chevron-down' : 'chevron-up'}
+          />
+        </TouchableRipple>
+      }
+      ListFooterComponent={<View style={styles.footer} />}
     />
   );
 }

@@ -10,7 +10,7 @@ import omit from 'lodash.omit';
 import {EventInput, FieldError, ScheduleInput} from '~types';
 import Confirm from './Confirm';
 import EventForm from './EventForm';
-import AgendaList from './AgendaList';
+import AgendaList from './Agenda/AgendaList';
 
 interface Props {
   autoFocus?: boolean;
@@ -31,10 +31,6 @@ export default function ScheduleForm({
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [addEventVisible, setAddEventVisible] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
-
-  const onPressItem = useCallback((_item: EventInput, index: number) => {
-    setEditIndex(index);
-  }, []);
 
   const closeConfirmDialog = useCallback(() => setConfirmVisible(false), []);
   const closeAddEventForm = useCallback(() => setAddEventVisible(false), []);
@@ -85,6 +81,14 @@ export default function ScheduleForm({
     name: 'events',
     keyName: 'key',
   });
+
+  const onPressItem = useCallback(
+    (item: EventInput & {key?: string}) => {
+      const index = fields.findIndex(field => field.key === item.key);
+      setEditIndex(index);
+    },
+    [fields],
+  );
 
   const onAddItem = useCallback(
     (input: EventInput) => {

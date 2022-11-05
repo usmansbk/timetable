@@ -1,6 +1,6 @@
 import {RRuleSet} from 'rrule';
 import {EventInput} from '~types';
-import dayjs, {currentUTCDate, formatUTCDate} from './date';
+import dayjs, {currentUTCDate, formatUTCDate, parseUTCdate} from './date';
 import {createDateRule} from './event';
 
 export type AgendaItemT = string | EventInput;
@@ -69,19 +69,23 @@ function getEventsByDate({
     });
 }
 
+interface CalendarGeneratorOptions extends CalendarOptions {
+  selectedDate: string;
+}
+
 export default function* calendarGenerator(
   items: EventInput[],
-  options: CalendarOptions,
+  options: CalendarGeneratorOptions,
 ): Generator<AgendaItemT[], AgendaItemT[] | null, AgendaItemT[]> {
   if (!items.length) {
     return null;
   }
 
-  const {startOfWeek, past} = options;
+  const {startOfWeek, past, selectedDate} = options;
 
   const rules = createDateRules(items, {startOfWeek});
 
-  const initialDate = currentUTCDate();
+  const initialDate = parseUTCdate(selectedDate);
 
   let date = past
     ? rules.before(initialDate, true)

@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import {memo, useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Appbar, Menu} from 'react-native-paper';
-import AgendaList from '~components/AgendaList';
+import AgendaList from '~components/Agenda/AgendaList';
 import Confirm from '~components/Confirm';
 import EmptyState from '~components/EmptyState';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
