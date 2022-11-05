@@ -57,7 +57,7 @@ function Timetable({navigation}: AppDrawerScreenProps<'Timetable'>) {
           style={styles.fab}
           visible={fabVisible}
           open={state.open}
-          icon={state.open ? 'calendar-today' : 'plus'}
+          icon={state.open ? 'calendar-edit' : 'plus'}
           actions={[
             {
               label: t('Create schedule'),
