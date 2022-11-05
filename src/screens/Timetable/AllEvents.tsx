@@ -46,7 +46,7 @@ function AllEvents({openDrawer, onPressItem}: Props) {
     enableVibration,
   ]);
 
-  const renderRight = useCallback(
+  const renderLeft = useCallback(
     () => <Appbar.Action icon="menu" onPress={openDrawer} />,
     [openDrawer],
   );
@@ -56,7 +56,7 @@ function AllEvents({openDrawer, onPressItem}: Props) {
       title={t('Timetable')}
       items={events}
       onPressItem={onPressItem}
-      renderRight={renderRight}
+      renderLeft={renderLeft}
     />
   );
 }
