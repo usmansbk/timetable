@@ -36,10 +36,7 @@ export default function ScheduleForm({
   const closeAddEventForm = useCallback(() => setAddEventVisible(false), []);
   const closeEditEventForm = useCallback(() => setEditIndex(null), []);
 
-  const onPressDuplicate = useCallback(
-    () => setAddEventVisible(true),
-    [editIndex],
-  );
+  const onPressDuplicate = useCallback(() => setAddEventVisible(true), []);
 
   const schema = useMemo(
     () =>
@@ -49,7 +46,6 @@ export default function ScheduleForm({
           title: yup
             .string()
             .trim()
-            .min(3, () => t('Title too short'))
             .max(80, () => t('Title too long'))
             .required(() => t('Add a Title')),
           events: yup
@@ -194,7 +190,7 @@ export default function ScheduleForm({
         onPressItem={onPressItem}
       />
       <FAB
-        icon="calendar-today"
+        icon="calendar-edit"
         style={styles.fab}
         onPress={() => setAddEventVisible(true)}
       />

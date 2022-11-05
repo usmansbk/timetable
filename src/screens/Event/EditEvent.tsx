@@ -1,5 +1,6 @@
 import {memo, useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
+import {InteractionManager} from 'react-native';
 import EventForm from '~components/EventForm';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
 import {selectAllSchedules, updateEvent} from '~redux/timetable/slice';
@@ -17,8 +18,10 @@ function EditEvent({event, visible, onDismiss}: Props) {
   const schedules = useAppSelector(selectAllSchedules);
 
   const onSubmit = useCallback((values: EventInput) => {
-    dispatch(updateEvent(values));
     onDismiss();
+    InteractionManager.runAfterInteractions(() => {
+      dispatch(updateEvent(values));
+    });
   }, []);
 
   const scheduleOptions = useMemo(

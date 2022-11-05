@@ -9,13 +9,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import {
-  Divider,
-  IconButton,
-  Text,
-  TouchableRipple,
-  useTheme,
-} from 'react-native-paper';
+import {Divider, Text, TouchableRipple, useTheme} from 'react-native-paper';
 import {FlashList, FlashListProps, ListRenderItem} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 import {
@@ -26,33 +20,14 @@ import {
   InteractionManager,
 } from 'react-native';
 import EmptyState from '~components/EmptyState';
-import {
-  currentUTCDate,
-  formatCalendarDate,
-  formatDateToUTC,
-  formatUTCDate,
-} from '~utils/date';
+import {formatDateToUTC} from '~utils/date';
 import calendarGenerator, {AgendaItemT} from '~utils/calendar';
 import {useAppSelector} from '~redux/hooks';
 import {selectStartOfWeek} from '~redux/settings/slice';
 import {EventInput} from '~types';
 import AgendaItem from './AgendaItem';
-import {ITEM_HEIGHT, MAX_NUM_OF_DAYS_PER_BATCH} from './constants';
-
-function DayHeader({title}: {title: string}) {
-  const {colors} = useTheme();
-
-  return (
-    <View
-      style={[styles.sectionHeader, {backgroundColor: colors.surfaceDisabled}]}>
-      <Text
-        variant="headlineMedium"
-        style={[styles.sectionHeaderText, {color: colors.onSurfaceVariant}]}>
-        {title}
-      </Text>
-    </View>
-  );
-}
+import {ITEM_HEIGHT, NUM_OF_DAYS_PER_BATCH} from './constants';
+import AgendaDayHeader from './AgendaDayHeader';
 
 const modes = {
   PAST: 'PAST',
@@ -62,6 +37,7 @@ const modes = {
 interface Props<T extends EventInput> {
   items: T[];
   onPressItem: (item: EventInput) => void;
+  onPressDayHeader?: (date: string) => void;
   keyExtractor?: FlashListProps<AgendaItemT>['keyExtractor'];
   onScroll?: FlashListProps<AgendaItemT>['onScroll'];
   listEmptyMessage?: string;
@@ -70,9 +46,10 @@ interface Props<T extends EventInput> {
   selectedDate?: string;
 }
 
-interface AgendaListHandle {
+export interface AgendaListHandle {
   scrollToTop: () => void;
   scrollToDate: (date: string) => void;
+  resetMode: () => void;
   prepareForLayoutAnimationRender: () => void;
 }
 
@@ -81,6 +58,7 @@ function AgendaList<T extends EventInput>(
     items,
     listEmptyMessage,
     onPressItem,
+    onPressDayHeader,
     onRefresh,
     onScroll,
     refreshing = false,
@@ -108,7 +86,7 @@ function AgendaList<T extends EventInput>(
   );
 
   const getUpcomingItems = useCallback(
-    (numOfDays = MAX_NUM_OF_DAYS_PER_BATCH) => {
+    (numOfDays = NUM_OF_DAYS_PER_BATCH) => {
       const data: AgendaItemT[] = [];
 
       for (let i = 0; i < numOfDays; i += 1) {
@@ -124,7 +102,7 @@ function AgendaList<T extends EventInput>(
   );
 
   const getPastItems = useCallback(
-    (numOfDays = MAX_NUM_OF_DAYS_PER_BATCH) => {
+    (numOfDays = NUM_OF_DAYS_PER_BATCH) => {
       const data: AgendaItemT[] = [];
 
       for (let i = 0; i < numOfDays; i += 1) {
@@ -139,20 +117,6 @@ function AgendaList<T extends EventInput>(
     [pastCalendar],
   );
 
-  const loadUpcoming = useCallback(() => {
-    const data = getUpcomingItems();
-    if (data.length) {
-      setUpcoming(currentData => [...currentData, ...data]);
-    }
-  }, [getUpcomingItems]);
-
-  const loadPast = useCallback(() => {
-    const data = getPastItems();
-    if (data.length) {
-      setPast(currentData => [...currentData, ...data]);
-    }
-  }, [getPastItems]);
-
   const scrollToDate = useCallback((item: string) => {
     listRef.current?.scrollToItem({
       item,
@@ -162,24 +126,25 @@ function AgendaList<T extends EventInput>(
   }, []);
 
   const scrollToTop = useCallback(() => {
-    scrollToDate(formatUTCDate(currentUTCDate()));
-  }, [scrollToDate]);
+    scrollToDate(selectedDate);
+  }, [scrollToDate, selectedDate]);
 
   useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
-      if (items.length) {
-        const upcomingItems = getUpcomingItems();
-        const pastItems = getPastItems();
+      const upcomingItems = getUpcomingItems();
+      const pastItems = getPastItems();
 
-        setPast(pastItems);
-        setUpcoming(upcomingItems);
-      }
+      setPast(pastItems);
+      setUpcoming(upcomingItems);
     });
-  }, [items]);
+  }, [getPastItems, getUpcomingItems]);
 
   useImperativeHandle(forwardedRef, () => ({
     scrollToTop,
     scrollToDate,
+    resetMode() {
+      setMode(modes.UPCOMING);
+    },
     prepareForLayoutAnimationRender() {
       listRef.current?.prepareForLayoutAnimationRender();
     },
@@ -192,51 +157,23 @@ function AgendaList<T extends EventInput>(
     InteractionManager.runAfterInteractions(scrollToTop);
   }, [scrollToTop]);
 
-  const handlePressItem = useCallback(
-    (item: EventInput) => () => onPressItem(item),
-    [onPressItem],
-  );
-
   const renderItem: ListRenderItem<AgendaItemT> = useCallback(
     ({item}) => {
       if (typeof item === 'string') {
-        return (
-          <DayHeader title={formatCalendarDate(item).toLocaleUpperCase()} />
-        );
+        return <AgendaDayHeader item={item} onPress={onPressDayHeader} />;
       }
 
-      return <AgendaItem item={item} onPress={handlePressItem(item)} />;
+      return <AgendaItem item={item} onPress={onPressItem} />;
     },
-    [handlePressItem, mode],
+    [mode, onPressDayHeader, onPressItem],
   );
-
-  const keyExtractor = useCallback(
-    (item: AgendaItemT, index: number) => {
-      if (typeof item === 'string') {
-        return mode + item + index;
-      }
-
-      return mode + item.id + index;
-    },
-    [mode],
-  );
-
-  const getItemType = useCallback(
-    (item: AgendaItemT) => (typeof item === 'string' ? 'sectionHeader' : 'row'),
-    [],
-  );
-
-  const onEndReached = useCallback(() => {
-    InteractionManager.runAfterInteractions(
-      mode === modes.PAST ? loadPast : loadUpcoming,
-    );
-  }, [mode]);
 
   if (!items.length) {
     return <EmptyState title={listEmptyMessage || t('No Events')} />;
   }
 
   const isPast = mode === modes.PAST;
+  const data = isPast ? past : upcoming;
 
   return (
     <FlashList
@@ -245,14 +182,24 @@ function AgendaList<T extends EventInput>(
       keyboardShouldPersistTaps="always"
       ref={listRef}
       inverted={isPast}
-      data={isPast ? past : upcoming}
+      data={data}
       estimatedItemSize={ITEM_HEIGHT}
       estimatedFirstItemOffset={ITEM_HEIGHT}
       onScroll={onScroll}
       onEndReachedThreshold={1}
-      onEndReached={onEndReached}
-      getItemType={getItemType}
       renderItem={renderItem}
+      getItemType={item => (typeof item === 'string' ? 'sectionHeader' : 'row')}
+      onEndReached={() => {
+        InteractionManager.runAfterInteractions(() => {
+          if (isPast) {
+            const data = getPastItems();
+            setPast([...past, ...data]);
+          } else {
+            const data = getUpcomingItems();
+            setUpcoming([...upcoming, ...data]);
+          }
+        });
+      }}
       refreshControl={
         onRefresh ? (
           <RefreshControl
@@ -262,19 +209,27 @@ function AgendaList<T extends EventInput>(
           />
         ) : undefined
       }
-      keyExtractor={keyExtractor}
       ItemSeparatorComponent={Divider}
       ListHeaderComponent={
-        <TouchableRipple style={styles.header} onPress={toggleMode}>
-          <IconButton
-            icon={mode === modes.PAST ? 'chevron-down' : 'chevron-up'}
-          />
-        </TouchableRipple>
+        <Header
+          text={t(isPast ? 'View upcoming' : 'View past')}
+          onPress={toggleMode}
+        />
       }
       ListFooterComponent={<View style={styles.footer} />}
     />
   );
 }
+
+const Header = ({text, onPress}: {text: string; onPress: () => void}) => {
+  return (
+    <TouchableRipple style={styles.header} onPress={onPress}>
+      <Text variant="labelMedium" style={styles.headerText}>
+        {text.toUpperCase()}
+      </Text>
+    </TouchableRipple>
+  );
+};
 
 const styles = StyleSheet.create({
   footer: {
@@ -285,13 +240,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  sectionHeader: {
-    height: ITEM_HEIGHT,
-    justifyContent: 'center',
-    paddingHorizontal: 16,
-  },
-  sectionHeaderText: {
-    fontSize: 12,
+  headerText: {
+    fontSize: 10,
   },
 });
 

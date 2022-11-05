@@ -1,4 +1,5 @@
-import {memo, useCallback, useMemo} from 'react';
+import {useCallback, useMemo} from 'react';
+import {InteractionManager} from 'react-native';
 import ScheduleForm from '~components/ScheduleForm';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
 import {
@@ -18,8 +19,10 @@ function EditSchedule({
   const dispatch = useAppDispatch();
 
   const onSubmit = useCallback((input: ScheduleInput) => {
-    dispatch(updateSchedule(input));
     navigation.pop();
+    InteractionManager.runAfterInteractions(() => {
+      dispatch(updateSchedule(input));
+    });
   }, []);
 
   const defaultValues = useMemo(
@@ -39,4 +42,4 @@ function EditSchedule({
   );
 }
 
-export default memo(EditSchedule);
+export default EditSchedule;

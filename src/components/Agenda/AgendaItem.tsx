@@ -1,4 +1,3 @@
-import {memo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {StyleSheet, View} from 'react-native';
 import {Text, TouchableRipple} from 'react-native-paper';
@@ -8,7 +7,7 @@ import {ITEM_HEIGHT} from './constants';
 
 interface Props {
   item: EventInput;
-  onPress: () => void;
+  onPress: (item: EventInput) => void;
 }
 
 function AgendaItem({item, onPress}: Props) {
@@ -28,7 +27,7 @@ function AgendaItem({item, onPress}: Props) {
   }
 
   return (
-    <TouchableRipple onPress={onPress}>
+    <TouchableRipple disabled={!onPress} onPress={() => onPress?.(item)}>
       <View style={styles.container}>
         <Text variant="titleSmall" numberOfLines={1}>
           {title}
@@ -43,7 +42,7 @@ function AgendaItem({item, onPress}: Props) {
   );
 }
 
-export default memo(AgendaItem);
+export default AgendaItem;
 
 const styles = StyleSheet.create({
   container: {

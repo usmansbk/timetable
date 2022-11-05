@@ -72,6 +72,7 @@ function AppDrawer({}: RootStackScreenProps<'AppDrawer'>) {
         component={Timetable}
         options={{
           title: t('Timetable'),
+          headerShown: false,
         }}
       />
     </Drawer.Navigator>
