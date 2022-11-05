@@ -141,7 +141,7 @@ function AgendaList<T extends EventInput>(
       setPast(pastItems);
       setUpcoming(upcomingItems);
     });
-  }, [items]);
+  }, [getPastItems, getUpcomingItems]);
 
   useImperativeHandle(forwardedRef, () => ({
     scrollToTop,
@@ -166,7 +166,7 @@ function AgendaList<T extends EventInput>(
 
       return <AgendaItem item={item} onPress={onPressItem} />;
     },
-    [mode],
+    [mode, onPressDayHeader, onPressItem],
   );
 
   if (!items.length) {

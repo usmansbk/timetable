@@ -36,10 +36,7 @@ export default function ScheduleForm({
   const closeAddEventForm = useCallback(() => setAddEventVisible(false), []);
   const closeEditEventForm = useCallback(() => setEditIndex(null), []);
 
-  const onPressDuplicate = useCallback(
-    () => setAddEventVisible(true),
-    [editIndex],
-  );
+  const onPressDuplicate = useCallback(() => setAddEventVisible(true), []);
 
   const schema = useMemo(
     () =>
