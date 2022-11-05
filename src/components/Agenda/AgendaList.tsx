@@ -81,7 +81,6 @@ function AgendaList<T extends EventInput>(
     items,
     listEmptyMessage,
     onPressItem,
-    keyExtractor,
     onRefresh,
     onScroll,
     refreshing = false,
@@ -97,10 +96,7 @@ function AgendaList<T extends EventInput>(
   const [mode, setMode] = useState(modes.UPCOMING);
 
   const [upcoming, setUpcoming] = useState<AgendaItemT[]>([]);
-  const [hasMoreUpcoming, setHasMoreUpcoming] = useState(true);
-
   const [past, setPast] = useState<AgendaItemT[]>([]);
-  const [hasMorePast, setHasMorePast] = useState(true);
 
   const pastCalendar = useMemo(
     () => calendarGenerator(items, {startOfWeek, past: true, selectedDate}),
@@ -112,70 +108,50 @@ function AgendaList<T extends EventInput>(
   );
 
   const getUpcomingItems = useCallback(
-    (maxNumDays = MAX_NUM_OF_DAYS_PER_BATCH) => {
+    (numOfDays = MAX_NUM_OF_DAYS_PER_BATCH) => {
       const data: AgendaItemT[] = [];
-      let hasMore = hasMoreUpcoming;
 
-      for (let i = 0; i < maxNumDays; i += 1) {
+      for (let i = 0; i < numOfDays; i += 1) {
         const section = upcomingCalendar.next();
         if (!section.done) {
           data.push(...section.value);
-        } else {
-          hasMore = !section.done;
-          break;
         }
       }
 
-      return {
-        data,
-        hasMore,
-      };
+      return data;
     },
-    [upcomingCalendar, hasMoreUpcoming],
+    [upcomingCalendar],
   );
 
   const getPastItems = useCallback(
-    (maxNumDays = MAX_NUM_OF_DAYS_PER_BATCH) => {
+    (numOfDays = MAX_NUM_OF_DAYS_PER_BATCH) => {
       const data: AgendaItemT[] = [];
-      let hasMore = hasMorePast;
 
-      for (let i = 0; i < maxNumDays; i += 1) {
+      for (let i = 0; i < numOfDays; i += 1) {
         const section = pastCalendar.next();
         if (!section.done) {
           data.push(...section.value);
-        } else {
-          hasMore = !section.done;
-          break;
         }
       }
 
-      return {
-        data,
-        hasMore,
-      };
+      return data;
     },
-    [pastCalendar, hasMorePast],
+    [pastCalendar],
   );
 
   const loadUpcoming = useCallback(() => {
-    if (hasMoreUpcoming) {
-      const {data, hasMore} = getUpcomingItems();
-      if (data.length) {
-        setUpcoming(currentData => [...currentData, ...data]);
-      }
-      setHasMoreUpcoming(hasMore);
+    const data = getUpcomingItems();
+    if (data.length) {
+      setUpcoming(currentData => [...currentData, ...data]);
     }
-  }, [getUpcomingItems, hasMoreUpcoming]);
+  }, [getUpcomingItems]);
 
   const loadPast = useCallback(() => {
-    if (hasMorePast) {
-      const {data, hasMore} = getPastItems();
-      if (data.length) {
-        setPast(currentData => [...currentData, ...data]);
-      }
-      setHasMorePast(hasMore);
+    const data = getPastItems();
+    if (data.length) {
+      setPast(currentData => [...currentData, ...data]);
     }
-  }, [getPastItems, hasMorePast]);
+  }, [getPastItems]);
 
   const onEndReached = useCallback(() => {
     InteractionManager.runAfterInteractions(
@@ -201,13 +177,11 @@ function AgendaList<T extends EventInput>(
   useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
       if (items.length) {
-        const upcomingResult = getUpcomingItems();
-        const pastResult = getPastItems();
+        const upcomingItems = getUpcomingItems();
+        const pastItems = getPastItems();
 
-        setPast(pastResult.data);
-        setHasMorePast(pastResult.hasMore);
-        setUpcoming(upcomingResult.data);
-        setHasMoreUpcoming(upcomingResult.hasMore);
+        setPast(pastItems);
+        setUpcoming(upcomingItems);
       }
     });
   }, [items, getPastItems, getUpcomingItems]);
@@ -253,10 +227,10 @@ function AgendaList<T extends EventInput>(
         />
       </TouchableRipple>
     ),
-    [toggleMode, mode],
+    [mode],
   );
 
-  const _keyExtractor = useCallback(
+  const keyExtractor = useCallback(
     (item: AgendaItemT, index: number) => {
       if (typeof item === 'string') {
         return mode + item + index;
@@ -301,7 +275,7 @@ function AgendaList<T extends EventInput>(
       onScroll={onScroll}
       ItemSeparatorComponent={Divider}
       showsVerticalScrollIndicator={false}
-      keyExtractor={keyExtractor || _keyExtractor}
+      keyExtractor={keyExtractor}
       ListHeaderComponent={renderHeader}
       ListFooterComponent={renderFooter}
     />
