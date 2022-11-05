@@ -197,19 +197,6 @@ function AgendaList<T extends EventInput>(
     [onPressItem],
   );
 
-  const renderFooter = useCallback(() => <View style={styles.footer} />, []);
-
-  const renderHeader = useCallback(
-    () => (
-      <TouchableRipple style={styles.header} onPress={toggleMode}>
-        <IconButton
-          icon={mode === modes.PAST ? 'chevron-down' : 'chevron-up'}
-        />
-      </TouchableRipple>
-    ),
-    [mode],
-  );
-
   if (!items.length) {
     return <EmptyState title={listEmptyMessage || t('No Events')} />;
   }
@@ -257,8 +244,14 @@ function AgendaList<T extends EventInput>(
         return mode + item.id + index;
       }}
       ItemSeparatorComponent={Divider}
-      ListHeaderComponent={renderHeader}
-      ListFooterComponent={renderFooter}
+      ListHeaderComponent={() => (
+        <TouchableRipple style={styles.header} onPress={toggleMode}>
+          <IconButton
+            icon={mode === modes.PAST ? 'chevron-down' : 'chevron-up'}
+          />
+        </TouchableRipple>
+      )}
+      ListFooterComponent={() => <View style={styles.footer} />}
     />
   );
 }
