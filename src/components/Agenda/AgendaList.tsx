@@ -149,13 +149,11 @@ function AgendaList<T extends EventInput>(
 
   useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
-      if (items.length) {
-        const upcomingItems = getUpcomingItems();
-        const pastItems = getPastItems();
+      const upcomingItems = getUpcomingItems();
+      const pastItems = getPastItems();
 
-        setPast(pastItems);
-        setUpcoming(upcomingItems);
-      }
+      setPast(pastItems);
+      setUpcoming(upcomingItems);
     });
   }, [items]);
 
