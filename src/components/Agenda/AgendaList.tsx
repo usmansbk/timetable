@@ -16,7 +16,7 @@ import {
   TouchableRipple,
   useTheme,
 } from 'react-native-paper';
-import {FlashList, FlashListProps, ListRenderItem} from '@shopify/flash-list';
+import {FlashList, FlashListProps} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 import {
   StyleSheet,
@@ -153,22 +153,13 @@ function AgendaList<T extends EventInput>(
     }
   }, [getPastItems]);
 
-  const onEndReached = useCallback(() => {
-    InteractionManager.runAfterInteractions(
-      mode === modes.PAST ? loadPast : loadUpcoming,
-    );
-  }, [loadPast, loadUpcoming, mode]);
-
-  const scrollToDate = useCallback(
-    (item: string) => {
-      listRef.current?.scrollToItem({
-        item,
-        viewPosition: 0,
-        animated: true,
-      });
-    },
-    [listRef.current],
-  );
+  const scrollToDate = useCallback((item: string) => {
+    listRef.current?.scrollToItem({
+      item,
+      viewPosition: 0,
+      animated: true,
+    });
+  }, []);
 
   const scrollToTop = useCallback(() => {
     scrollToDate(formatUTCDate(currentUTCDate()));
@@ -184,7 +175,7 @@ function AgendaList<T extends EventInput>(
         setUpcoming(upcomingItems);
       }
     });
-  }, [items, getPastItems, getUpcomingItems]);
+  }, [items]);
 
   useImperativeHandle(forwardedRef, () => ({
     scrollToTop,
@@ -206,17 +197,6 @@ function AgendaList<T extends EventInput>(
     [onPressItem],
   );
 
-  const renderItem: ListRenderItem<AgendaItemT> = useCallback(
-    ({item}) => {
-      if (typeof item === 'string') {
-        return <DayHeader item={item} />;
-      }
-
-      return <AgendaItem item={item} onPress={handlePressItem(item)} />;
-    },
-    [handlePressItem],
-  );
-
   const renderFooter = useCallback(() => <View style={styles.footer} />, []);
 
   const renderHeader = useCallback(
@@ -230,21 +210,6 @@ function AgendaList<T extends EventInput>(
     [mode],
   );
 
-  const keyExtractor = useCallback(
-    (item: AgendaItemT, index: number) => {
-      if (typeof item === 'string') {
-        return mode + item + index;
-      }
-
-      return mode + item.id + index;
-    },
-    [mode],
-  );
-
-  const getItemType = useCallback((item: AgendaItemT) => {
-    return typeof item === 'string' ? 'sectionHeader' : 'row';
-  }, []);
-
   if (!items.length) {
     return <EmptyState title={listEmptyMessage || t('No Events')} />;
   }
@@ -253,11 +218,28 @@ function AgendaList<T extends EventInput>(
 
   return (
     <FlashList
+      initialScrollIndex={0}
+      showsVerticalScrollIndicator={false}
+      keyboardShouldPersistTaps="always"
       ref={listRef}
       inverted={isPast}
-      getItemType={getItemType}
       data={isPast ? past : upcoming}
-      renderItem={renderItem}
+      estimatedItemSize={ITEM_HEIGHT}
+      estimatedFirstItemOffset={ITEM_HEIGHT}
+      onScroll={onScroll}
+      onEndReached={() => {
+        InteractionManager.runAfterInteractions(
+          mode === modes.PAST ? loadPast : loadUpcoming,
+        );
+      }}
+      getItemType={item => (typeof item === 'string' ? 'sectionHeader' : 'row')}
+      renderItem={({item}) => {
+        if (typeof item === 'string') {
+          return <DayHeader item={item} />;
+        }
+
+        return <AgendaItem item={item} onPress={handlePressItem(item)} />;
+      }}
       refreshControl={
         onRefresh ? (
           <RefreshControl
@@ -267,15 +249,14 @@ function AgendaList<T extends EventInput>(
           />
         ) : undefined
       }
-      initialScrollIndex={0}
-      keyboardShouldPersistTaps="always"
-      estimatedItemSize={ITEM_HEIGHT}
-      estimatedFirstItemOffset={ITEM_HEIGHT}
-      onEndReached={onEndReached}
-      onScroll={onScroll}
+      keyExtractor={(item, index) => {
+        if (typeof item === 'string') {
+          return mode + item + index;
+        }
+
+        return mode + item.id + index;
+      }}
       ItemSeparatorComponent={Divider}
-      showsVerticalScrollIndicator={false}
-      keyExtractor={keyExtractor}
       ListHeaderComponent={renderHeader}
       ListFooterComponent={renderFooter}
     />
