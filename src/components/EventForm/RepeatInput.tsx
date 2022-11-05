@@ -76,6 +76,7 @@ function RepeatInput({onChange, value, error}: Props) {
         onClear={() => onChange(null)}
         error={error}
         onPress={openForm}
+        optional
       />
       <Portal>
         <Dialog visible={open} onDismiss={closeForm}>
