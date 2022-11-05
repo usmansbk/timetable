@@ -17,16 +17,16 @@ const scheduleSchemaEntity = new schema.Entity('schedules', {
   events: new schema.Array(eventSchemaEntity),
 });
 
-interface ReminderEntity extends Reminder {
+export interface ReminderEntity extends Reminder {
   id: string;
 }
 
-interface ScheduleEntity extends Omit<ScheduleInput, 'events'> {
+export interface ScheduleEntity extends Omit<ScheduleInput, 'events'> {
   id: string;
   events: string[];
 }
 
-interface EventEntity extends EventInput {
+export interface EventEntity extends EventInput {
   id: string;
 }
 
