@@ -12,7 +12,11 @@ import {
 } from '~redux/timetable/slice';
 import {EventInput} from '~types';
 
-function ScheduleDetails({schedule}: {schedule: ScheduleEntity}) {
+interface Props {
+  schedule: ScheduleEntity;
+}
+
+function ScheduleDetails({schedule}: Props) {
   const {t} = useTranslation();
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
