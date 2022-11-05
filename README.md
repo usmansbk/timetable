@@ -32,9 +32,9 @@ Timetable app for Students
 
 ### Prerequisites
 
-- NodeJS v16
+- [NodeJS](https://nodejs.org/en/) v16
 
-- Yarn
+- [Yarn](https://yarnpkg.com/getting-started/install)
 
 ### Setup
 
