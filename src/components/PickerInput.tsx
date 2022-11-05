@@ -1,4 +1,5 @@
-import {TextInput, TouchableRipple} from 'react-native-paper';
+import {TouchableOpacity} from 'react-native';
+import {TextInput} from 'react-native-paper';
 
 interface Props {
   value: string;
@@ -11,6 +12,7 @@ interface Props {
   rightIcon?: string;
   optional?: boolean;
   error?: boolean;
+  multiline?: boolean;
 }
 
 function PickerInput({
@@ -23,13 +25,15 @@ function PickerInput({
   error,
   onClear,
   placeholder,
+  multiline,
 }: Props) {
   return (
-    <TouchableRipple disabled={disabled} onPress={onPress}>
+    <TouchableOpacity disabled={disabled} onPress={onPress}>
       <TextInput
         theme={{
           roundness: 0,
         }}
+        multiline={multiline}
         value={value}
         label={label}
         placeholder={placeholder}
@@ -42,7 +46,7 @@ function PickerInput({
         }
         error={error}
       />
-    </TouchableRipple>
+    </TouchableOpacity>
   );
 }
 
