@@ -12,7 +12,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import timetableReducer from './timetable/slice';
 import settingsReducer from './settings/slice';
-import userReducer from './user/slice';
+import userReducer from './users/slice';
 
 const persistConfig = {
   key: 'root',

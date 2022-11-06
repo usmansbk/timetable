@@ -5,7 +5,7 @@ import {StyleSheet, ToastAndroid} from 'react-native';
 import {Button} from 'react-native-paper';
 import {WEB_CLIENT_ID, IOS_CLIENT_ID} from '~constants';
 import {useAppDispatch} from '~redux/hooks';
-import {setCurrentUser} from '~redux/user/slice';
+import {setCurrentUser} from '~redux/users/slice';
 import {User} from '~types';
 
 GoogleSignin.configure({
