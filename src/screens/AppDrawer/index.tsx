@@ -76,18 +76,20 @@ function AppDrawerContent(props: DrawerContentComponentProps) {
         onPress={() => navigation.navigate('Settings')}
       />
       {user && (
-        <PaperDrawer.Item
-          icon="logout-variant"
-          label={t('Log out')}
-          onPress={openConfirmLogout}
-        />
+        <>
+          <PaperDrawer.Item
+            icon="logout-variant"
+            label={t('Log out')}
+            onPress={openConfirmLogout}
+          />
+          <Confirm
+            visible={confirmVisible}
+            onDismiss={closeConfirmLogout}
+            title={t('Log out?')}
+            onConfirm={signOut}
+          />
+        </>
       )}
-      <Confirm
-        visible={confirmVisible}
-        onDismiss={closeConfirmLogout}
-        title={t('Log out?')}
-        onConfirm={signOut}
-      />
     </DrawerContentScrollView>
   );
 }
