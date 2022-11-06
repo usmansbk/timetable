@@ -11,12 +11,13 @@ import {
   ScheduleEntity,
 } from '~redux/timetable/slice';
 import {EventInput} from '~types';
+import ScheduleInfo from './ScheduleInfo';
 
 interface Props {
   schedule: ScheduleEntity;
 }
 
-type MenuOptionKey = 'edit' | 'delete' | 'duplicate' | 'info';
+type MenuOptionKey = 'edit' | 'delete' | 'duplicate' | 'more';
 
 function ScheduleDetails({schedule}: Props) {
   const {t} = useTranslation();
@@ -52,7 +53,7 @@ function ScheduleDetails({schedule}: Props) {
         });
       } else if (key === 'delete') {
         openConfirm();
-      } else if (key === 'info') {
+      } else if (key === 'more') {
         openInfo();
       }
     },
@@ -93,7 +94,7 @@ function ScheduleDetails({schedule}: Props) {
           title={t('Duplicate')}
         />
         <Menu.Item onPress={handleMenuPress('delete')} title={t('Delete')} />
-        <Menu.Item onPress={handleMenuPress('info')} title={t('Info')} />
+        <Menu.Item onPress={handleMenuPress('more')} title={t('More')} />
       </Menu>
     ),
     [menuVisible, closeConfirm, openMenu, handleMenuPress],
@@ -113,6 +114,11 @@ function ScheduleDetails({schedule}: Props) {
         onDismiss={closeConfirm}
         onConfirm={handleDelete}
         title={t('confirm_delete_schedule', {title: schedule.title})}
+      />
+      <ScheduleInfo
+        visible={infoVisible}
+        onDismiss={closeInfo}
+        schedule={schedule}
       />
     </>
   );
