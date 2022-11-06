@@ -9,7 +9,7 @@ Free Timetable app for Students
 
 ## Features
 
-- Offline support
+- Offline first
 
 - Repeating events
 
@@ -21,13 +21,13 @@ Free Timetable app for Students
 
 ## Todo
 
-- [ ] Schedule sharing
+- [ ] Sync timetable
 
 - [ ] Event update notification
 
-- [ ] File sharing
+- [ ] Schedule sharing
 
-- [ ] Chatrooms
+- [ ] File sharing
 
 ## Built With
 
