@@ -75,3 +75,9 @@ Contributions, issues, and feature requests are welcome!
 ## Show your support
 
 Give a ⭐️ if you like this project!
+
+## Privacy
+
+### We may ask you for permission to use device features.
+
+Features we may ask for include notifications. These features are used solely for the purpose of improving the app experience, and we make it clear why and when these features are used. We don't use these features for anything other than their intended purpose. If you wish, you can opt out of using these features at any time.
