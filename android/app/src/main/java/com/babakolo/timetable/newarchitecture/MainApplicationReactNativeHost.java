@@ -1,4 +1,4 @@
-package com.timetable.newarchitecture;
+package com.babakolo.timetable.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.timetable.BuildConfig;
-import com.timetable.newarchitecture.components.MainComponentsRegistry;
-import com.timetable.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.babakolo.timetable.BuildConfig;
+import com.babakolo.timetable.newarchitecture.components.MainComponentsRegistry;
+import com.babakolo.timetable.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -2,7 +2,7 @@ import {useTranslation} from 'react-i18next';
 import {StyleSheet, View} from 'react-native';
 import {Text, TouchableRipple} from 'react-native-paper';
 import {EventInput} from '~types';
-import {formatUTCtoLocalTime} from '~utils/date';
+import {formatEventTime} from '~utils/event';
 import {ITEM_HEIGHT} from './constants';
 
 interface Props {
@@ -13,25 +13,15 @@ interface Props {
 
 function AgendaItem({item, onPress, is24Hour}: Props) {
   const {t} = useTranslation();
-  const {title, startTime, endTime} = item;
 
-  let time;
-  const from = startTime && formatUTCtoLocalTime(startTime, is24Hour);
-  const to = endTime && formatUTCtoLocalTime(endTime, is24Hour);
-
-  if (from && to) {
-    time = `${from}-${to}`;
-  } else if (from) {
-    time = from;
-  } else if (to) {
-    time = t('event_ends_at', {time: to});
-  }
+  const timeFormat = formatEventTime(item, is24Hour);
+  const time = timeFormat && t(timeFormat.key, {...timeFormat.options});
 
   return (
     <TouchableRipple disabled={!onPress} onPress={() => onPress?.(item)}>
       <View style={styles.container}>
         <Text variant="titleSmall" numberOfLines={1}>
-          {title}
+          {item.title}
         </Text>
         {!!time && (
           <Text variant="bodySmall" numberOfLines={1}>
