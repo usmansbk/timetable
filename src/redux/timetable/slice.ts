@@ -163,10 +163,8 @@ const timetableSlice = createSlice({
 
       if (event?.scheduleId) {
         const schedule = state.schedules.entities[event.scheduleId];
-        if (schedule) {
-          schedule.events = schedule.events.filter(
-            id => id !== event.scheduleId,
-          );
+        if (schedule?.events) {
+          schedule.events = schedule.events.filter(id => id !== event.id);
         }
       }
 

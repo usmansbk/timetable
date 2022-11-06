@@ -47,6 +47,7 @@ export default function Select({
         error={error}
         optional={optional}
         onPress={() => setOpen(true)}
+        onClear={() => onChange(null)}
       />
       <Portal>
         <Dialog visible={open} onDismiss={() => setOpen(false)}>

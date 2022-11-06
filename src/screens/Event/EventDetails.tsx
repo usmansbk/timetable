@@ -69,7 +69,7 @@ function EventDetails({event, date}: Props) {
   const time = timeFormat && t(timeFormat.key, {...timeFormat.options});
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text variant="headlineMedium">{title}</Text>
       <Text
         variant="headlineMedium"

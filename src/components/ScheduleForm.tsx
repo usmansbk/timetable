@@ -219,7 +219,7 @@ export default function ScheduleForm({
       />
       <EventForm
         autoFocus
-        title={editItem ? t('Copy') : undefined}
+        title={editIndex !== null ? t('Copy') : undefined}
         resetOnSubmit={!editItem}
         visible={addEventVisible || selectedDate !== null}
         onDismiss={closeAddEventForm}
