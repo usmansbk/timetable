@@ -14,5 +14,7 @@
   "1_d": "1 day before",
   "event_starts_at": "{{time}}",
   "event_ends_at": "Ends {{time}}",
-  "event_start_end_time": "{{from}}-{{to}}"
+  "event_start_end_time": "{{from}}-{{to}}",
+  "events_count_one": "{{count}} event",
+  "events_count_other": "{{count}} events"
 }
