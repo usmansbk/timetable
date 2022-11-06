@@ -1,7 +1,11 @@
 import React, {memo} from 'react';
 import {Text, useTheme, TextProps} from 'react-native-paper';
 import {Linking} from 'react-native';
-import isUrl from 'is-url';
+import linkifyIt from 'linkify-it';
+
+const linkify = linkifyIt();
+
+linkify.add('git:', 'http:').add('ftp', null);
 
 interface Props extends Omit<TextProps, 'children'> {
   text: string;
@@ -13,12 +17,14 @@ function HyperlinkedText({text, ...props}: Props) {
   return (
     <Text {...props}>
       {tokens.map((token, index) => {
-        if (isUrl(token)) {
+        if (linkify.test(token)) {
+          const [{url}] = linkify.match(token)!;
+
           return (
             <Text
               {...props}
               key={index}
-              onPress={() => Linking.openURL(token)}
+              onPress={() => Linking.openURL(url)}
               style={{
                 color: colors.tertiary,
                 textDecorationLine: 'underline',
