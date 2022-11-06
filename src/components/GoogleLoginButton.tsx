@@ -3,7 +3,7 @@ import {
   GoogleSigninButton,
 } from '@react-native-google-signin/google-signin';
 import {useCallback, useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, ToastAndroid} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {CLIENT_ID} from '~constants';
 import {useAppDispatch} from '~redux/hooks';
@@ -26,6 +26,7 @@ function GoogleLoginButton() {
       const {user} = await GoogleSignin.signIn();
       dispatch(setCurrentUser(user as User));
     } catch (e) {
+      ToastAndroid.show((e as Error).message, ToastAndroid.SHORT);
       setLoading(false);
     }
   }, []);

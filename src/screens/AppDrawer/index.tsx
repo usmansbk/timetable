@@ -4,14 +4,17 @@ import {
   DrawerContentScrollView,
   DrawerHeaderProps,
 } from '@react-navigation/drawer';
-import {memo} from 'react';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {memo, useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
+import {ToastAndroid} from 'react-native';
 import {Appbar, Drawer as PaperDrawer} from 'react-native-paper';
 import AccountHeader from '~screens/AppDrawer/AccountHeader';
-import {useAppSelector} from '~redux/hooks';
+import {useAppDispatch, useAppSelector} from '~redux/hooks';
 import {selectAllSchedules} from '~redux/timetable/slice';
-import {selectCurrentUser} from '~redux/user/slice';
+import {selectCurrentUser, setCurrentUser} from '~redux/user/slice';
 import {DrawerStackParamList, RootStackScreenProps} from '~types';
+import Confirm from '~components/Confirm';
 import Timetable from '../Timetable';
 
 const Drawer = createDrawerNavigator<DrawerStackParamList>();
@@ -28,8 +31,22 @@ function DrawerNavigationBar({navigation, options}: DrawerHeaderProps) {
 function AppDrawerContent(props: DrawerContentComponentProps) {
   const {t} = useTranslation();
   const {navigation, state} = props;
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const dispatch = useAppDispatch();
   const schedules = useAppSelector(selectAllSchedules);
   const user = useAppSelector(selectCurrentUser);
+
+  const openConfirmLogout = useCallback(() => setConfirmVisible(true), []);
+  const closeConfirmLogout = useCallback(() => setConfirmVisible(false), []);
+
+  const signOut = useCallback(async () => {
+    try {
+      dispatch(setCurrentUser(null));
+      await GoogleSignin.signOut();
+    } catch (e) {
+      ToastAndroid.show((e as Error).message, ToastAndroid.SHORT);
+    }
+  }, []);
 
   return (
     <DrawerContentScrollView {...props}>
@@ -57,6 +74,19 @@ function AppDrawerContent(props: DrawerContentComponentProps) {
         icon="cog-outline"
         label={t('Settings')}
         onPress={() => navigation.navigate('Settings')}
+      />
+      {user && (
+        <PaperDrawer.Item
+          icon="logout-variant"
+          label={t('Log out')}
+          onPress={openConfirmLogout}
+        />
+      )}
+      <Confirm
+        visible={confirmVisible}
+        onDismiss={closeConfirmLogout}
+        title={t('Log out?')}
+        onConfirm={signOut}
       />
     </DrawerContentScrollView>
   );
