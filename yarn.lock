@@ -1349,6 +1349,11 @@
   dependencies:
     invariant "^2.2.4"
 
+"@react-native-google-signin/google-signin@^8.2.0":
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/@react-native-google-signin/google-signin/-/google-signin-8.2.0.tgz#42cd62703c341e22d2f4181bdd35f1907d90bc0d"
+  integrity sha512-O43gUt0UtVNuLcxFvPouIXObJ68eMO8z08j5n/TXnc/nckg6l54p/BsmefaRoby15gIAi96OADB0GAbwaraDFg==
+
 "@react-native/assets@1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@react-native/assets/-/assets-1.0.0.tgz#c6f9bf63d274bafc8e970628de24986b30a55c8e"
