@@ -11,7 +11,7 @@ import {ToastAndroid} from 'react-native';
 import {Appbar, Drawer as PaperDrawer} from 'react-native-paper';
 import AccountHeader from '~screens/AppDrawer/AccountHeader';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
-import {selectAllSchedules} from '~redux/timetable/slice';
+import {clearTimetable, selectAllSchedules} from '~redux/timetable/slice';
 import {selectCurrentUser, setCurrentUser} from '~redux/user/slice';
 import {DrawerStackParamList, RootStackScreenProps} from '~types';
 import Confirm from '~components/Confirm';
@@ -42,6 +42,7 @@ function AppDrawerContent(props: DrawerContentComponentProps) {
   const signOut = useCallback(async () => {
     try {
       dispatch(setCurrentUser(null));
+      dispatch(clearTimetable());
       await GoogleSignin.signOut();
     } catch (e) {
       ToastAndroid.show((e as Error).message, ToastAndroid.SHORT);
