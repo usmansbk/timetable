@@ -16,6 +16,8 @@ interface Props {
   schedule: ScheduleEntity;
 }
 
+type MenuOptionKey = 'edit' | 'delete' | 'duplicate' | 'info';
+
 function ScheduleDetails({schedule}: Props) {
   const {t} = useTranslation();
   const dispatch = useAppDispatch();
@@ -32,8 +34,12 @@ function ScheduleDetails({schedule}: Props) {
   const closeConfirm = useCallback(() => setConfirmVisible(false), []);
   const openConfirm = useCallback(() => setConfirmVisible(true), []);
 
+  const [infoVisible, setInfoVisible] = useState(false);
+  const closeInfo = useCallback(() => setInfoVisible(false), []);
+  const openInfo = useCallback(() => setInfoVisible(true), []);
+
   const handleMenuPress = useCallback(
-    (key: 'edit' | 'delete' | 'duplicate') => () => {
+    (key: MenuOptionKey) => () => {
       closeMenu();
 
       if (key === 'edit') {
@@ -46,6 +52,8 @@ function ScheduleDetails({schedule}: Props) {
         });
       } else if (key === 'delete') {
         openConfirm();
+      } else if (key === 'info') {
+        openInfo();
       }
     },
     [navigation, id],
@@ -85,6 +93,7 @@ function ScheduleDetails({schedule}: Props) {
           title={t('Duplicate')}
         />
         <Menu.Item onPress={handleMenuPress('delete')} title={t('Delete')} />
+        <Menu.Item onPress={handleMenuPress('info')} title={t('Info')} />
       </Menu>
     ),
     [menuVisible, closeConfirm, openMenu, handleMenuPress],
