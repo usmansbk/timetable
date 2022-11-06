@@ -81,3 +81,11 @@ Give a ⭐️ if you like this project!
 ### We may ask you for permission to use device features.
 
 Features we may ask for include notifications. These features are used solely for the purpose of improving the app experience, and we make it clear why and when these features are used. We don't use these features for anything other than their intended purpose. If you wish, you can opt out of using these features at any time.
+
+### Your data may be stored in AWS
+
+We use AWS to sync timetable and settings across devices. This is stored by Amazon and is subject to their privacy policy.
+
+### This policy may be updated at any time.
+
+Continued use of our app will be regarded as acceptance of our practices around privacy and personal information. If you have any questions about how we handle user data and personal information, feel free to contact us.
