@@ -5,13 +5,14 @@ import {
 import {useCallback, useState} from 'react';
 import {StyleSheet, ToastAndroid} from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {CLIENT_ID} from '~constants';
+import {WEB_CLIENT_ID, IOS_CLIENT_ID} from '~constants';
 import {useAppDispatch} from '~redux/hooks';
 import {setCurrentUser} from '~redux/user/slice';
 import {User} from '~types';
 
 GoogleSignin.configure({
-  webClientId: CLIENT_ID,
+  webClientId: WEB_CLIENT_ID,
+  iosClientId: IOS_CLIENT_ID,
 });
 
 function GoogleLoginButton() {
