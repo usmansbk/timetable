@@ -1,6 +1,6 @@
 # Timetable
 
-Free Timetable app for Students
+Free Timetable app for teachers and students. Perfect for school, college, and university.
 
 <p float="left">
 <img src="https://user-images.githubusercontent.com/10219539/200135313-7f91ec04-9624-401f-b86d-624294e0bd3e.png" width="400">
@@ -10,6 +10,8 @@ Free Timetable app for Students
 ## Features
 
 - Offline first
+
+- Multiple schedules
 
 - Repeating events
 
@@ -23,9 +25,11 @@ Free Timetable app for Students
 
 - [ ] Sync timetable
 
+- [ ] Schedule sharing
+
 - [ ] Event update notification
 
-- [ ] Schedule sharing
+- [ ] Today Widget
 
 - [ ] File sharing
 
