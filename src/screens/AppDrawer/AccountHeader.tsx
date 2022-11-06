@@ -1,16 +1,14 @@
 import {memo} from 'react';
-import {useTranslation} from 'react-i18next';
 import {StyleSheet, View} from 'react-native';
-import {Button, Text} from 'react-native-paper';
+import {Text} from 'react-native-paper';
+import GoogleLoginButton from '~components/GoogleLoginButton';
 import UserAvatar from '~components/UserAvatar';
 
 interface Props {}
 
 function AccountHeader({}: Props) {
-  const {t} = useTranslation();
-
-  const user = {fullName: 'Babakolo Usman Suleiman'};
-  const {fullName} = user;
+  const user = null;
+  const fullName = 'Usman';
 
   return (
     <View style={styles.container}>
@@ -20,11 +18,7 @@ function AccountHeader({}: Props) {
           <Text style={styles.name}>{fullName}</Text>
         </View>
       ) : (
-        <View style={styles.button}>
-          <Button mode="contained" uppercase onPress={() => null}>
-            {t('Login')}
-          </Button>
-        </View>
+        <GoogleLoginButton />
       )}
     </View>
   );
@@ -33,9 +27,10 @@ function AccountHeader({}: Props) {
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
   },
   header: {
-    paddingVertical: 16,
     paddingHorizontal: 24,
     alignItems: 'center',
   },
