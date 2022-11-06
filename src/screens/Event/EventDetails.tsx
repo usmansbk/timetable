@@ -35,7 +35,7 @@ function Field({
         {label.toLocaleUpperCase()}
       </Text>
       {hypertext ? (
-        <HyperlinkedText variant="bodyMedium" text={value} />
+        <HyperlinkedText selectable variant="bodyMedium" text={value} />
       ) : (
         <Text
           variant="headlineMedium"
