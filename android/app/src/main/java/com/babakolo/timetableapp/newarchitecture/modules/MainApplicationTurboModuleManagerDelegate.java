@@ -1,4 +1,4 @@
-package com.babakolo.timetable.newarchitecture.modules;
+package com.babakolo.timetableapp.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

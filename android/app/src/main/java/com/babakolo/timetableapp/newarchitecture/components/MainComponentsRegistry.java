@@ -1,4 +1,4 @@
-package com.babakolo.timetable.newarchitecture.components;
+package com.babakolo.timetableapp.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

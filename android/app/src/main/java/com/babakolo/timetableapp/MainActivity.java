@@ -1,4 +1,4 @@
-package com.babakolo.timetable;
+package com.babakolo.timetableapp;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
