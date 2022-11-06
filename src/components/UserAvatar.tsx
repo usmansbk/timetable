@@ -2,7 +2,7 @@ import {Avatar} from 'react-native-paper';
 
 interface Props {
   size?: number;
-  uri?: string;
+  uri?: string | null;
   name?: string;
 }
 

@@ -3,19 +3,19 @@ import {StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import GoogleLoginButton from '~components/GoogleLoginButton';
 import UserAvatar from '~components/UserAvatar';
+import {User} from '~types';
 
-interface Props {}
+interface Props {
+  user: User | null;
+}
 
-function AccountHeader({}: Props) {
-  const user = null;
-  const fullName = 'Usman';
-
+function AccountHeader({user}: Props) {
   return (
     <View style={styles.container}>
       {!!user ? (
         <View style={styles.header}>
-          <UserAvatar />
-          <Text style={styles.name}>{fullName}</Text>
+          <UserAvatar uri={user.photo} name={user.name} />
+          <Text style={styles.name}>{user.name}</Text>
         </View>
       ) : (
         <GoogleLoginButton />

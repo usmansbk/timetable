@@ -2,10 +2,13 @@ import {
   GoogleSignin,
   GoogleSigninButton,
 } from '@react-native-google-signin/google-signin';
-import {useCallback} from 'react';
+import {useCallback, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {CLIENT_ID} from '~constants';
+import {useAppDispatch} from '~redux/hooks';
+import {setCurrentUser} from '~redux/user/slice';
+import {User} from '~types';
 
 GoogleSignin.configure({
   webClientId: CLIENT_ID,
@@ -13,17 +16,23 @@ GoogleSignin.configure({
 
 function GoogleLoginButton() {
   const {dark} = useTheme();
+  const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
 
   const signin = useCallback(async () => {
     try {
+      setLoading(true);
       await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      console.log(userInfo);
-    } catch (e) {}
+      const {user} = await GoogleSignin.signIn();
+      dispatch(setCurrentUser(user as User));
+    } catch (e) {
+      setLoading(false);
+    }
   }, []);
 
   return (
     <GoogleSigninButton
+      disabled={loading}
       onPress={signin}
       style={styles.button}
       color={
