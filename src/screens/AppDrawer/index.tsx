@@ -7,10 +7,11 @@ import {
 import {memo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Appbar, Drawer as PaperDrawer} from 'react-native-paper';
+import AccountHeader from '~screens/AppDrawer/AccountHeader';
 import {useAppSelector} from '~redux/hooks';
 import {selectAllSchedules} from '~redux/timetable/slice';
 import {DrawerStackParamList, RootStackScreenProps} from '~types';
-import Timetable from './Timetable';
+import Timetable from '../Timetable';
 
 const Drawer = createDrawerNavigator<DrawerStackParamList>();
 
@@ -30,23 +31,26 @@ function AppDrawerContent(props: DrawerContentComponentProps) {
 
   return (
     <DrawerContentScrollView {...props}>
-      {state.routes.map(({name, key}, index) => (
-        <PaperDrawer.Item
-          active={index === state.index}
-          key={key}
-          label={name}
-          onPress={() => navigation.navigate(name)}
-          icon="view-day"
-        />
-      ))}
-      {schedules.map(({title, id}) => (
-        <PaperDrawer.Item
-          key={id}
-          label={title}
-          onPress={() => navigation.navigate('Schedule', {id})}
-          icon="view-day-outline"
-        />
-      ))}
+      <AccountHeader />
+      <PaperDrawer.Section>
+        {state.routes.map(({name, key}, index) => (
+          <PaperDrawer.Item
+            active={index === state.index}
+            key={key}
+            label={name}
+            onPress={() => navigation.navigate(name)}
+            icon="view-day"
+          />
+        ))}
+        {schedules.map(({title, id}) => (
+          <PaperDrawer.Item
+            key={id}
+            label={title}
+            onPress={() => navigation.navigate('Schedule', {id})}
+            icon="view-day-outline"
+          />
+        ))}
+      </PaperDrawer.Section>
       <PaperDrawer.Item
         icon="cog-outline"
         label={t('Settings')}
