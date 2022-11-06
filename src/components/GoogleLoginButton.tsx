@@ -1,10 +1,8 @@
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-} from '@react-native-google-signin/google-signin';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useCallback, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import {StyleSheet, ToastAndroid} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import {Button} from 'react-native-paper';
 import {WEB_CLIENT_ID, IOS_CLIENT_ID} from '~constants';
 import {useAppDispatch} from '~redux/hooks';
 import {setCurrentUser} from '~redux/user/slice';
@@ -16,7 +14,7 @@ GoogleSignin.configure({
 });
 
 function GoogleLoginButton() {
-  const {dark} = useTheme();
+  const {t} = useTranslation();
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
 
@@ -33,14 +31,9 @@ function GoogleLoginButton() {
   }, []);
 
   return (
-    <GoogleSigninButton
-      disabled={loading}
-      onPress={signin}
-      style={styles.button}
-      color={
-        dark ? GoogleSigninButton.Color.Dark : GoogleSigninButton.Color.Light
-      }
-    />
+    <Button disabled={loading} loading={loading} onPress={signin}>
+      {t('Login with Google')}
+    </Button>
   );
 }
 
