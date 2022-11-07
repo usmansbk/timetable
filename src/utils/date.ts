@@ -22,20 +22,16 @@ export function formatCurrentDate() {
   return dayjs().startOf('day').format();
 }
 
-export function formatLocalDate(date: DateType, format = 'ddd, DD MMM YYYY') {
-  return dayjs(date).format(format);
-}
-
 export function formatDate(date: Date) {
   return dayjs(date).format();
 }
 
-export function formatDateToTime(date: Date) {
-  return dayjs(date).format(TIME_FORMAT);
-}
-
 export function formatTime(time: string, is24Hour = false) {
   return is24Hour ? time : dayjs(time, TIME_FORMAT).format('hh:mm A');
+}
+
+export function formatDateToTime(date: Date) {
+  return dayjs(date).format(TIME_FORMAT);
 }
 
 export function formatFromDate(source: Dayjs, compared: Dayjs) {
@@ -46,7 +42,7 @@ export function formatUTCToLocalDate(date: DateType) {
   return dayjs.utc(date).local().format();
 }
 
-export function formatCalendarDate(date: string) {
+export function formatCalendarDate(date: DateType) {
   return dayjs(date).calendar(null, {
     sameDay: '[Today], dddd, D MMMM',
     nextDay: '[Tomorrow], dddd, D MMMM',
@@ -92,12 +88,12 @@ export function currentUTCDateTime() {
   return dayjs.utc().toDate();
 }
 
-export function nextUTCDate(date: DateType) {
-  return dayjs.utc(date).add(1, 'day').toDate();
+export function nextUTCDate(after: DateType) {
+  return dayjs.utc(after).add(1, 'day').toDate();
 }
 
-export function previousUTCDate(date: DateType) {
-  return dayjs.utc(date).subtract(1, 'day').toDate();
+export function previousUTCDate(before: DateType) {
+  return dayjs.utc(before).subtract(1, 'day').toDate();
 }
 
 export default dayjs;
