@@ -53,6 +53,10 @@ export function formatCalendarDate(date: DateType) {
   });
 }
 
+export function formatDay(day: number) {
+  return dayjs().day(day).format('dddd');
+}
+
 export function parseDate(date: string) {
   return dayjs(date).toDate();
 }
