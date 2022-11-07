@@ -206,6 +206,11 @@ const timetableSlice = createSlice({
         };
       },
     },
+    clearTimetable(state) {
+      schedulesAdapter.removeAll(state.schedules);
+      remindersAdapter.removeAll(state.reminders);
+      eventsAdapter.removeAll(state.events);
+    },
   },
 });
 
@@ -219,6 +224,7 @@ export const {
   updateSchedule,
   removeSchedule,
   setReminder,
+  clearTimetable,
 } = actions;
 
 export const {

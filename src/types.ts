@@ -89,3 +89,10 @@ export interface FieldError<T> {
   name: keyof T;
   message: string;
 }
+
+export interface User {
+  id: string;
+  name: string;
+  photo?: string | null;
+  email: string;
+}
