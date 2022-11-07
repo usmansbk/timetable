@@ -1,5 +1,5 @@
 import {Recurrence} from '~types';
-import {parseUTCdate} from './date';
+import {parseDateToUTC} from './date';
 import {createDateRule} from './event';
 
 export function validateRecurrence(repeat: Recurrence | null, ctx: any) {
@@ -9,6 +9,6 @@ export function validateRecurrence(repeat: Recurrence | null, ctx: any) {
 
   const {startDate} = ctx.parent;
   const rule = createDateRule({startDate, repeat});
-  const next = rule?.after(parseUTCdate(startDate));
+  const next = rule?.after(parseDateToUTC(startDate));
   return !!next;
 }
