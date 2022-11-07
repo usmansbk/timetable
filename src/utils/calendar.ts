@@ -1,6 +1,11 @@
 import {RRuleSet} from 'rrule';
 import {EventInput} from '~types';
-import dayjs, {formatUTCDate, parseUTCdate} from './date';
+import dayjs, {
+  formatUTCToLocalDate,
+  nextUTCDate,
+  parseDateToUTC,
+  previousUTCDate,
+} from './date';
 import {createDateRule} from './event';
 
 export type AgendaItemT = string | EventInput;
@@ -11,15 +16,19 @@ interface CalendarOptions {
   selectedDate: string;
 }
 
+interface DateRulesOptions extends Omit<CalendarOptions, 'selectedDate'> {
+  initialDate: Date;
+}
+
 function createDateRules(
   items: EventInput[],
-  {startOfWeek, selectedDate}: CalendarOptions,
+  {startOfWeek, initialDate}: DateRulesOptions,
 ) {
   const rules = new RRuleSet();
 
   rules.rrule(
     createDateRule({
-      startDate: parseUTCdate(selectedDate),
+      startDate: initialDate,
       startOfWeek,
     }),
   );
@@ -83,30 +92,23 @@ export default function* calendarGenerator(
 
   const {startOfWeek, past, selectedDate} = options;
 
-  const rules = createDateRules(items, options);
+  const initialDate = parseDateToUTC(selectedDate);
 
-  const initialDate = parseUTCdate(selectedDate);
+  const rules = createDateRules(items, {startOfWeek, past, initialDate});
 
   let date = past
     ? rules.before(initialDate, true)
     : rules.after(initialDate, true);
 
   while (date) {
-    const title = formatUTCDate(date);
+    const title = formatUTCToLocalDate(date);
     const events = getEventsByDate({items, date, startOfWeek});
     const data = events.map(event => ({...event, startDate: title}));
     yield past ? [...data, title] : [title, ...data];
 
     const nextDate = past ? rules.before(date) : rules.after(date);
 
-    if (nextDate) {
-      date = nextDate;
-    } else {
-      const day = dayjs.utc(date);
-      date = past
-        ? day.subtract(1, 'day').toDate()
-        : day.add(1, 'day').toDate();
-    }
+    date = nextDate || (past ? previousUTCDate(date) : nextUTCDate(date));
   }
 
   return null as never;

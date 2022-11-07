@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1088331457064",
+    "project_id": "babakolo-timetableapp",
+    "storage_bucket": "babakolo-timetableapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1088331457064:android:9e3b569cf2c12a9e430b1d",
+        "android_client_info": {
+          "package_name": "com.babakolo.timetableapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1088331457064-0b809o2f7rk69dq0rfrqis8tcl5g8rbb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.babakolo.timetableapp",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "1088331457064-9qs5krufnh3vsar7bscoamks7dj49336.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.babakolo.timetableapp",
+            "certificate_hash": "a38fa4bff9dfb804fdde613b4e4e423bea2690a5"
+          }
+        },
+        {
+          "client_id": "1088331457064-mupoi62nr21501kmhfi1mhjfnqt23vtr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfTaGyl-sWYwPXiIa5F4DD7Q8HWXkb28M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1088331457064-mupoi62nr21501kmhfi1mhjfnqt23vtr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

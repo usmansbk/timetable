@@ -13,7 +13,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {useTranslation} from 'react-i18next';
 import * as yup from 'yup';
 import {EventInput} from '~types';
-import {formatDateToUTC} from '~utils/date';
+import {formatCurrentDate} from '~utils/date';
 import {validateRecurrence} from '~utils/validators';
 import {useAppSelector} from '~redux/hooks';
 import {selectIs24HourTimeFormat} from '~redux/settings/slice';
@@ -103,7 +103,7 @@ function EventForm({
       Object.assign(
         {
           title: '',
-          startDate: formatDateToUTC(new Date()),
+          startDate: formatCurrentDate(),
           startTime: null,
           endTime: null,
           scheduleId: null,

@@ -1,4 +1,4 @@
-import {memo} from 'react';
+import {memo, useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {
@@ -23,6 +23,8 @@ function ScheduleInfo({visible, onDismiss, schedule}: Props) {
   const {t} = useTranslation();
   const {title, events} = schedule;
 
+  const handleShare = useCallback(() => {}, []);
+
   return (
     <Portal>
       <Modal
@@ -36,6 +38,8 @@ function ScheduleInfo({visible, onDismiss, schedule}: Props) {
         ]}>
         <Appbar.Header elevated>
           <Appbar.Action icon="close" onPress={onDismiss} />
+          <Appbar.Content title="" />
+          <Appbar.Action icon="share-variant-outline" onPress={handleShare} />
         </Appbar.Header>
         <ScrollView contentContainerStyle={styles.contentContainer}>
           <View style={[styles.heading, styles.content]}>

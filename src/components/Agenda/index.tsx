@@ -2,7 +2,7 @@ import React, {memo, useCallback, useRef, useState} from 'react';
 import {InteractionManager, StyleSheet, View} from 'react-native';
 import {Appbar} from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {formatDateToUTC, parseUTCtoLocalDate} from '~utils/date';
+import {formatCurrentDate, formatDate, parseDate} from '~utils/date';
 import {EventInput} from '~types';
 import AgendaList, {AgendaListHandle} from './AgendaList';
 
@@ -22,14 +22,14 @@ function Agenda<T extends EventInput>({
   renderLeft,
 }: Props<T>) {
   const ref = useRef<AgendaListHandle>(null);
-  const [selectedDate, setSelectedDate] = useState(formatDateToUTC());
+  const [selectedDate, setSelectedDate] = useState(formatCurrentDate());
   const [openDatePicker, setOpenDatePicker] = useState(false);
 
   const openCalendar = useCallback(() => setOpenDatePicker(true), []);
 
   const scrollToTop = useCallback(() => {
     ref.current?.resetMode();
-    setSelectedDate(formatDateToUTC());
+    setSelectedDate(formatCurrentDate());
     InteractionManager.runAfterInteractions(ref.current?.scrollToTop);
   }, []);
 
@@ -58,11 +58,11 @@ function Agenda<T extends EventInput>({
       />
       {openDatePicker && (
         <DateTimePicker
-          value={parseUTCtoLocalDate(selectedDate)}
+          value={parseDate(selectedDate)}
           onChange={(e, date) => {
             setOpenDatePicker(false);
             if (e.type === 'set' && date) {
-              setSelectedDate(formatDateToUTC(date));
+              setSelectedDate(formatDate(date));
             }
           }}
         />

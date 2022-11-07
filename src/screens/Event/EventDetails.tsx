@@ -7,7 +7,7 @@ import {useAppSelector} from '~redux/hooks';
 import {selectIs24HourTimeFormat} from '~redux/settings/slice';
 import {selectScheduleById} from '~redux/timetable/slice';
 import {EventInput} from '~types';
-import {formatUTCtoLocalDate} from '~utils/date';
+import {formatCalendarDate} from '~utils/date';
 import {
   formatEventTime,
   formatRecurrence,
@@ -74,7 +74,7 @@ function EventDetails({event, date}: Props) {
       <Text
         variant="headlineMedium"
         style={[styles.text1, {color: colors.onSurfaceVariant}]}>
-        {formatUTCtoLocalDate(startDate)}
+        {formatCalendarDate(startDate)}
       </Text>
       {!!time && (
         <Text
