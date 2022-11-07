@@ -5,14 +5,15 @@ import omit from 'lodash.omit';
 import {Platform} from 'react-native';
 import Notification, {CHANNEL_ID} from '~config/notifications';
 import {EventInput, Recurrence, Reminder, ReminderKey} from '~types';
-import dayjs, {
-  setUTCDateTime,
-  currentUTCTime,
-  parseUTCtoLocalDate,
+import {
+  currentUTCDateTime,
+  ONE_YEAR,
+  formatFromDate,
+  parseUTCToLocalDate,
+  parseFullDay,
 } from './date';
 import {createDateRule} from './event';
 
-const ONE_YEAR = dayjs.duration(1, 'year').asMilliseconds();
 const REPEAT_INTERVAL = 1;
 
 interface ScheduleNotificationOptions {
@@ -47,7 +48,7 @@ function scheduleNotification(
 ) {
   const {id, title, startDate, repeat, startTime} = event;
 
-  const startAt = setUTCDateTime(startDate, startTime);
+  const startAt = parseFullDay(startDate, startTime);
 
   Object.keys(reminder).forEach(key => {
     const reminderKey = key as ReminderKey;
@@ -61,11 +62,11 @@ function scheduleNotification(
       );
 
       const rule = createDateRule({startDate: remindAt, repeat});
-      const fireDate = rule?.after(currentUTCTime(), true);
+      const fireDate = rule?.after(currentUTCDateTime(), true);
 
       if (fireDate) {
-        const date = parseUTCtoLocalDate(fireDate);
-        const message = dayjs(startAt).from(remindAt);
+        const date = parseUTCToLocalDate(fireDate);
+        const message = formatFromDate(startAt, remindAt);
 
         const repeatType = repeat?.freq && (getRepeatType(repeat.freq) as any);
 

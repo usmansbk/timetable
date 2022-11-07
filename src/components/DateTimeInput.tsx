@@ -1,12 +1,12 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {memo, useState} from 'react';
 import {
-  formatUTCtoLocalDate,
-  formatUTCtoLocalTime,
-  formatDateToUTC,
-  formatTimeToUTC,
-  parseUTCtoLocalDate,
-  parseUTCtoLocalTime,
+  formatLocalDate,
+  formatTime,
+  parseDate,
+  parseTime,
+  formatDate,
+  formatDateToTime,
 } from '~utils/date';
 import PickerInput from './PickerInput';
 
@@ -36,11 +36,8 @@ function DateTimeInput({
 
   if (value) {
     formattedValue =
-      mode === 'date'
-        ? formatUTCtoLocalDate(value)
-        : formatUTCtoLocalTime(value, is24Hour);
-    parsedValue =
-      mode === 'date' ? parseUTCtoLocalDate(value) : parseUTCtoLocalTime(value);
+      mode === 'date' ? formatLocalDate(value) : formatTime(value, is24Hour);
+    parsedValue = mode === 'date' ? parseDate(value) : parseTime(value);
   } else {
     formattedValue = '';
     parsedValue = new Date();
@@ -66,7 +63,7 @@ function DateTimeInput({
             setOpen(false);
             if (e.type === 'set' && date) {
               onChange(
-                mode === 'date' ? formatDateToUTC(date) : formatTimeToUTC(date),
+                mode === 'date' ? formatDate(date) : formatDateToTime(date),
               );
             }
           }}

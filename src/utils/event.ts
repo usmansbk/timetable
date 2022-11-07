@@ -4,16 +4,16 @@ import {Language} from 'rrule/dist/esm/nlp/i18n';
 import {EventInput, Recurrence} from '~types';
 import {
   currentUTCDate,
-  parseUTCdate,
   DateType,
-  formatUTCtoLocalTime,
+  formatTime,
+  parseDateToUTC,
 } from '~utils/date';
 
 export function formatRecurrence(input: Recurrence, lng?: Language) {
   const {freq, until} = input;
   const rule = new RRule({
     freq: RRule[freq],
-    until: until ? parseUTCdate(until) : null,
+    until: until ? parseDateToUTC(until) : null,
   });
 
   return capitalize(rule.toText(undefined, lng));
@@ -28,7 +28,7 @@ export function createDateRule({
   repeat?: Recurrence | null;
   startOfWeek?: number;
 }) {
-  const dtstart = parseUTCdate(startDate);
+  const dtstart = parseDateToUTC(startDate);
   if (!repeat) {
     return new RRule({
       dtstart,
@@ -43,7 +43,7 @@ export function createDateRule({
   return new RRule({
     dtstart,
     freq: Frequency[freq],
-    until: until ? parseUTCdate(until) : null,
+    until: until ? parseDateToUTC(until) : null,
     wkst: startOfWeek,
   });
 }
@@ -52,7 +52,7 @@ export function getNextEventDate(event: EventInput, after?: string) {
   const {startDate, repeat} = event;
   const rule = createDateRule({startDate, repeat});
 
-  return rule.after(after ? parseUTCdate(after) : currentUTCDate(), true);
+  return rule.after(after ? parseDateToUTC(after) : currentUTCDate(), true);
 }
 
 export function formatEventTime(event: EventInput, is24Hour?: boolean) {
@@ -62,8 +62,8 @@ export function formatEventTime(event: EventInput, is24Hour?: boolean) {
     return;
   }
 
-  const from = startTime && formatUTCtoLocalTime(startTime, is24Hour);
-  const to = endTime && formatUTCtoLocalTime(endTime, is24Hour);
+  const from = startTime && formatTime(startTime, is24Hour);
+  const to = endTime && formatTime(endTime, is24Hour);
 
   if (from && to) {
     return {

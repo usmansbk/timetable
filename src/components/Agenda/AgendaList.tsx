@@ -20,7 +20,7 @@ import {
   InteractionManager,
 } from 'react-native';
 import EmptyState from '~components/EmptyState';
-import {formatDateToUTC} from '~utils/date';
+import {formatCurrentDate} from '~utils/date';
 import calendarGenerator, {AgendaItemT} from '~utils/calendar';
 import {useAppSelector} from '~redux/hooks';
 import {
@@ -65,7 +65,7 @@ function AgendaList<T extends EventInput>(
     onRefresh,
     onScroll,
     refreshing = false,
-    selectedDate = formatDateToUTC(),
+    selectedDate = formatCurrentDate(),
   }: Props<T>,
   forwardedRef: ForwardedRef<AgendaListHandle>,
 ) {
