@@ -13,7 +13,7 @@ dayjs.extend(calendar);
 
 export const DAYS_OF_WEEK = [0, 1, 2, 3, 4, 5, 6]; // sun - sat
 
-const TIME_FORMAT = 'HH:mm';
+const TIME_FORMAT = 'HH:mmZ';
 
 export type DateType = string | Date | Dayjs;
 export const ONE_YEAR = dayjs.duration(1, 'year').asMilliseconds();
@@ -27,7 +27,7 @@ export function formatDate(date: Date) {
 }
 
 export function formatTime(time: string, is24Hour = false) {
-  return is24Hour ? time : dayjs(time, TIME_FORMAT).format('hh:mm A');
+  return dayjs(time, TIME_FORMAT).format(is24Hour ? 'HH:mm' : 'hh:mm A');
 }
 
 export function formatDateToTime(date: Date) {
