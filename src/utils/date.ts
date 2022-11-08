@@ -108,4 +108,10 @@ export function addMinutes(time: string, minutes: number) {
   return dayjs(time, TIME_FORMAT).add(minutes, 'minutes').format(TIME_FORMAT);
 }
 
+export function roundUpCurrentTime() {
+  const currenTime = dayjs();
+  const roundUp = Math.ceil(currenTime.minute() / 15) * 15;
+  return currenTime.minute(roundUp).format(TIME_FORMAT);
+}
+
 export default dayjs;

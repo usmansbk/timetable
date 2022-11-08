@@ -13,7 +13,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {useTranslation} from 'react-i18next';
 import * as yup from 'yup';
 import {EventInput} from '~types';
-import {addMinutes, formatCurrentDate, formatCurrentTime} from '~utils/date';
+import {addMinutes, formatCurrentDate, roundUpCurrentTime} from '~utils/date';
 import {validateRecurrence} from '~utils/validators';
 import {useAppSelector} from '~redux/hooks';
 import {
@@ -103,7 +103,7 @@ function EventForm({
   });
 
   const handleReset = useCallback(() => {
-    const startTime = formatCurrentTime();
+    const startTime = roundUpCurrentTime();
     reset(
       Object.assign(
         {
