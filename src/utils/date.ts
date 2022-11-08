@@ -22,6 +22,10 @@ export function formatCurrentDate() {
   return dayjs().startOf('day').format();
 }
 
+export function formatCurrentTime() {
+  return dayjs().format(TIME_FORMAT);
+}
+
 export function formatDate(date: Date) {
   return dayjs(date).format();
 }
@@ -98,6 +102,10 @@ export function nextUTCDate(after: DateType) {
 
 export function previousUTCDate(before: DateType) {
   return dayjs.utc(before).subtract(1, 'day').toDate();
+}
+
+export function addMinutes(time: string, minutes: number) {
+  return dayjs(time, TIME_FORMAT).add(minutes, 'minutes').format(TIME_FORMAT);
 }
 
 export default dayjs;
