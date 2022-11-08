@@ -124,4 +124,11 @@ export function roundUpCurrentDate(interval = 15) {
     .format();
 }
 
+export function getDuration(start: string, end: string) {
+  const startAt = dayjs(start, TIME_FORMAT);
+  const endAt = dayjs(end, TIME_FORMAT);
+
+  return Math.abs(endAt.diff(startAt, 'minutes'));
+}
+
 export default dayjs;

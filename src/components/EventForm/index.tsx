@@ -13,7 +13,12 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {useTranslation} from 'react-i18next';
 import * as yup from 'yup';
 import {EventInput} from '~types';
-import {addMinutes, roundUpCurrentDate, roundUpCurrentTime} from '~utils/date';
+import {
+  addMinutes,
+  getDuration,
+  roundUpCurrentDate,
+  roundUpCurrentTime,
+} from '~utils/date';
 import {validateRecurrence} from '~utils/validators';
 import {useAppSelector} from '~redux/hooks';
 import {
@@ -97,6 +102,8 @@ function EventForm({
     control,
     handleSubmit,
     formState: {errors, touchedFields},
+    setValue,
+    getValues,
     reset,
   } = useForm<EventInput>({
     resolver: yupResolver(schema),
@@ -199,7 +206,21 @@ function EventForm({
                   <DateTimeInput
                     optional
                     label={t('From')}
-                    onChange={onChange}
+                    onChange={newValue => {
+                      if (newValue) {
+                        const {startTime, endTime} = getValues();
+                        if (startTime && endTime) {
+                          const duration = getDuration(startTime, endTime);
+                          const adjustedEndTime = addMinutes(
+                            newValue,
+                            duration,
+                          );
+                          setValue('endTime', adjustedEndTime);
+                        }
+                      }
+
+                      onChange(newValue);
+                    }}
                     value={value}
                     mode="time"
                     error={!!errors.startTime}
