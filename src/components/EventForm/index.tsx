@@ -13,7 +13,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {useTranslation} from 'react-i18next';
 import * as yup from 'yup';
 import {EventInput} from '~types';
-import {addMinutes, formatCurrentDate, roundUpCurrentTime} from '~utils/date';
+import {addMinutes, roundUpCurrentDate, roundUpCurrentTime} from '~utils/date';
 import {validateRecurrence} from '~utils/validators';
 import {useAppSelector} from '~redux/hooks';
 import {
@@ -108,7 +108,7 @@ function EventForm({
       Object.assign(
         {
           title: '',
-          startDate: formatCurrentDate(),
+          startDate: roundUpCurrentDate(),
           startTime,
           endTime: addMinutes(startTime, defaultEventDuration),
           scheduleId: null,
