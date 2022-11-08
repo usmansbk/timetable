@@ -17,5 +17,6 @@
   "event_start_end_time": "{{from}}-{{to}}",
   "events_count_zero": "No events",
   "events_count_one": "{{count}} event",
-  "events_count_other": "{{count}} events"
+  "events_count_other": "{{count}} events",
+  "duration": "{{minutes}} minutes"
 }

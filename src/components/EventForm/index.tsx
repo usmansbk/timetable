@@ -13,10 +13,13 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {useTranslation} from 'react-i18next';
 import * as yup from 'yup';
 import {EventInput} from '~types';
-import {formatCurrentDate} from '~utils/date';
+import {addMinutes, formatCurrentDate, roundUpCurrentTime} from '~utils/date';
 import {validateRecurrence} from '~utils/validators';
 import {useAppSelector} from '~redux/hooks';
-import {selectIs24HourTimeFormat} from '~redux/settings/slice';
+import {
+  selectDefaultEventDuration,
+  selectIs24HourTimeFormat,
+} from '~redux/settings/slice';
 import DateTimeInput from '../DateTimeInput';
 import Confirm from '../Confirm';
 import Select, {SelectOption} from '../Select';
@@ -55,6 +58,7 @@ function EventForm({
   const closeConfirm = useCallback(() => setConfirmVisible(false), []);
 
   const is24Hour = useAppSelector(selectIs24HourTimeFormat);
+  const defaultEventDuration = useAppSelector(selectDefaultEventDuration);
 
   const schema = useMemo(
     () =>
@@ -99,13 +103,14 @@ function EventForm({
   });
 
   const handleReset = useCallback(() => {
+    const startTime = roundUpCurrentTime();
     reset(
       Object.assign(
         {
           title: '',
           startDate: formatCurrentDate(),
-          startTime: null,
-          endTime: null,
+          startTime,
+          endTime: addMinutes(startTime, defaultEventDuration),
           scheduleId: null,
           repeat: null,
           description: null,
@@ -113,7 +118,7 @@ function EventForm({
         defaultValues,
       ),
     );
-  }, [reset, defaultValues]);
+  }, [reset, defaultValues, defaultEventDuration]);
 
   const _onSubmit = handleSubmit(values => {
     onSubmit(schema.cast(values, {stripUnknown: true}));
