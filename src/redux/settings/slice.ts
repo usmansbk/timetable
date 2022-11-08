@@ -11,6 +11,7 @@ interface State {
   is24Hour: boolean;
   vibrate: boolean;
   defaultReminders: Reminder;
+  defaultEventDurationInMinutes: number;
 }
 
 const initialState: State = {
@@ -20,6 +21,7 @@ const initialState: State = {
   vibrate: true,
   defaultReminders: DEFAULT_REMINDERS,
   is24Hour: true,
+  defaultEventDurationInMinutes: 60,
 };
 
 const settingsSlice = createSlice({
@@ -31,6 +33,9 @@ const settingsSlice = createSlice({
     },
     setStartOfWeek(state, action: PayloadAction<number>) {
       state.startOfWeek = action.payload;
+    },
+    setDefaultEventDuration(state, action: PayloadAction<number>) {
+      state.defaultEventDurationInMinutes = action.payload;
     },
     toggleDefaultReminder(state, action: PayloadAction<ReminderKey>) {
       state.defaultReminders[action.payload] =
@@ -57,6 +62,7 @@ export const {
   toggleNotificationSound,
   toggleNotificationVibration,
   toggle24HourTimeFormat,
+  setDefaultEventDuration,
 } = actions;
 
 export const selectAppTheme = (state: RootState) => state.settings.theme;
@@ -70,5 +76,7 @@ export const selectNotificationVibration = (state: RootState) =>
   state.settings.vibrate;
 export const selectIs24HourTimeFormat = (state: RootState) =>
   state.settings.is24Hour;
+export const selectDefaultEventDuration = (state: RootState) =>
+  state.settings.defaultEventDurationInMinutes;
 
 export default reducer;

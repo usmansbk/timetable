@@ -7,6 +7,7 @@ import {formatDay} from '~utils/date';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
 import {
   selectAppTheme,
+  selectDefaultEventDuration,
   selectIs24HourTimeFormat,
   selectNotificationSound,
   selectNotificationVibration,
@@ -20,6 +21,7 @@ import {APP_VERSION, SUPPORT_EMAIL} from '~constants';
 import ThemePicker from './ThemePicker';
 import DayPicker from './DayPicker';
 import DefaultReminders from './DefaultReminders';
+import DurationPicker from './DurationPicker';
 
 export default function Settings({}: RootStackScreenProps<'Settings'>) {
   const {t} = useTranslation();
@@ -29,10 +31,12 @@ export default function Settings({}: RootStackScreenProps<'Settings'>) {
   const playSound = useAppSelector(selectNotificationSound);
   const vibrate = useAppSelector(selectNotificationVibration);
   const is24Hour = useAppSelector(selectIs24HourTimeFormat);
+  const defaultEventDuration = useAppSelector(selectDefaultEventDuration);
 
   const [themePickerVisible, setThemePickerVisible] = useState(false);
   const [dayPickerVisible, setDayPickerVisible] = useState(false);
   const [reminderVisible, setReminderVisible] = useState(false);
+  const [durationVisible, setDurationVisible] = useState(false);
 
   const openThemePicker = useCallback(() => setThemePickerVisible(true), []);
   const closeThemePicker = useCallback(() => setThemePickerVisible(false), []);
@@ -42,6 +46,9 @@ export default function Settings({}: RootStackScreenProps<'Settings'>) {
 
   const openReminderPicker = useCallback(() => setReminderVisible(true), []);
   const closeReminderPicker = useCallback(() => setReminderVisible(false), []);
+
+  const openDurationPicker = useCallback(() => setDurationVisible(true), []);
+  const closeDurationPicker = useCallback(() => setDurationVisible(false), []);
 
   const sendEmailToSupport = useCallback(() => {
     Linking.openURL(
@@ -73,6 +80,11 @@ export default function Settings({}: RootStackScreenProps<'Settings'>) {
           title={t('Start of the week')}
           description={formatDay(startOfWeek)}
           onPress={openDayPicker}
+        />
+        <List.Item
+          title={t('Default event duration')}
+          description={t('duration', {minutes: defaultEventDuration})}
+          onPress={openDurationPicker}
         />
         <List.Item
           title={t('24-hour time')}
@@ -121,6 +133,10 @@ export default function Settings({}: RootStackScreenProps<'Settings'>) {
       <DefaultReminders
         visible={reminderVisible}
         onDismiss={closeReminderPicker}
+      />
+      <DurationPicker
+        visible={durationVisible}
+        onDismiss={closeDurationPicker}
       />
     </ScrollView>
   );
