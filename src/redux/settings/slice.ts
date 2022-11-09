@@ -50,6 +50,9 @@ const settingsSlice = createSlice({
     toggle24HourTimeFormat(state) {
       state.is24Hour = !state.is24Hour;
     },
+    resetSettings() {
+      return initialState;
+    },
   },
 });
 
@@ -63,6 +66,7 @@ export const {
   toggleNotificationVibration,
   toggle24HourTimeFormat,
   setDefaultEventDuration,
+  resetSettings,
 } = actions;
 
 export const selectAppTheme = (state: RootState) => state.settings.theme;
