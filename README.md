@@ -7,6 +7,10 @@ Free Timetable app for teachers and students. Perfect for school, college, and u
 <img src="https://user-images.githubusercontent.com/10219539/200135318-f865b045-2974-4267-ae5c-cec33b4ce0bb.png" width="400">
 </p>
 
+## Download
+
+- [APK](https://docs.google.com/uc?export=download&id=1wWZW7JngvYLaclYv3mD6aFP8e4YEWiaZ)
+
 ## Features
 
 - Offline first
