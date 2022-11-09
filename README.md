@@ -9,6 +9,8 @@ Free Timetable app for teachers and students. Perfect for school, college, and u
 
 ## Download
 
+Links will be replaced with Play Store open test link once reviewed
+
 - [APK ARM64 v8a](https://drive.google.com/file/d/1wWZW7JngvYLaclYv3mD6aFP8e4YEWiaZ/view?usp=share_link)
 - [APK x86](https://drive.google.com/file/d/1Bya4v5Uy7147CTM37ob9Iz0qo3imBTlU/view?usp=sharing)
 - [APK X86_64](https://drive.google.com/file/d/1LICZfOTW-G8UZFL3K7scW7jZUyRP_9BC/view?usp=sharing)
