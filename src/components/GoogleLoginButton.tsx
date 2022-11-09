@@ -1,7 +1,7 @@
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {StyleSheet, ToastAndroid} from 'react-native';
+import {ToastAndroid} from 'react-native';
 import {Button} from 'react-native-paper';
 import {WEB_CLIENT_ID, IOS_CLIENT_ID} from '~constants';
 import {useAppDispatch} from '~redux/hooks';
@@ -37,11 +37,5 @@ function GoogleLoginButton() {
     </Button>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    height: 48,
-  },
-});
 
 export default GoogleLoginButton;
