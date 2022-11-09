@@ -5,7 +5,7 @@ import {Button, Checkbox, Dialog, Portal} from 'react-native-paper';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useAppDispatch} from '~redux/hooks';
 import {clearTimetable} from '~redux/timetable/slice';
-import {setCurrentUser} from '~redux/users/slice';
+import {resetUserState} from '~redux/users/slice';
 import {resetSettings} from '~redux/settings/slice';
 
 interface Props {
@@ -25,7 +25,7 @@ function LogoutConfirm({visible, onDismiss}: Props) {
   const signOut = useCallback(async () => {
     onDismiss();
     try {
-      dispatch(setCurrentUser(null));
+      dispatch(resetUserState());
       if (status === 'checked') {
         dispatch(clearTimetable());
         dispatch(resetSettings());
