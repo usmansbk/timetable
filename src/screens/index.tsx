@@ -49,8 +49,8 @@ export default function Screens() {
     <SafeAreaView
       style={[styles.container, {backgroundColor: colors.background}]}>
       <StatusBar
-        backgroundColor={colors.primary}
-        barStyle={dark ? 'dark-content' : 'light-content'}
+        backgroundColor={colors.background}
+        barStyle={dark ? 'light-content' : 'dark-content'}
       />
       <Stack.Navigator
         initialRouteName="AppDrawer"
