@@ -9,12 +9,7 @@ Free Timetable app for teachers and students. Perfect for school, college, and u
 
 ## Download
 
-Links will be replaced with Play Store open test link once reviewed
-
-- [APK ARM64 v8a](https://drive.google.com/file/d/1wWZW7JngvYLaclYv3mD6aFP8e4YEWiaZ/view?usp=share_link)
-- [APK x86](https://drive.google.com/file/d/1Bya4v5Uy7147CTM37ob9Iz0qo3imBTlU/view?usp=sharing)
-- [APK X86_64](https://drive.google.com/file/d/1LICZfOTW-G8UZFL3K7scW7jZUyRP_9BC/view?usp=sharing)
-- [APK armeabi v7a](https://drive.google.com/file/d/1JfHMSVv5GjMT_V_Ht_nQRyQBcAcD34mE/view?usp=sharing)
+<a href='https://play.google.com/store/apps/details?id=com.babakolo.timetableapp&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 
 ## Features
 
