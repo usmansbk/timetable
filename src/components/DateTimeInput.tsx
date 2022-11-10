@@ -1,5 +1,7 @@
-import DateTimePicker from '@react-native-community/datetimepicker';
-import {memo, useState} from 'react';
+import {memo, useCallback, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {DatePickerModal, TimePickerModal} from 'react-native-paper-dates';
+import type {SingleChange} from 'react-native-paper-dates/lib/typescript/Date/Calendar';
 import {
   formatTime,
   parseDate,
@@ -29,6 +31,7 @@ function DateTimeInput({
   error,
   is24Hour,
 }: Props) {
+  const {i18n} = useTranslation();
   const [open, setOpen] = useState(false);
 
   let formattedValue;
@@ -43,29 +46,54 @@ function DateTimeInput({
     parsedValue = new Date();
   }
 
+  const openPicker = useCallback(() => setOpen(false), []);
+  const closePicker = useCallback(() => setOpen(false), []);
+
+  const onChangeDate = useCallback<SingleChange>(
+    ({date}) => {
+      closePicker();
+      if (date) {
+        onChange(mode === 'date' ? formatDate(date) : formatDateToTime(date));
+      }
+    },
+    [mode],
+  );
+
+  const onClear = useCallback(() => onChange(null), [onChange]);
+
   return (
     <>
       <PickerInput
-        onPress={() => setOpen(true)}
+        onPress={openPicker}
         value={formattedValue}
         label={label}
         error={error}
         optional={optional}
         icon={mode === 'date' ? 'calendar-outline' : 'clock-outline'}
-        onClear={() => onChange(null)}
+        onClear={onClear}
       />
-      {open && (
-        <DateTimePicker
-          is24Hour={is24Hour}
-          mode={mode}
-          value={parsedValue}
-          onChange={(e, date) => {
-            setOpen(false);
-            if (e.type === 'set' && date) {
-              onChange(
-                mode === 'date' ? formatDate(date) : formatDateToTime(date),
-              );
-            }
+      {mode === 'date' ? (
+        <DatePickerModal
+          mode="single"
+          locale={i18n.language}
+          visible={open}
+          onDismiss={closePicker}
+          date={parsedValue}
+          onChange={onChangeDate}
+          onConfirm={onChangeDate}
+        />
+      ) : (
+        <TimePickerModal
+          locale={i18n.language}
+          hours={parsedValue.getHours()}
+          minutes={parsedValue.getMinutes()}
+          visible={open}
+          onDismiss={closePicker}
+          onConfirm={({hours, minutes}) => {
+            const date = new Date();
+            date.setHours(hours);
+            date.setMinutes(minutes);
+            onChangeDate({date});
           }}
         />
       )}

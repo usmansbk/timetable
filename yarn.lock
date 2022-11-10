@@ -2498,6 +2498,11 @@ camelcase@^6.0.0:
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-6.3.0.tgz#5685b95eb209ac9c0c177467778c9c84df58ba9a"
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
+caniuse-lite@^1.0.30001383:
+  version "1.0.30001431"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001431.tgz#e7c59bd1bc518fae03a4656be442ce6c4887a795"
+  integrity sha512-zBUoFU0ZcxpvSt9IU66dXVT/3ctO1cy4y9cscs1szkPlcWb6pasYM144GqrUygUbT+k7cmUCW61cvskjcv0enQ==
+
 caniuse-lite@^1.0.30001400:
   version "1.0.30001422"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001422.tgz#f2d7c6202c49a8359e6e35add894d88ef93edba1"
@@ -2680,7 +2685,7 @@ color-string@^1.6.0, color-string@^1.9.0:
     color-name "^1.0.0"
     simple-swizzle "^0.2.2"
 
-color@^3.1.2:
+color@^3.1.2, color@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/color/-/color-3.2.1.tgz#3544dc198caf4490c3ecc9a790b54fe9ff45e164"
   integrity sha512-aBl7dZI9ENN6fUGC7mWpMTPNHmWUSNan9tuWN6ahh5ZLNk9baLJOnSMlrQkHcrfFgz2/RigjUVAjdx36VcemKA==
@@ -6634,6 +6639,14 @@ react-native-open-notification@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/react-native-open-notification/-/react-native-open-notification-0.1.4.tgz#20b7c03a1543ce36f3f99ff9924c67eef2688aa9"
   integrity sha512-TPeFRsao6nDFW5nvBseD6nheRCN1U3poaY90iDzBY1MEEVepClqfEC9Iw0cqj7LYnpDSF8V25fb/SpjEg3HdQQ==
+
+react-native-paper-dates@^0.9.2:
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/react-native-paper-dates/-/react-native-paper-dates-0.9.2.tgz#ae218c2c2aceeef6dd211e943bff5a5751ca874c"
+  integrity sha512-46dl848IIYVQgoeVRhZoE+9hT2oQa8ode4xd0L31d1otS5dzWDoQGMltRTgN8RkR7ogcVl2Okty0SDdDp6ZdEA==
+  dependencies:
+    caniuse-lite "^1.0.30001383"
+    color "^3.2.1"
 
 react-native-paper@5.0.0-rc.8:
   version "5.0.0-rc.8"
