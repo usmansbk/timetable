@@ -38,10 +38,10 @@ function Agenda<T extends EventInput>({
   }, []);
 
   const onChangeDate = useCallback<SingleChange>(({date}) => {
-    closeCalendar();
     if (date) {
       setSelectedDate(formatDate(date));
     }
+    closeCalendar();
   }, []);
 
   return (

@@ -51,10 +51,10 @@ function DateTimeInput({
 
   const onChangeDate = useCallback<SingleChange>(
     ({date}) => {
-      closePicker();
       if (date) {
         onChange(mode === 'date' ? formatDate(date) : formatDateToTime(date));
       }
+      closePicker();
     },
     [mode],
   );
