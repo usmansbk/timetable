@@ -1,7 +1,9 @@
 import React, {memo, useCallback, useRef, useState} from 'react';
 import {InteractionManager, StyleSheet, View} from 'react-native';
 import {Appbar} from 'react-native-paper';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import {DatePickerModal} from 'react-native-paper-dates';
+import {useTranslation} from 'react-i18next';
+import type {SingleChange} from 'react-native-paper-dates/lib/typescript/Date/Calendar';
 import {formatCurrentDate, formatDate, parseDate} from '~utils/date';
 import {EventInput} from '~types';
 import AgendaList, {AgendaListHandle} from './AgendaList';
@@ -21,16 +23,25 @@ function Agenda<T extends EventInput>({
   renderRight,
   renderLeft,
 }: Props<T>) {
+  const {i18n} = useTranslation();
   const ref = useRef<AgendaListHandle>(null);
   const [selectedDate, setSelectedDate] = useState(formatCurrentDate());
-  const [openDatePicker, setOpenDatePicker] = useState(false);
+  const [datePickerVisible, setDatePickerVisible] = useState(false);
 
-  const openCalendar = useCallback(() => setOpenDatePicker(true), []);
+  const openCalendar = useCallback(() => setDatePickerVisible(true), []);
+  const closeCalendar = useCallback(() => setDatePickerVisible(false), []);
 
   const scrollToTop = useCallback(() => {
     ref.current?.resetMode();
     setSelectedDate(formatCurrentDate());
     InteractionManager.runAfterInteractions(ref.current?.scrollToTop);
+  }, []);
+
+  const onChangeDate = useCallback<SingleChange>(({date}) => {
+    closeCalendar();
+    if (date) {
+      setSelectedDate(formatDate(date));
+    }
   }, []);
 
   return (
@@ -56,17 +67,15 @@ function Agenda<T extends EventInput>({
         selectedDate={selectedDate}
         onPressItem={onPressItem}
       />
-      {openDatePicker && (
-        <DateTimePicker
-          value={parseDate(selectedDate)}
-          onChange={(e, date) => {
-            setOpenDatePicker(false);
-            if (e.type === 'set' && date) {
-              setSelectedDate(formatDate(date));
-            }
-          }}
-        />
-      )}
+      <DatePickerModal
+        locale={i18n.language}
+        mode="single"
+        visible={datePickerVisible}
+        onDismiss={closeCalendar}
+        date={parseDate(selectedDate)}
+        onConfirm={onChangeDate}
+        onChange={onChangeDate}
+      />
     </View>
   );
 }

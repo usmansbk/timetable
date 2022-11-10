@@ -46,7 +46,7 @@ function DateTimeInput({
     parsedValue = new Date();
   }
 
-  const openPicker = useCallback(() => setOpen(false), []);
+  const openPicker = useCallback(() => setOpen(true), []);
   const closePicker = useCallback(() => setOpen(false), []);
 
   const onChangeDate = useCallback<SingleChange>(

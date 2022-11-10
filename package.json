@@ -14,7 +14,6 @@
   "dependencies": {
     "@hookform/resolvers": "^2.9.10",
     "@react-native-async-storage/async-storage": "^1.17.10",
-    "@react-native-community/datetimepicker": "^6.5.4",
     "@react-native-community/push-notification-ios": "^1.10.1",
     "@react-native-google-signin/google-signin": "^8.2.1",
     "@react-navigation/drawer": "^6.5.0",

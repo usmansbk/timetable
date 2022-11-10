@@ -1330,13 +1330,6 @@
     prompts "^2.4.0"
     semver "^6.3.0"
 
-"@react-native-community/datetimepicker@^6.5.4":
-  version "6.5.4"
-  resolved "https://registry.yarnpkg.com/@react-native-community/datetimepicker/-/datetimepicker-6.5.4.tgz#b86225e8d2d0d13586833c54c944821825187697"
-  integrity sha512-6YUz6d6bEh409eG6HcL/oHmqElWtQgeHmVoVIfuJusf54ZsHr14NqHvrux0P1vBv5vcYrn9Qi8OwZZiFVyp9vw==
-  dependencies:
-    invariant "^2.2.4"
-
 "@react-native-community/eslint-config@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@react-native-community/eslint-config/-/eslint-config-2.0.0.tgz#35dcc529a274803fc4e0a6b3d6c274551fb91774"
