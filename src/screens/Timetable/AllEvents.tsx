@@ -16,9 +16,10 @@ import {scheduleNotifications} from '~utils/notifications';
 interface Props {
   openDrawer: () => void;
   onPressItem: (item: EventInput) => void;
+  onPressSearch: () => void;
 }
 
-function AllEvents({openDrawer, onPressItem}: Props) {
+function AllEvents({openDrawer, onPressItem, onPressSearch}: Props) {
   const {t} = useTranslation();
   const events = useAppSelector(selectAllEvents);
   const reminders = useAppSelector(selectReminderEntities);
@@ -52,8 +53,8 @@ function AllEvents({openDrawer, onPressItem}: Props) {
   );
 
   const renderRight = useCallback(
-    () => <Appbar.Action icon="calendar-search" onPress={() => null} />,
-    [],
+    () => <Appbar.Action icon="calendar-search" onPress={onPressSearch} />,
+    [onPressSearch],
   );
 
   return (

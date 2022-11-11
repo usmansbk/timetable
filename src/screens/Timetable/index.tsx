@@ -28,6 +28,10 @@ function Timetable({navigation}: AppDrawerScreenProps<'Timetable'>) {
     [navigation],
   );
 
+  const onPressSearch = useCallback(() => {
+    navigation.navigate('Search');
+  }, [navigation]);
+
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => {
@@ -51,7 +55,11 @@ function Timetable({navigation}: AppDrawerScreenProps<'Timetable'>) {
 
   return (
     <View style={styles.container}>
-      <AllEvents openDrawer={navigation.openDrawer} onPressItem={onPressItem} />
+      <AllEvents
+        openDrawer={navigation.openDrawer}
+        onPressItem={onPressItem}
+        onPressSearch={onPressSearch}
+      />
       <Portal>
         <FAB.Group
           style={styles.fab}

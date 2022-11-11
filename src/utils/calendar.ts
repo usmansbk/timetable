@@ -1,4 +1,3 @@
-import groupBy from 'lodash.groupby';
 import {RRuleSet} from 'rrule';
 import {EventInput} from '~types';
 import dayjs, {
@@ -77,12 +76,12 @@ const byTime = (a: EventInput, b: EventInput) => {
   return -1;
 };
 
-const byDate = (a: EventInput, b: EventInput) => {
-  if (a.startDate === b.startDate) {
+const byDate = (a: string, b: string) => {
+  if (a === b) {
     return 0;
   }
 
-  if (a.startDate > b.startDate) {
+  if (a > b) {
     return 1;
   }
 
@@ -102,14 +101,16 @@ function getEventsByDate({
 }
 
 export function groupByDate(items: EventInput[], startOfWeek: number) {
-  return Object.keys(groupBy(items.sort(byDate), 'startDate')).map(date => ({
-    title: date,
-    data: getEventsByDate({
-      items,
-      date: parseDateToUTC(date),
-      startOfWeek,
-    }),
-  }));
+  return Array.from(new Set(items.map(item => item.startDate)))
+    .sort(byDate)
+    .map(date => ({
+      title: date,
+      data: getEventsByDate({
+        items,
+        date: parseDateToUTC(date),
+        startOfWeek,
+      }),
+    }));
 }
 
 export default function* calendarGenerator(

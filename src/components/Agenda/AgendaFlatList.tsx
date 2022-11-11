@@ -15,7 +15,7 @@ import AgendaDayHeader from './AgendaDayHeader';
 
 interface Props<T extends EventInput> {
   items: T[];
-  listEmptyMessage: string;
+  listEmptyMessage?: string;
   onPressItem: (item: EventInput) => void;
   onPressDayHeader?: (date: string) => void;
 }
@@ -33,6 +33,7 @@ function FlatAgendaList<T extends EventInput>({
 
   return (
     <SectionList
+      keyboardShouldPersistTaps="always"
       sections={sections}
       stickySectionHeadersEnabled
       contentContainerStyle={styles.contentContainer}
@@ -44,7 +45,9 @@ function FlatAgendaList<T extends EventInput>({
           <AgendaItem item={item} onPress={onPressItem} is24Hour={is24Hour} />
         );
       }}
-      ListEmptyComponent={<EmptyState title={listEmptyMessage} />}
+      ListEmptyComponent={
+        listEmptyMessage ? <EmptyState title={listEmptyMessage} /> : undefined
+      }
       ItemSeparatorComponent={Divider}
     />
   );
