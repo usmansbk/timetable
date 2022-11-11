@@ -2,7 +2,7 @@ import React, {memo, useCallback, useRef, useState} from 'react';
 import {InteractionManager, StyleSheet, View} from 'react-native';
 import {Appbar} from 'react-native-paper';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {formatCurrentDate, formatDate, parseDate} from '~utils/date';
+import dayjs, {formatCurrentDate, formatDate, parseDate} from '~utils/date';
 import {EventInput} from '~types';
 import AgendaList, {AgendaListHandle} from './AgendaList';
 
@@ -65,6 +65,8 @@ function Agenda<T extends EventInput>({
           setDatePickerVisible(false);
           setSelectedDate(formatDate(date));
         }}
+        minimumDate={dayjs().subtract(1, 'year').toDate()}
+        maximumDate={dayjs().add(1, 'year').toDate()}
       />
     </View>
   );
