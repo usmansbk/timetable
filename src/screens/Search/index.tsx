@@ -32,6 +32,9 @@ function Search({navigation}: RootStackScreenProps<'Search'>) {
         placeholder={t('Search')}
         onChangeText={setSearchQuery}
         onIconPress={navigation.goBack}
+        theme={{
+          roundness: 0,
+        }}
       />
 
       <AgendaFlatList
