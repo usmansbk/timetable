@@ -51,8 +51,14 @@ function AllEvents({openDrawer, onPressItem, onPressSearch}: Props) {
   );
 
   const renderRight = useCallback(
-    () => <Appbar.Action icon="calendar-search" onPress={onPressSearch} />,
-    [onPressSearch],
+    () => (
+      <Appbar.Action
+        icon="calendar-search"
+        onPress={onPressSearch}
+        disabled={!events.length}
+      />
+    ),
+    [onPressSearch, events.length],
   );
 
   return (

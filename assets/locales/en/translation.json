@@ -18,5 +18,9 @@
   "events_count_zero": "No events",
   "events_count_one": "{{count}} event",
   "events_count_other": "{{count}} events",
-  "duration": "{{minutes}} minutes"
+  "duration": "{{minutes}} minutes",
+  "date_month_pos_one": "On the {{count}}st {{formattedDay}}",
+  "date_month_pos_two": "On the {{count}}nd {{formattedDay}}",
+  "date_month_pos_few": "On the {{count}}rd {{formattedDay}}",
+  "date_month_pos_other": "On the {{count}}th {{formattedDay}}"
 }

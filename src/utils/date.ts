@@ -65,6 +65,16 @@ export function formatDay(day: number) {
   return dayjs().day(day).format('dddd');
 }
 
+export function formatDateMonthPosition(date: string) {
+  const day = dayjs(date);
+
+  return {
+    position: Math.round(day.date() / 7),
+    formattedDay: day.format('dddd'),
+    day: day.day(),
+  };
+}
+
 export function parseDate(date: string) {
   return dayjs(date).toDate();
 }
