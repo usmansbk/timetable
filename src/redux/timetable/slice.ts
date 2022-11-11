@@ -142,8 +142,17 @@ const timetableSlice = createSlice({
       },
     },
     addEvent: {
-      reducer(state, action: PayloadAction<NormalizedEvent>) {
-        eventsAdapter.addMany(state.events, action.payload.events);
+      reducer(state, action: PayloadAction<EventEntity>) {
+        const event = action.payload;
+
+        if (event.scheduleId) {
+          const schedule = state.schedules.entities[event.scheduleId];
+          if (schedule) {
+            schedule.events = schedule.events.concat(event.id);
+          }
+        }
+
+        eventsAdapter.addOne(state.events, event);
       },
       prepare(payload: EventInput) {
         const event = Object.assign({}, payload, {id: nanoid()});
@@ -154,7 +163,7 @@ const timetableSlice = createSlice({
         );
 
         return {
-          payload: normalized.entities,
+          payload: Object.values(normalized.entities.events)[0],
         };
       },
     },
@@ -172,8 +181,8 @@ const timetableSlice = createSlice({
       remindersAdapter.removeOne(state.reminders, action.payload);
     },
     updateEvent: {
-      reducer(state, action: PayloadAction<NormalizedEvent>) {
-        const newEvent = Object.values(action.payload.events)[0];
+      reducer(state, action: PayloadAction<EventEntity>) {
+        const newEvent = action.payload;
         const oldEvent = state.events.entities[newEvent.id];
         const {id, ...changes} = newEvent;
 
@@ -202,7 +211,7 @@ const timetableSlice = createSlice({
         );
 
         return {
-          payload: normalized.entities,
+          payload: Object.values(normalized.entities.events)[0],
         };
       },
     },
