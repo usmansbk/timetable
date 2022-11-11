@@ -51,12 +51,18 @@ function AllEvents({openDrawer, onPressItem}: Props) {
     [openDrawer],
   );
 
+  const renderRight = useCallback(
+    () => <Appbar.Action icon="calendar-search" onPress={() => null} />,
+    [],
+  );
+
   return (
     <Agenda
       title={t('Timetable')}
       items={events}
       onPressItem={onPressItem}
       renderLeft={renderLeft}
+      renderRight={renderRight}
     />
   );
 }

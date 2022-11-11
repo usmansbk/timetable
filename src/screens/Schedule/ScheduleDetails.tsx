@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import {memo, useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Appbar, Menu} from 'react-native-paper';
-import Agenda from '~components/Agenda';
+import AgendaFlatList from '~components/Agenda/AgendaFlatList';
 import Confirm from '~components/Confirm';
 import {useAppDispatch, useAppSelector} from '~redux/hooks';
 import {
@@ -77,37 +77,28 @@ function ScheduleDetails({schedule}: Props) {
     [navigation],
   );
 
-  const renderLeft = useCallback(
-    () => <Appbar.BackAction onPress={navigation.goBack} />,
-    [],
-  );
-
-  const renderRight = useCallback(
-    () => (
-      <Menu
-        visible={menuVisible}
-        onDismiss={closeMenu}
-        anchor={<Appbar.Action icon="dots-vertical" onPress={openMenu} />}>
-        <Menu.Item onPress={handleMenuPress('edit')} title={t('Edit')} />
-        <Menu.Item
-          onPress={handleMenuPress('duplicate')}
-          title={t('Duplicate')}
-        />
-        <Menu.Item onPress={handleMenuPress('delete')} title={t('Delete')} />
-        <Menu.Item onPress={handleMenuPress('more')} title={t('More')} />
-      </Menu>
-    ),
-    [menuVisible, closeConfirm, openMenu, handleMenuPress],
-  );
-
   return (
     <>
-      <Agenda
-        title={title}
+      <Appbar.Header>
+        <Appbar.BackAction onPress={navigation.goBack} />
+        <Appbar.Content title={title} />
+        <Menu
+          visible={menuVisible}
+          onDismiss={closeMenu}
+          anchor={<Appbar.Action icon="dots-vertical" onPress={openMenu} />}>
+          <Menu.Item onPress={handleMenuPress('edit')} title={t('Edit')} />
+          <Menu.Item
+            onPress={handleMenuPress('duplicate')}
+            title={t('Duplicate')}
+          />
+          <Menu.Item onPress={handleMenuPress('delete')} title={t('Delete')} />
+          <Menu.Item onPress={handleMenuPress('more')} title={t('More')} />
+        </Menu>
+      </Appbar.Header>
+      <AgendaFlatList
         items={events as EventInput[]}
         onPressItem={onPressItem}
-        renderLeft={renderLeft}
-        renderRight={renderRight}
+        listEmptyMessage={t('No Events')}
       />
       <Confirm
         visible={confirmVisible}
