@@ -101,13 +101,15 @@ function getEventsByDate({
   return items.filter(item => matches(item, date, startOfWeek)).sort(byTime);
 }
 
-export function groupByDate(items: EventInput[]) {
-  return Object.entries(groupBy(items.sort(byDate), 'startDate')).map(
-    ([title, data]) => ({
-      title,
-      data: data.sort(byTime),
+export function groupByDate(items: EventInput[], startOfWeek: number) {
+  return Object.keys(groupBy(items.sort(byDate), 'startDate')).map(date => ({
+    title: date,
+    data: getEventsByDate({
+      items,
+      date: parseDateToUTC(date),
+      startOfWeek,
     }),
-  );
+  }));
 }
 
 export default function* calendarGenerator(

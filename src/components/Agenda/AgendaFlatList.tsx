@@ -4,7 +4,10 @@ import {SectionList, StyleSheet, View} from 'react-native';
 import {Divider, Text, TouchableRipple} from 'react-native-paper';
 import EmptyState from '~components/EmptyState';
 import {useAppSelector} from '~redux/hooks';
-import {selectIs24HourTimeFormat} from '~redux/settings/slice';
+import {
+  selectIs24HourTimeFormat,
+  selectStartOfWeek,
+} from '~redux/settings/slice';
 import {EventInput} from '~types';
 import {groupByDate} from '~utils/calendar';
 import {formatEventTime, formatRecurrence} from '~utils/event';
@@ -24,8 +27,9 @@ function FlatAgendaList<T extends EventInput>({
   onPressDayHeader,
 }: Props<T>) {
   const is24Hour = useAppSelector(selectIs24HourTimeFormat);
+  const startOfWeek = useAppSelector(selectStartOfWeek);
 
-  const sections = useMemo(() => groupByDate(items), [items]);
+  const sections = useMemo(() => groupByDate(items, startOfWeek), [items]);
 
   return (
     <SectionList
