@@ -10,10 +10,11 @@ import {
 import {capitalize} from './helper';
 
 export function formatRecurrence(input: Recurrence, lng?: Language) {
-  const {freq, until} = input;
+  const {freq, until, weekdays} = input;
   const rule = new RRule({
     freq: RRule[freq],
     until: until ? parseDateToUTC(until) : null,
+    byweekday: weekdays,
   });
 
   return capitalize(rule.toText(undefined, lng));
@@ -38,13 +39,14 @@ export function createDateRule({
     });
   }
 
-  const {freq, until} = repeat;
+  const {freq, until, weekdays} = repeat;
 
   return new RRule({
     dtstart,
     freq: Frequency[freq],
     until: until ? parseDateToUTC(until) : null,
     wkst: startOfWeek,
+    byweekday: weekdays,
   });
 }
 

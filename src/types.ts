@@ -67,6 +67,7 @@ declare global {
 export interface Recurrence {
   freq: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
   until?: string;
+  weekdays?: number[];
 }
 
 export interface EventInput {

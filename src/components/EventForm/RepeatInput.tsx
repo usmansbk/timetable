@@ -10,6 +10,7 @@ import Select from '~components/Select';
 import {Recurrence} from '~types';
 import {formatRecurrence} from '~utils/event';
 import PickerInput from '~components/PickerInput';
+import DayPicker from './DayPicker';
 
 interface Props {
   value?: Recurrence | null;
@@ -20,6 +21,7 @@ interface Props {
 export const schema = yup.object<Record<keyof Recurrence, yup.AnySchema>>({
   freq: yup.string().required(),
   until: yup.string().nullable().optional(),
+  weekdays: yup.array(yup.number()).nullable().optional(),
 });
 
 function RepeatInput({onChange, value, error}: Props) {
@@ -86,14 +88,25 @@ function RepeatInput({onChange, value, error}: Props) {
               control={control}
               name="freq"
               render={({field: {onChange, value}}) => (
-                <Select
-                  icon="repeat"
-                  value={value}
-                  onChange={onChange}
-                  label={t('Repeat')}
-                  options={options}
-                  error={!!errors.freq}
-                />
+                <>
+                  <Select
+                    icon="repeat"
+                    value={value}
+                    onChange={onChange}
+                    label={t('Repeat')}
+                    options={options}
+                    error={!!errors.freq}
+                  />
+                  {value === 'WEEKLY' && (
+                    <Controller
+                      control={control}
+                      name="weekdays"
+                      render={({field: {value, onChange}}) => (
+                        <DayPicker value={value || []} onChange={onChange} />
+                      )}
+                    />
+                  )}
+                </>
               )}
             />
             <Divider />
