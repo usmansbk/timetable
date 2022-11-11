@@ -1,6 +1,7 @@
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {
   Appbar,
+  Divider,
   HelperText,
   Modal,
   Portal,
@@ -197,6 +198,7 @@ function EventForm({
               />
             )}
           />
+          <Divider />
           <View style={styles.row}>
             <View style={styles.time}>
               <Controller
@@ -229,6 +231,7 @@ function EventForm({
                 )}
               />
             </View>
+            <Divider />
             <View style={styles.time}>
               <Controller
                 control={control}
@@ -263,6 +266,7 @@ function EventForm({
               )}
             />
           )}
+          <Divider />
           <Controller
             control={control}
             name="repeat"
@@ -279,6 +283,7 @@ function EventForm({
               {errors.repeat.message}
             </HelperText>
           )}
+          <Divider />
           <Controller
             control={control}
             name="description"

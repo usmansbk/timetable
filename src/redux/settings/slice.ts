@@ -15,7 +15,7 @@ interface State {
 }
 
 const initialState: State = {
-  theme: 'dark',
+  theme: 'system',
   startOfWeek: DAYS_OF_WEEK[0],
   playSound: true,
   vibrate: true,

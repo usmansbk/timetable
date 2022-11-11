@@ -33,6 +33,7 @@ export type RootStackParamList = {
   AppDrawer: NavigatorScreenParams<DrawerStackParamList>;
   Settings: undefined;
   NewSchedule: undefined;
+  Search: undefined;
   DuplicateSchedule: {
     id: string;
   };

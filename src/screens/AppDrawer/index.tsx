@@ -54,7 +54,7 @@ function AppDrawerContent(props: DrawerContentComponentProps) {
             key={id}
             label={title}
             onPress={() => navigation.navigate('Schedule', {id})}
-            icon="view-day-outline"
+            icon="calendar-clock-outline"
           />
         ))}
       </PaperDrawer.Section>

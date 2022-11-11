@@ -10,7 +10,7 @@ import omit from 'lodash.omit';
 import {EventInput, FieldError, ScheduleInput} from '~types';
 import Confirm from './Confirm';
 import EventForm from './EventForm';
-import AgendaList from './Agenda/AgendaList';
+import AgendaFlatList from './Agenda/AgendaFlatList';
 
 interface Props {
   autoFocus?: boolean;
@@ -197,7 +197,7 @@ export default function ScheduleForm({
           {errors.title.message}
         </HelperText>
       )}
-      <AgendaList
+      <AgendaFlatList
         items={fields}
         listEmptyMessage={t('Add Events')}
         onPressItem={onPressItem}

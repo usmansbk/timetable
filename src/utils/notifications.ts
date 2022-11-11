@@ -1,6 +1,5 @@
 import {Dictionary} from '@reduxjs/toolkit';
 import {ManipulateType} from 'dayjs';
-import capitalize from 'lodash.capitalize';
 import omit from 'lodash.omit';
 import {Platform} from 'react-native';
 import Notification, {CHANNEL_ID} from '~config/notifications';
@@ -11,8 +10,10 @@ import {
   formatFromDate,
   parseUTCToLocalDate,
   parseFullDay,
+  formatDateToHumanTime,
 } from './date';
 import {createDateRule} from './event';
+import {capitalize} from './helper';
 
 const REPEAT_INTERVAL = 1;
 
@@ -74,7 +75,10 @@ function scheduleNotification(
           channelId: CHANNEL_ID,
           group: id,
           title,
-          message: capitalize(message),
+          message:
+            reminderKey === '0_m'
+              ? formatDateToHumanTime(date)
+              : capitalize(message),
           date,
           allowWhileIdle: true,
           playSound,

@@ -2,7 +2,7 @@ import {memo, useCallback, useMemo, useState} from 'react';
 import {useForm, Controller} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
-import {Button, Dialog, Portal} from 'react-native-paper';
+import {Button, Dialog, Divider, Portal} from 'react-native-paper';
 import * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup';
 import DateTimeInput from '~components/DateTimeInput';
@@ -96,6 +96,7 @@ function RepeatInput({onChange, value, error}: Props) {
                 />
               )}
             />
+            <Divider />
             <Controller
               control={control}
               name="until"

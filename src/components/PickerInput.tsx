@@ -1,5 +1,8 @@
-import {TouchableOpacity} from 'react-native';
-import {TextInput} from 'react-native-paper';
+import {StyleSheet, View} from 'react-native';
+import {Text, TouchableRipple, IconButton, useTheme} from 'react-native-paper';
+
+const MAXIMIZED_LABEL_FONT_SIZE = 16;
+const MINIMIZED_LABEL_FONT_SIZE = 12;
 
 interface Props {
   value: string;
@@ -24,30 +27,54 @@ function PickerInput({
   optional,
   error,
   onClear,
-  placeholder,
-  multiline,
 }: Props) {
+  const {colors} = useTheme();
   return (
-    <TouchableOpacity disabled={disabled} onPress={onPress}>
-      <TextInput
-        theme={{
-          roundness: 0,
-        }}
-        multiline={multiline}
-        value={value}
-        label={label}
-        placeholder={placeholder}
-        editable={false}
-        left={icon ? <TextInput.Icon icon={icon} disabled /> : undefined}
-        right={
-          optional && value ? (
-            <TextInput.Icon icon="close" onPress={onClear} />
-          ) : null
-        }
-        error={error}
-      />
-    </TouchableOpacity>
+    <TouchableRipple onPress={onPress} disabled={disabled}>
+      <View
+        style={[
+          styles.container,
+          {
+            backgroundColor: error ? colors.errorContainer : colors.background,
+          },
+        ]}>
+        {icon ? <IconButton icon={icon} disabled /> : undefined}
+        <View style={styles.body}>
+          {label && (
+            <Text
+              variant="labelLarge"
+              style={{
+                fontSize: value
+                  ? MINIMIZED_LABEL_FONT_SIZE
+                  : MAXIMIZED_LABEL_FONT_SIZE,
+                color: colors.outline,
+              }}>
+              {label}
+            </Text>
+          )}
+          {value && (
+            <Text style={{color: colors.onSurfaceVariant}} variant="bodyLarge">
+              {value}
+            </Text>
+          )}
+        </View>
+        {optional && value ? (
+          <IconButton icon="close" onPress={onClear} />
+        ) : null}
+      </View>
+    </TouchableRipple>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  body: {
+    flex: 1,
+  },
+});
 
 export default PickerInput;

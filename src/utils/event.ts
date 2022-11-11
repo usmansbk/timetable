@@ -1,5 +1,4 @@
 import {Frequency, RRule} from 'rrule';
-import capitalize from 'lodash.capitalize';
 import {Language} from 'rrule/dist/esm/nlp/i18n';
 import {EventInput, Recurrence} from '~types';
 import {
@@ -8,6 +7,7 @@ import {
   formatTime,
   parseDateToUTC,
 } from '~utils/date';
+import {capitalize} from './helper';
 
 export function formatRecurrence(input: Recurrence, lng?: Language) {
   const {freq, until} = input;

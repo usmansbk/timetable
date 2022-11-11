@@ -14,6 +14,7 @@ import Schedule from './Schedule';
 import EditSchedule from './EditSchedule';
 import DuplicateSchedule from './DuplicateSchedule';
 import Event from './Event';
+import Search from './Search';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -49,8 +50,8 @@ export default function Screens() {
     <SafeAreaView
       style={[styles.container, {backgroundColor: colors.background}]}>
       <StatusBar
-        backgroundColor={colors.primary}
-        barStyle={dark ? 'dark-content' : 'light-content'}
+        backgroundColor={colors.background}
+        barStyle={dark ? 'light-content' : 'dark-content'}
       />
       <Stack.Navigator
         initialRouteName="AppDrawer"
@@ -97,6 +98,13 @@ export default function Screens() {
         />
         <Stack.Screen component={Schedule} name="Schedule" />
         <Stack.Screen component={Event} name="Event" />
+        <Stack.Screen
+          component={Search}
+          name="Search"
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack.Navigator>
     </SafeAreaView>
   );

@@ -1,12 +1,12 @@
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {ToastAndroid} from 'react-native';
 import {Button} from 'react-native-paper';
 import {WEB_CLIENT_ID, IOS_CLIENT_ID} from '~constants';
 import {useAppDispatch} from '~redux/hooks';
 import {setAccessToken, setCurrentUser} from '~redux/users/slice';
 import {User} from '~types';
+import showMessage from '~utils/toast';
 
 GoogleSignin.configure({
   webClientId: WEB_CLIENT_ID,
@@ -26,7 +26,7 @@ function GoogleLoginButton() {
       dispatch(setCurrentUser(user as User));
       dispatch(setAccessToken(idToken));
     } catch (e) {
-      ToastAndroid.show((e as Error).message, ToastAndroid.SHORT);
+      showMessage((e as Error).message);
       setLoading(false);
     }
   }, []);

@@ -34,7 +34,13 @@ function createDateRules(
   );
 
   items.forEach(({startDate, repeat}) => {
-    rules.rrule(createDateRule({startDate, repeat, startOfWeek}));
+    rules.rrule(
+      createDateRule({
+        startDate,
+        repeat,
+        startOfWeek,
+      }),
+    );
   });
 
   return rules;
@@ -50,6 +56,38 @@ function matches(item: EventInput, utcDate: Date, startOfWeek: number) {
   return !!nextDate && dayjs.utc(utcDate).isSame(nextDate, 'date');
 }
 
+const byTime = (a: EventInput, b: EventInput) => {
+  if (a.startTime === b.startTime) {
+    return 0;
+  }
+
+  if (!a.startTime) {
+    return -1;
+  }
+
+  if (!b.startTime) {
+    return 1;
+  }
+
+  if (a.startTime > b.startTime) {
+    return 1;
+  }
+
+  return -1;
+};
+
+const byDate = (a: string, b: string) => {
+  if (a === b) {
+    return 0;
+  }
+
+  if (a > b) {
+    return 1;
+  }
+
+  return -1;
+};
+
 function getEventsByDate({
   items,
   date,
@@ -59,27 +97,20 @@ function getEventsByDate({
   date: Date;
   startOfWeek: number;
 }) {
-  return items
-    .filter(item => matches(item, date, startOfWeek))
-    .sort((a, b) => {
-      if (a.startTime === b.startTime) {
-        return 0;
-      }
+  return items.filter(item => matches(item, date, startOfWeek)).sort(byTime);
+}
 
-      if (!a.startTime) {
-        return -1;
-      }
-
-      if (!b.startTime) {
-        return 1;
-      }
-
-      if (a.startTime > b.startTime) {
-        return 1;
-      }
-
-      return -1;
-    });
+export function groupByDate(items: EventInput[], startOfWeek: number) {
+  return Array.from(new Set(items.map(item => item.startDate)))
+    .sort(byDate)
+    .map(date => ({
+      title: date,
+      data: getEventsByDate({
+        items,
+        date: parseDateToUTC(date),
+        startOfWeek,
+      }),
+    }));
 }
 
 export default function* calendarGenerator(
@@ -94,7 +125,11 @@ export default function* calendarGenerator(
 
   const initialDate = parseDateToUTC(selectedDate);
 
-  const rules = createDateRules(items, {startOfWeek, past, initialDate});
+  const rules = createDateRules(items, {
+    startOfWeek,
+    past,
+    initialDate,
+  });
 
   let date = past
     ? rules.before(initialDate, true)

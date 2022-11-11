@@ -1,8 +1,8 @@
 import React, {memo, useCallback, useRef, useState} from 'react';
 import {InteractionManager, StyleSheet, View} from 'react-native';
 import {Appbar} from 'react-native-paper';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import {formatCurrentDate, formatDate, parseDate} from '~utils/date';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import dayjs, {formatCurrentDate, formatDate, parseDate} from '~utils/date';
 import {EventInput} from '~types';
 import AgendaList, {AgendaListHandle} from './AgendaList';
 
@@ -23,9 +23,9 @@ function Agenda<T extends EventInput>({
 }: Props<T>) {
   const ref = useRef<AgendaListHandle>(null);
   const [selectedDate, setSelectedDate] = useState(formatCurrentDate());
-  const [openDatePicker, setOpenDatePicker] = useState(false);
+  const [datePickerVisible, setDatePickerVisible] = useState(false);
 
-  const openCalendar = useCallback(() => setOpenDatePicker(true), []);
+  const openCalendar = useCallback(() => setDatePickerVisible(true), []);
 
   const scrollToTop = useCallback(() => {
     ref.current?.resetMode();
@@ -56,17 +56,18 @@ function Agenda<T extends EventInput>({
         selectedDate={selectedDate}
         onPressItem={onPressItem}
       />
-      {openDatePicker && (
-        <DateTimePicker
-          value={parseDate(selectedDate)}
-          onChange={(e, date) => {
-            setOpenDatePicker(false);
-            if (e.type === 'set' && date) {
-              setSelectedDate(formatDate(date));
-            }
-          }}
-        />
-      )}
+      <DateTimePickerModal
+        isVisible={datePickerVisible}
+        mode="date"
+        date={parseDate(selectedDate)}
+        onCancel={() => setDatePickerVisible(false)}
+        onConfirm={date => {
+          setDatePickerVisible(false);
+          setSelectedDate(formatDate(date));
+        }}
+        minimumDate={dayjs().subtract(1, 'year').toDate()}
+        maximumDate={dayjs().add(1, 'year').toDate()}
+      />
     </View>
   );
 }

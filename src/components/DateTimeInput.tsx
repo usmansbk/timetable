@@ -1,5 +1,5 @@
-import DateTimePicker from '@react-native-community/datetimepicker';
-import {memo, useState} from 'react';
+import {memo, useCallback, useState} from 'react';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {
   formatTime,
   parseDate,
@@ -43,32 +43,37 @@ function DateTimeInput({
     parsedValue = new Date();
   }
 
+  const openPicker = useCallback(() => setOpen(true), []);
+  const closePicker = useCallback(() => setOpen(false), []);
+
+  const onClear = useCallback(() => onChange(null), [onChange]);
+  const onConfirm = useCallback(
+    (date: Date) => {
+      setOpen(false);
+      onChange(mode === 'date' ? formatDate(date) : formatDateToTime(date));
+    },
+    [mode],
+  );
+
   return (
     <>
       <PickerInput
-        onPress={() => setOpen(true)}
+        onPress={openPicker}
         value={formattedValue}
         label={label}
         error={error}
         optional={optional}
         icon={mode === 'date' ? 'calendar-outline' : 'clock-outline'}
-        onClear={() => onChange(null)}
+        onClear={onClear}
       />
-      {open && (
-        <DateTimePicker
-          is24Hour={is24Hour}
-          mode={mode}
-          value={parsedValue}
-          onChange={(e, date) => {
-            setOpen(false);
-            if (e.type === 'set' && date) {
-              onChange(
-                mode === 'date' ? formatDate(date) : formatDateToTime(date),
-              );
-            }
-          }}
-        />
-      )}
+      <DateTimePickerModal
+        isVisible={open}
+        is24Hour={is24Hour}
+        mode={mode}
+        date={parsedValue}
+        onCancel={closePicker}
+        onConfirm={onConfirm}
+      />
     </>
   );
 }
