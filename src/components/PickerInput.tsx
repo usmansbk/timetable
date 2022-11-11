@@ -68,11 +68,13 @@ function PickerInput({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 8,
+    alignItems: 'flex-start',
   },
   body: {
     flex: 1,
+    paddingVertical: 8,
+    minHeight: 56,
+    justifyContent: 'center',
   },
 });
 
