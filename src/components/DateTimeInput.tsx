@@ -1,7 +1,5 @@
 import {memo, useCallback, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {DatePickerModal, TimePickerModal} from 'react-native-paper-dates';
-import type {SingleChange} from 'react-native-paper-dates/lib/typescript/Date/Calendar';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {
   formatTime,
   parseDate,
@@ -31,7 +29,6 @@ function DateTimeInput({
   error,
   is24Hour,
 }: Props) {
-  const {i18n} = useTranslation();
   const [open, setOpen] = useState(false);
 
   let formattedValue;
@@ -49,17 +46,14 @@ function DateTimeInput({
   const openPicker = useCallback(() => setOpen(true), []);
   const closePicker = useCallback(() => setOpen(false), []);
 
-  const onChangeDate = useCallback<SingleChange>(
-    ({date}) => {
-      if (date) {
-        onChange(mode === 'date' ? formatDate(date) : formatDateToTime(date));
-      }
-      closePicker();
+  const onClear = useCallback(() => onChange(null), [onChange]);
+  const onConfirm = useCallback(
+    (date: Date) => {
+      setOpen(false);
+      onChange(mode === 'date' ? formatDate(date) : formatDateToTime(date));
     },
     [mode],
   );
-
-  const onClear = useCallback(() => onChange(null), [onChange]);
 
   return (
     <>
@@ -72,31 +66,14 @@ function DateTimeInput({
         icon={mode === 'date' ? 'calendar-outline' : 'clock-outline'}
         onClear={onClear}
       />
-      {mode === 'date' ? (
-        <DatePickerModal
-          mode="single"
-          locale={i18n.language}
-          visible={open}
-          onDismiss={closePicker}
-          date={parsedValue}
-          onChange={onChangeDate}
-          onConfirm={onChangeDate}
-        />
-      ) : (
-        <TimePickerModal
-          locale={i18n.language}
-          hours={parsedValue.getHours()}
-          minutes={parsedValue.getMinutes()}
-          visible={open}
-          onDismiss={closePicker}
-          onConfirm={({hours, minutes}) => {
-            const date = new Date();
-            date.setHours(hours);
-            date.setMinutes(minutes);
-            onChangeDate({date});
-          }}
-        />
-      )}
+      <DateTimePickerModal
+        isVisible={open}
+        is24Hour={is24Hour}
+        mode={mode}
+        date={parsedValue}
+        onCancel={closePicker}
+        onConfirm={onConfirm}
+      />
     </>
   );
 }

@@ -14,6 +14,7 @@
   "dependencies": {
     "@hookform/resolvers": "^2.9.10",
     "@react-native-async-storage/async-storage": "^1.17.10",
+    "@react-native-community/datetimepicker": "^6.5.5",
     "@react-native-community/push-notification-ios": "^1.10.1",
     "@react-native-google-signin/google-signin": "^8.2.1",
     "@react-navigation/drawer": "^6.5.0",
@@ -35,9 +36,9 @@
     "react-i18next": "^12.0.0",
     "react-native": "^0.70.5",
     "react-native-gesture-handler": "^2.8.0",
+    "react-native-modal-datetime-picker": "^14.0.0",
     "react-native-open-notification": "^0.1.4",
     "react-native-paper": "5.0.0-rc.8",
-    "react-native-paper-dates": "^0.9.2",
     "react-native-push-notification": "^8.1.1",
     "react-native-reanimated": "^2.12.0",
     "react-native-safe-area-context": "^4.4.1",
