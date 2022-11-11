@@ -10,6 +10,7 @@ import {
   formatFromDate,
   parseUTCToLocalDate,
   parseFullDay,
+  formatDateToHumanTime,
 } from './date';
 import {createDateRule} from './event';
 import {capitalize} from './helper';
@@ -74,7 +75,10 @@ function scheduleNotification(
           channelId: CHANNEL_ID,
           group: id,
           title,
-          message: capitalize(message),
+          message:
+            reminderKey === '0_m'
+              ? formatDateToHumanTime(date)
+              : capitalize(message),
           date,
           allowWhileIdle: true,
           playSound,

@@ -38,6 +38,10 @@ export function formatDateToTime(date: Date) {
   return dayjs(date).format(TIME_FORMAT);
 }
 
+export function formatDateToHumanTime(date: Date, is24Hour = false) {
+  return dayjs(date).format(is24Hour ? 'HH:mm' : 'hh:mm A');
+}
+
 export function formatFromDate(source: Dayjs, compared: Dayjs) {
   return dayjs(source).from(compared);
 }
