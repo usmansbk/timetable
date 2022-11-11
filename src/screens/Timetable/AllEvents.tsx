@@ -28,17 +28,15 @@ function AllEvents({openDrawer, onPressItem, onPressSearch}: Props) {
   const enableVibration = useAppSelector(selectNotificationVibration);
 
   useEffect(() => {
-    if (events.length) {
-      InteractionManager.runAfterInteractions(() => {
-        scheduleNotifications({
-          events,
-          reminders,
-          defaultReminder,
-          playSound: playNotificationSound,
-          vibrate: enableVibration,
-        });
+    InteractionManager.runAfterInteractions(() => {
+      scheduleNotifications({
+        events,
+        reminders,
+        defaultReminder,
+        playSound: playNotificationSound,
+        vibrate: enableVibration,
       });
-    }
+    });
   }, [
     events,
     reminders,
