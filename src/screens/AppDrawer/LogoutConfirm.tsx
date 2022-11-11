@@ -1,5 +1,5 @@
 import {memo, useCallback, useState} from 'react';
-import {ToastAndroid, View} from 'react-native';
+import {View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {Button, Checkbox, Dialog, Portal} from 'react-native-paper';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
@@ -7,6 +7,7 @@ import {useAppDispatch} from '~redux/hooks';
 import {clearTimetable} from '~redux/timetable/slice';
 import {resetUserState} from '~redux/users/slice';
 import {resetSettings} from '~redux/settings/slice';
+import showMessage from '~utils/toast';
 
 interface Props {
   visible: boolean;
@@ -32,7 +33,7 @@ function LogoutConfirm({visible, onDismiss}: Props) {
       }
       await GoogleSignin.signOut();
     } catch (e) {
-      ToastAndroid.show((e as Error).message, ToastAndroid.SHORT);
+      showMessage((e as Error).message);
     }
   }, [status, onDismiss]);
 
