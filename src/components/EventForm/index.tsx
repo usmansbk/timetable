@@ -231,7 +231,6 @@ function EventForm({
                 )}
               />
             </View>
-            <Divider />
             <View style={styles.time}>
               <Controller
                 control={control}
@@ -251,20 +250,23 @@ function EventForm({
             </View>
           </View>
           {!!schedules?.length && (
-            <Controller
-              control={control}
-              name="scheduleId"
-              render={({field: {onChange, value}}) => (
-                <Select
-                  optional
-                  icon="view-day-outline"
-                  label={t('Schedule')}
-                  value={value}
-                  onChange={onChange}
-                  options={schedules}
-                />
-              )}
-            />
+            <>
+              <Divider />
+              <Controller
+                control={control}
+                name="scheduleId"
+                render={({field: {onChange, value}}) => (
+                  <Select
+                    optional
+                    icon="view-day-outline"
+                    label={t('Schedule')}
+                    value={value}
+                    onChange={onChange}
+                    options={schedules}
+                  />
+                )}
+              />
+            </>
           )}
           <Divider />
           <Controller

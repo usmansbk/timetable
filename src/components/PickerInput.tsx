@@ -30,14 +30,13 @@ function PickerInput({
 }: Props) {
   const {colors} = useTheme();
   return (
-    <TouchableRipple onPress={onPress} disabled={disabled}>
-      <View
-        style={[
-          styles.container,
-          {
-            backgroundColor: error ? colors.errorContainer : colors.background,
-          },
-        ]}>
+    <TouchableRipple
+      onPress={onPress}
+      disabled={disabled}
+      style={{
+        backgroundColor: error ? colors.errorContainer : colors.background,
+      }}>
+      <View style={styles.container}>
         {icon ? <IconButton icon={icon} disabled /> : undefined}
         <View style={styles.body}>
           {label && (
@@ -69,11 +68,13 @@ function PickerInput({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 8,
+    alignItems: 'flex-start',
   },
   body: {
     flex: 1,
+    paddingVertical: 8,
+    minHeight: 56,
+    justifyContent: 'center',
   },
 });
 
