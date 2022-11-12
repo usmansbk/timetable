@@ -101,7 +101,7 @@ function RepeatInput({onChange, value, error, date}: Props) {
                     options={options}
                     error={!!errors.freq}
                   />
-                  {false && value === 'WEEKLY' && (
+                  {value === 'WEEKLY' && (
                     <Controller
                       control={control}
                       name="weekdays"
@@ -110,12 +110,12 @@ function RepeatInput({onChange, value, error, date}: Props) {
                       )}
                     />
                   )}
-                  {false && value === 'MONTHLY' && (
+                  {value === 'MONTHLY' && (
                     <Controller
                       control={control}
                       name="byMonthPosition"
                       render={({field: {onChange, value}}) => {
-                        const {position, day, formattedDay} =
+                        const {position, formattedDay} =
                           formatDateMonthPosition(date);
                         return (
                           <Checkbox.Item
