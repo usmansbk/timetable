@@ -2,7 +2,7 @@ import {memo, useCallback, useMemo, useState} from 'react';
 import {useForm, Controller} from 'react-hook-form';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
-import {Button, Checkbox, Dialog, Divider, Portal} from 'react-native-paper';
+import {Button, Dialog, Divider, Portal} from 'react-native-paper';
 import * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup';
 import DateTimeInput from '~components/DateTimeInput';
@@ -10,8 +10,6 @@ import Select from '~components/Select';
 import {Recurrence} from '~types';
 import {formatRecurrence} from '~utils/event';
 import PickerInput from '~components/PickerInput';
-import {formatDateMonthPosition} from '~utils/date';
-import DayPicker from './DayPicker';
 
 interface Props {
   value?: Recurrence | null;
@@ -60,7 +58,6 @@ function RepeatInput({onChange, value, error, date}: Props) {
     control,
     handleSubmit,
     formState: {errors},
-    setValue,
   } = useForm<Recurrence>({
     resolver: yupResolver(schema),
     reValidateMode: 'onChange',
@@ -92,48 +89,14 @@ function RepeatInput({onChange, value, error, date}: Props) {
               control={control}
               name="freq"
               render={({field: {onChange, value}}) => (
-                <>
-                  <Select
-                    icon="repeat"
-                    value={value}
-                    onChange={onChange}
-                    label={t('Repeat')}
-                    options={options}
-                    error={!!errors.freq}
-                  />
-                  {false && value === 'WEEKLY' && (
-                    <Controller
-                      control={control}
-                      name="weekdays"
-                      render={({field: {value, onChange}}) => (
-                        <DayPicker value={value || []} onChange={onChange} />
-                      )}
-                    />
-                  )}
-                  {false && value === 'MONTHLY' && (
-                    <Controller
-                      control={control}
-                      name="byMonthDayPosition"
-                      render={({field: {onChange, value}}) => {
-                        const {position, formattedDay, day} =
-                          formatDateMonthPosition(date);
-                        return (
-                          <Checkbox.Item
-                            label={t('date_month_pos', {
-                              count: position,
-                              formattedDay,
-                              ordinal: true,
-                            })}
-                            status={value ? 'checked' : 'unchecked'}
-                            onPress={() => {
-                              onChange(!value);
-                            }}
-                          />
-                        );
-                      }}
-                    />
-                  )}
-                </>
+                <Select
+                  icon="repeat"
+                  value={value}
+                  onChange={onChange}
+                  label={t('Repeat')}
+                  options={options}
+                  error={!!errors.freq}
+                />
               )}
             />
             <Divider />
