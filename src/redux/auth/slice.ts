@@ -12,8 +12,8 @@ const initialState: State = {
   user: null,
 };
 
-const usersSlice = createSlice({
-  name: 'users',
+const authSlice = createSlice({
+  name: 'auth',
   initialState,
   reducers: {
     setCurrentUser(state, action: PayloadAction<User | null>) {
@@ -28,7 +28,7 @@ const usersSlice = createSlice({
   },
 });
 
-const {actions, reducer} = usersSlice;
+const {actions, reducer} = authSlice;
 
 export const {setCurrentUser, setAccessToken, resetUserState} = actions;
 
