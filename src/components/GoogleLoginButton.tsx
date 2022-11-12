@@ -33,7 +33,7 @@ function GoogleLoginButton() {
 
   return (
     <Button disabled={loading} loading={loading} onPress={signin}>
-      {t('Login with Google')}
+      {t('Sign in with Google')}
     </Button>
   );
 }
