@@ -68,7 +68,7 @@ export interface Recurrence {
   freq: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
   until?: string;
   weekdays?: number[];
-  byMonthPosition?: boolean;
+  byMonthDayPosition?: boolean;
 }
 
 export interface EventInput {

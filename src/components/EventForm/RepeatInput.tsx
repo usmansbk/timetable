@@ -24,7 +24,7 @@ export const schema = yup.object<Record<keyof Recurrence, yup.AnySchema>>({
   freq: yup.string().required(),
   until: yup.string().nullable().optional(),
   weekdays: yup.array(yup.number()).nullable().optional(),
-  byMonthPosition: yup.bool().nullable().optional(),
+  byMonthDayPosition: yup.boolean().nullable().optional(),
 });
 
 function RepeatInput({onChange, value, error, date}: Props) {
@@ -101,7 +101,7 @@ function RepeatInput({onChange, value, error, date}: Props) {
                     options={options}
                     error={!!errors.freq}
                   />
-                  {value === 'WEEKLY' && (
+                  {false && value === 'WEEKLY' && (
                     <Controller
                       control={control}
                       name="weekdays"
@@ -110,12 +110,12 @@ function RepeatInput({onChange, value, error, date}: Props) {
                       )}
                     />
                   )}
-                  {value === 'MONTHLY' && (
+                  {false && value === 'MONTHLY' && (
                     <Controller
                       control={control}
-                      name="byMonthPosition"
+                      name="byMonthDayPosition"
                       render={({field: {onChange, value}}) => {
-                        const {position, formattedDay} =
+                        const {position, formattedDay, day} =
                           formatDateMonthPosition(date);
                         return (
                           <Checkbox.Item
