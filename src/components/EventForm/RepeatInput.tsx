@@ -15,7 +15,7 @@ interface Props {
   value?: Recurrence | null;
   onChange: (value: Recurrence | null) => void;
   error?: boolean;
-  date: string;
+  date?: string;
 }
 
 export const schema = yup.object<Record<keyof Recurrence, yup.AnySchema>>({
@@ -25,7 +25,7 @@ export const schema = yup.object<Record<keyof Recurrence, yup.AnySchema>>({
   byMonthDayPosition: yup.boolean().nullable().optional(),
 });
 
-function RepeatInput({onChange, value, error, date}: Props) {
+function RepeatInput({onChange, value, error}: Props) {
   const {t} = useTranslation();
   const [open, setOpen] = useState(false);
 

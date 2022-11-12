@@ -277,7 +277,6 @@ function EventForm({
                 onChange={onChange}
                 value={value}
                 error={!!errors.repeat}
-                date={getValues().startDate}
               />
             )}
           />
