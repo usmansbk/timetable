@@ -4,7 +4,7 @@ import {useTranslation} from 'react-i18next';
 import {Button} from 'react-native-paper';
 import {WEB_CLIENT_ID, IOS_CLIENT_ID} from '~constants';
 import {useAppDispatch} from '~redux/hooks';
-import {setAccessToken, setCurrentUser} from '~redux/users/slice';
+import {setAccessToken, setCurrentUser} from '~redux/auth/slice';
 import {User} from '~types';
 import showMessage from '~utils/toast';
 

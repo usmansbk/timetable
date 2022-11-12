@@ -10,7 +10,7 @@ import {Appbar, Drawer as PaperDrawer} from 'react-native-paper';
 import AccountHeader from '~screens/AppDrawer/AccountHeader';
 import {useAppSelector} from '~redux/hooks';
 import {selectAllSchedules} from '~redux/timetable/slice';
-import {selectCurrentUser} from '~redux/users/slice';
+import {selectCurrentUser} from '~redux/auth/slice';
 import {DrawerStackParamList, RootStackScreenProps} from '~types';
 import Timetable from '../Timetable';
 import LogoutConfirm from './LogoutConfirm';

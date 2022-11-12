@@ -3,7 +3,7 @@ import {useTranslation} from 'react-i18next';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {useAppDispatch} from '~redux/hooks';
 import {clearTimetable} from '~redux/timetable/slice';
-import {resetUserState} from '~redux/users/slice';
+import {resetUserState} from '~redux/auth/slice';
 import {resetSettings} from '~redux/settings/slice';
 import showMessage from '~utils/toast';
 import Confirm from '~components/Confirm';

@@ -12,7 +12,8 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import timetableReducer from './timetable/slice';
 import settingsReducer from './settings/slice';
-import userReducer from './users/slice';
+import authReducer from './auth/slice';
+import {apiSlice} from './api';
 
 const persistConfig = {
   key: 'root',
@@ -23,7 +24,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
   timetable: timetableReducer,
   settings: settingsReducer,
-  users: userReducer,
+  auth: authReducer,
+  [apiSlice.reducerPath]: apiSlice.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -35,7 +37,7 @@ const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }),
+    }).concat(apiSlice.middleware),
 });
 
 export const persistor = persistStore(store);

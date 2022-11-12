@@ -3,13 +3,13 @@ import {RootState} from '~redux/store';
 import {User} from '~types';
 
 interface State {
-  accessToken: string | null;
-  currentUser: User | null;
+  token: string | null;
+  user: User | null;
 }
 
 const initialState: State = {
-  accessToken: null,
-  currentUser: null,
+  token: null,
+  user: null,
 };
 
 const usersSlice = createSlice({
@@ -17,10 +17,10 @@ const usersSlice = createSlice({
   initialState,
   reducers: {
     setCurrentUser(state, action: PayloadAction<User | null>) {
-      state.currentUser = action.payload;
+      state.user = action.payload;
     },
     setAccessToken(state, action: PayloadAction<string | null>) {
-      state.accessToken = action.payload;
+      state.token = action.payload;
     },
     resetUserState() {
       return initialState;
@@ -32,7 +32,7 @@ const {actions, reducer} = usersSlice;
 
 export const {setCurrentUser, setAccessToken, resetUserState} = actions;
 
-export const selectCurrentUser = (state: RootState) => state.users.currentUser;
-export const selectAccessToken = (state: RootState) => state.users.accessToken;
+export const selectCurrentUser = (state: RootState) => state.auth.user;
+export const selectAccessToken = (state: RootState) => state.auth.token;
 
 export default reducer;
