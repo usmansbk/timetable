@@ -18,8 +18,8 @@ import {useAppSelector} from '~redux/hooks';
 import {selectAppTheme} from '~redux/settings/slice';
 
 const {LightTheme, DarkTheme} = adaptNavigationTheme({
-  light: NavigationLightTheme,
-  dark: NavigationDarkTheme,
+  reactNavigationDark: NavigationDarkTheme,
+  reactNavigationLight: NavigationLightTheme,
 });
 
 const CommonTheme: Partial<MD3Theme> = {
